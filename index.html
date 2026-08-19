@@ -648,7 +648,7 @@
 <!-- ===== Lead capture (free — no backend required) ===== -->
 <script>
   window.PLOT = {
-    LEAD_EMAIL: "dlhepburn@gmail.com",
+    LEAD_EMAIL: "hello@plotworthy.co.uk",
     /* Optional: paste a free access key from https://web3forms.com below to collect
        every submission centrally by email. Leave blank to use the email fallback
        (opens the visitor's email app pre-addressed to you). */
@@ -754,6 +754,23 @@
   #wizM .whoget{font-size:.8rem;opacity:.75;margin-top:12px;text-align:center}
   #wizM .restart{margin-top:16px;text-align:center}
   #wizM .restart button{background:none;border:1px solid var(--line);border-radius:999px;padding:8px 18px;cursor:pointer;font-family:inherit;font-size:.84rem;color:var(--ink-2)}
+  #wizM .snapcard{border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:16px;box-shadow:0 14px 32px -20px rgba(19,42,38,.45)}
+  #wizM .snap-top{background:var(--ink);color:var(--paper);padding:15px 18px}
+  #wizM .snap-eyebrow{font-size:.66rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold-soft);font-weight:700}
+  #wizM .snap-top h3{font-size:1.08rem;margin-top:5px}
+  #wizM .snap-body{padding:16px 18px;background:#fff}
+  #wizM .snap-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:.9rem}
+  #wizM .snap-row span:first-child{font-weight:600}
+  #wizM .snap-verdict{font-weight:700;padding:3px 11px;border-radius:999px;font-size:.78rem;white-space:nowrap}
+  #wizM .snap-verdict.good{background:#dcece3;color:#1c6b4a}
+  #wizM .snap-verdict.warn{background:#f6ecc9;color:#8a6a12}
+  #wizM .snap-headline{font-size:.9rem;margin-top:12px;color:var(--ink-2);line-height:1.5}
+  #wizM .snap-watch{margin-top:13px}
+  #wizM .snap-watch-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--gold);margin-bottom:6px}
+  #wizM .snap-watch ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+  #wizM .snap-watch li{font-size:.85rem;padding-left:18px;position:relative;color:var(--ink)}
+  #wizM .snap-watch li:before{content:"•";position:absolute;left:4px;color:var(--gold);font-weight:800}
+  #wizM .snap-disc{font-size:.72rem;opacity:.6;margin-top:12px;line-height:1.4}
   #wizM .wlead{margin-top:16px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
   #wizM .wlead-label{font-weight:650;font-size:.92rem;margin-bottom:10px}
   #wizM .wlead-row{display:flex;gap:10px;flex-wrap:wrap}
@@ -846,8 +863,24 @@
     <div class="wstep" data-step="5">
       <div class="rhead">
         <div class="tick">✓</div>
-        <h2>Here's your plan</h2>
-        <p>Based on your answers, we've mapped your route and prepared a brief for the right professionals.</p>
+        <h2>Here's your free snapshot</h2>
+        <p>An instant, indicative read on what's possible — based on your answers.</p>
+      </div>
+      <div class="snapcard">
+        <div class="snap-top">
+          <span class="snap-eyebrow">Feasibility snapshot</span>
+          <h3 id="wSnapTitle">—</h3>
+        </div>
+        <div class="snap-body">
+          <div class="snap-row"><span>Feasibility</span><span class="snap-verdict" id="wSnapVerdict">—</span></div>
+          <div class="snap-row"><span>Planning route</span><span id="wSnapRoute2">—</span></div>
+          <p class="snap-headline" id="wSnapHeadline"></p>
+          <div class="snap-watch">
+            <div class="snap-watch-label">Things to be aware of</div>
+            <ul id="wSnapWatch"></ul>
+          </div>
+          <p class="snap-disc">Indicative guidance based on your answers — not a formal planning decision or valuation. Your full report goes much deeper.</p>
+        </div>
       </div>
       <div class="route"><h3>What happens next for you</h3><div class="path" id="wPath"></div></div>
       <div class="brief">
@@ -862,7 +895,7 @@
         <div class="bfoot">🔒 The professional receives this pre-qualified brief, so they can approach you already understanding the job — and give you a proper fee quote.</div>
       </div>
       <div class="wlead">
-        <div class="wlead-label">Enter your email to get your free snapshot &amp; save this plan</div>
+        <div class="wlead-label">Email me this snapshot &amp; my recommended next steps</div>
         <div class="wlead-row">
           <input id="wLeadEmail" type="email" placeholder="you@email.com">
           <button id="wLeadBtn" class="wbtn">Send it to me</button>
@@ -950,7 +983,34 @@
     if(state.intent==='Extend / renovate') return 'May fall under permitted development — to confirm';
     return 'Assessed in your feasibility report';
   }
+  function computeSnapshot(){
+    const uc=state.useclass||"", intent=state.intent||"";
+    let s={title:'Exploring your options',verdict:'Worth exploring',tone:'good',headline:'',watch:[]};
+    if(intent==='Change of use'){
+      if(uc.indexOf('C2')===0){s.title='Change of use to C2 (care / supported living)';s.verdict='Promising — planning-led';s.tone='warn';s.headline='C2 care and supported-living schemes are in strong demand and can add real value — but every change to C2 needs full planning permission, with no permitted-development shortcut.';s.watch=['Full planning permission required (no PD right for C2)','Parking, neighbour amenity & highways will be assessed','Care uses also need CQC registration — design to those standards early'];}
+      else if(uc.indexOf('C4')===0){s.title='Change of use to an HMO';s.verdict='Often achievable';s.tone='good';s.headline='HMO conversions can lift rental yield, but many councils have removed permitted-development rights, so your local position matters.';s.watch=['Check for an Article 4 direction in your area','HMO licensing & minimum room-size standards apply','Parking & amenity commonly raised by councils'];}
+      else if(uc.indexOf('C1')===0){s.title='Change of use to a guest house / hotel';s.verdict='Feasible — location matters';s.tone='warn';s.headline='Guest-house and small-hotel uses can work well in the right spot, but will need planning permission.';s.watch=['Full planning permission likely','Parking, noise & neighbour impact','Fire safety & accessibility standards'];}
+      else if(uc.indexOf('Class E')===0){s.title='Change of use to commercial (Class E)';s.verdict='Often flexible';s.tone='good';s.headline='Class E covers many commercial uses with flexibility between them, though a change from residential still needs permission.';s.watch=['Permission needed when changing from residential','Check the local plan & any Article 4 direction','Impact on neighbours & parking'];}
+      else if(uc.indexOf('Back to residential')===0){s.title='Change of use back to residential (C3)';s.verdict='Usually positive';s.tone='good';s.headline='Returning a property to residential use is often supported by planning policy.';s.watch=['Confirm the current lawful use first','A planning application is usually still needed','Space & amenity standards apply'];}
+      else {s.title='Change of use';s.verdict='Worth exploring';s.tone='warn';s.headline='Change-of-use schemes can unlock significant value, but the planning route depends on the use you want to move to.';s.watch=['Planning permission is usually required','Local plan policy & any Article 4 direction','Parking, amenity & highways'];}
+    } else if(intent==='Extend / renovate'){
+      s.title='Extension / renovation';s.verdict='Often permitted development';s.tone='good';s.headline='Many extensions fall under permitted development, though limits on size, height and position apply — and some areas restrict them.';s.watch=['Check permitted-development limits & any Article 4','Neighbour impact matters for larger schemes','Building regulations will apply'];
+    } else if(intent==='Convert into flats'){
+      s.title='Conversion into flats';s.verdict='Achievable — planning-led';s.tone='warn';s.headline='Splitting a property into flats can add real value, but almost always needs planning permission.';s.watch=['Planning permission usually required','Parking, amenity & space standards','Check for any Article 4 direction'];
+    } else if(intent==='New build / develop'){
+      s.title='New build / development';s.verdict='High potential — full planning';s.tone='warn';s.headline='Building new homes on the site can be very valuable, but needs a full planning application and careful assessment.';s.watch=['Full planning application needed','Site access, constraints & local policy','Design & impact assessments'];
+    } else {
+      s.title='Exploring your options';s.verdict='Worth exploring';s.tone='good';s.headline='There are usually several options for a site like this — a feasibility report will lay them out with the planning route, indicative costs and value for each.';s.watch=["We'll assess the realistic planning options",'Indicative costs & value uplift','The best route to reach your goals'];
+    }
+    return s;
+  }
   function buildResult(){
+    const snap=computeSnapshot();
+    $('#wSnapTitle').textContent=snap.title+(state.addr?(' — '+state.addr):'');
+    const v=$('#wSnapVerdict'); v.textContent=snap.verdict; v.className='snap-verdict '+snap.tone;
+    $('#wSnapRoute2').textContent=planningRoute();
+    $('#wSnapHeadline').textContent=snap.headline;
+    const uw=$('#wSnapWatch'); uw.innerHTML=''; snap.watch.forEach(w=>{const li=document.createElement('li');li.textContent=w;uw.appendChild(li);});
     $('#wBriefAddr').textContent=state.addr||'your property';
     $('#wbPtype').textContent=state.ptype||'—';
     let it=state.intent||'—'; if(state.useclass&&state.useclass!=='Not sure which') it+=' → '+state.useclass;
