@@ -895,7 +895,7 @@
         <div class="bfoot">🔒 The professional receives this pre-qualified brief, so they can approach you already understanding the job — and give you a proper fee quote.</div>
       </div>
       <div class="wlead">
-        <div class="wlead-label">Email me this snapshot &amp; my recommended next steps</div>
+        <div class="wlead-label">Like us to follow up? Leave your email and we'll be in touch with your report &amp; next steps</div>
         <div class="wlead-row">
           <input id="wLeadEmail" type="email" placeholder="you@email.com">
           <button id="wLeadBtn" class="wbtn">Send it to me</button>
@@ -1026,14 +1026,19 @@
   $('#wLeadBtn').addEventListener('click',()=>{
     const em=$('#wLeadEmail').value.trim();
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){$('#wLeadEmail').focus();return;}
+    const snap=computeSnapshot();
     const data={
       Email:em, Address:state.addr, Property:state.ptype,
       Objective:state.intent+(state.useclass&&state.useclass!=='Not sure which'?(' → '+state.useclass):''),
-      'Planning route':planningRoute(), 'Support requested':state.support
+      'Feasibility verdict':snap.verdict,
+      'Planning route':planningRoute(),
+      'Snapshot summary':snap.headline,
+      'Things to be aware of':snap.watch.join('; '),
+      'Support requested':state.support
     };
     const btn=$('#wLeadBtn'); btn.disabled=true; btn.textContent='Sending…';
     window.plotSubmitLead('client (wizard)',data,()=>{
-      const n=$('#wLeadNote'); n.textContent="Thanks — your snapshot is on its way. We'll be in touch shortly."; n.classList.add('show');
+      const n=$('#wLeadNote'); n.textContent="Thanks — we've got your details and we'll be in touch shortly with your next steps."; n.classList.add('show');
       btn.textContent='Sent ✓';
     });
   });
