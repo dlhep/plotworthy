@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plotworthy — Know what your property could become</title>
+<style>
+  :root{
+    --ink:#132a26;        /* deep plot green */
+    --ink-2:#1d3a34;
+    --paper:#f7f4ee;      /* warm off-white */
+    --paper-2:#efe9dd;
+    --gold:#c8992b;       /* warm accent */
+    --gold-soft:#e8d9ac;
+    --terra:#c96b3f;
+    --line:rgba(19,42,38,.12);
+    --shadow:0 18px 50px -20px rgba(19,42,38,.35);
+    --r:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{line-height:1.12;font-weight:700;letter-spacing:-.02em}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+  .btn{display:inline-block;background:var(--gold);color:var(--ink);font-weight:650;padding:14px 26px;border-radius:999px;transition:.2s;border:1px solid transparent;cursor:pointer;font-size:1rem}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -10px rgba(200,153,43,.7)}
+  .btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+  .btn.ghost:hover{background:var(--ink);color:var(--paper);box-shadow:none}
+  .eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:.72rem;font-weight:700;color:var(--gold)}
+
+  /* NAV */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(247,244,238,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.25rem;letter-spacing:-.03em}
+  .logo .mark{width:30px;height:30px;border-radius:8px;background:var(--ink);position:relative;flex:0 0 auto}
+  .logo .mark:before{content:"";position:absolute;inset:7px;border:2px solid var(--gold);border-radius:3px}
+  .logo .mark:after{content:"";position:absolute;left:13px;top:5px;width:4px;height:20px;background:var(--gold)}
+  .nav-links{display:flex;gap:28px;align-items:center;font-size:.94rem;font-weight:550}
+  .nav-links a:hover{color:var(--gold)}
+  @media(max-width:820px){.nav-links a:not(.btn){display:none}}
+
+  /* HERO */
+  .hero{position:relative;overflow:hidden;padding:84px 0 72px}
+  .hero:before{content:"";position:absolute;right:-12%;top:-30%;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--gold-soft),transparent 62%);opacity:.6}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;position:relative}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:36px}}
+  .hero h1{font-size:clamp(2.4rem,5vw,3.8rem);margin:18px 0 20px}
+  .hero h1 em{font-style:normal;color:var(--gold);position:relative}
+  .hero p.lead{font-size:1.2rem;max-width:34ch;color:var(--ink-2);opacity:.92}
+  .hero-cta{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+  .hero-note{margin-top:18px;font-size:.86rem;color:var(--ink-2);opacity:.7}
+
+  .report-card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden;transform:rotate(1.4deg)}
+  .report-card .rc-top{background:var(--ink);color:var(--paper);padding:20px 22px}
+  .report-card .rc-top .eyebrow{color:var(--gold-soft)}
+  .report-card h3{font-size:1.15rem;margin-top:6px}
+  .report-card .rc-body{padding:20px 22px}
+  .rc-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px dashed var(--line);font-size:.92rem}
+  .rc-row:last-child{border-bottom:none}
+  .rc-row .tag{font-weight:700}
+  .pill{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--paper-2)}
+  .pill.green{background:#dcece3;color:#1c6b4a}
+  .pill.amber{background:#f6ecc9;color:#8a6a12}
+
+  /* STRIP */
+  .strip{background:var(--ink);color:var(--paper);padding:22px 0}
+  .strip-in{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;font-size:.92rem;opacity:.9}
+  .strip-in b{color:var(--gold-soft)}
+
+  /* SECTION */
+  section{padding:80px 0}
+  .sec-head{max-width:640px;margin-bottom:48px}
+  .sec-head h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin:12px 0 14px}
+  .sec-head p{font-size:1.08rem;color:var(--ink-2);opacity:.9}
+
+  /* STEPS */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media(max-width:840px){.steps{grid-template-columns:1fr}}
+  .step{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:30px 26px;position:relative}
+  .step .n{font-size:.8rem;font-weight:800;color:var(--gold);letter-spacing:.1em}
+  .step h3{font-size:1.28rem;margin:14px 0 8px}
+  .step p{color:var(--ink-2);font-size:.98rem}
+
+  /* AUDIENCES */
+  .aud{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media(max-width:840px){.aud{grid-template-columns:1fr}}
+  .aud-card{border-radius:var(--r);padding:32px 28px;color:var(--paper);position:relative;overflow:hidden;min-height:290px;display:flex;flex-direction:column}
+  .aud-card.c1{background:linear-gradient(160deg,#1d3a34,#132a26)}
+  .aud-card.c2{background:linear-gradient(160deg,#2c4a43,#1b352f)}
+  .aud-card.c3{background:linear-gradient(160deg,#3a4a2f,#26301f)}
+  .aud-card h3{font-size:1.4rem;margin-bottom:6px}
+  .aud-card .role{font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;color:var(--gold-soft);font-weight:700}
+  .aud-card ul{list-style:none;margin:16px 0 auto;display:flex;flex-direction:column;gap:9px}
+  .aud-card li{font-size:.94rem;padding-left:24px;position:relative;opacity:.94}
+  .aud-card li:before{content:"→";position:absolute;left:0;color:var(--gold)}
+  .aud-card .price{margin-top:20px;font-size:.86rem;opacity:.85;border-top:1px solid rgba(255,255,255,.15);padding-top:14px}
+  .aud-card .price b{color:#fff;font-size:1.05rem}
+
+  /* TIERS */
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+  @media(max-width:840px){.tiers{grid-template-columns:1fr}}
+  .tier{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:30px 28px;display:flex;flex-direction:column}
+  .tier.feat{border-color:var(--gold);box-shadow:0 20px 40px -22px rgba(200,153,43,.55);position:relative}
+  .tier.feat:before{content:"Most popular";position:absolute;top:-12px;left:28px;background:var(--gold);color:var(--ink);font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:999px}
+  .tier h3{font-size:1.25rem}
+  .tier .cost{font-size:2.1rem;font-weight:800;margin:10px 0 2px;letter-spacing:-.03em}
+  .tier .cost span{font-size:.9rem;font-weight:500;opacity:.6}
+  .tier .who{font-size:.85rem;color:var(--ink-2);opacity:.8;margin-bottom:18px}
+  .tier ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
+  .tier li{font-size:.92rem;padding-left:26px;position:relative}
+  .tier li:before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:800}
+  .tier li.off{opacity:.4}
+  .tier li.off:before{content:"–";color:var(--ink)}
+  .tier .btn{margin-top:auto;text-align:center}
+  .tier.feat .btn{background:var(--gold)}
+  .tier .btn.ghost{background:transparent}
+
+  /* CASE */
+  .case{background:var(--ink);color:var(--paper);border-radius:24px;padding:52px 44px;display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+  @media(max-width:840px){.case{grid-template-columns:1fr;padding:36px 26px}}
+  .case .eyebrow{color:var(--gold-soft)}
+  .case h2{font-size:clamp(1.7rem,3vw,2.3rem);margin:12px 0 16px}
+  .case p{opacity:.9}
+  .case-facts{display:flex;flex-direction:column;gap:14px}
+  .fact{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px 18px}
+  .fact .k{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--gold-soft);font-weight:700}
+  .fact .v{font-size:1.05rem;margin-top:3px}
+
+  /* CTA / FORM */
+  .cta{background:linear-gradient(150deg,var(--paper-2),var(--paper));border:1px solid var(--line);border-radius:24px;padding:52px 44px;display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+  @media(max-width:840px){.cta{grid-template-columns:1fr;padding:34px 24px}}
+  .cta h2{font-size:clamp(1.8rem,3vw,2.4rem);margin-bottom:10px}
+  form{display:flex;flex-direction:column;gap:12px}
+  .fld{display:flex;flex-direction:column;gap:5px}
+  .fld label{font-size:.8rem;font-weight:650;letter-spacing:.02em}
+  .fld input,.fld select{padding:13px 15px;border-radius:12px;border:1px solid var(--line);background:#fff;font-size:.98rem;font-family:inherit;color:var(--ink)}
+  .fld input:focus,.fld select:focus{outline:2px solid var(--gold-soft);border-color:var(--gold)}
+  form .btn{margin-top:6px}
+  .form-note{font-size:.78rem;color:var(--ink-2);opacity:.7;margin-top:2px}
+
+  /* FOOTER */
+  footer{background:var(--ink);color:var(--paper);padding:56px 0 30px;margin-top:20px}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px;padding-bottom:34px;border-bottom:1px solid rgba(255,255,255,.12)}
+  @media(max-width:720px){.foot-grid{grid-template-columns:1fr}}
+  footer .logo{color:var(--paper)}
+  footer p{opacity:.75;font-size:.92rem;max-width:34ch;margin-top:12px}
+  .foot-col h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold-soft);margin-bottom:14px}
+  .foot-col a{display:block;opacity:.82;font-size:.94rem;margin-bottom:9px}
+  .foot-col a:hover{opacity:1;color:var(--gold-soft)}
+  .foot-bot{padding-top:20px;font-size:.82rem;opacity:.6;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  .disc{max-width:1120px;margin:14px auto 0;padding:0 24px;font-size:.74rem;opacity:.5}
+  .join-band{background:linear-gradient(160deg,#1d3a34,#132a26);color:var(--paper);border-radius:22px;padding:40px 40px 38px;position:relative;overflow:hidden}
+  .join-band:before{content:"";position:absolute;right:-60px;top:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(200,153,43,.3),transparent 65%)}
+  .join-band h2{font-size:clamp(1.7rem,3vw,2.4rem);margin:12px 0 14px;position:relative}
+  .join-band p{opacity:.9;max-width:60ch;position:relative;font-size:1.05rem}
+  @media(max-width:640px){.join-band{padding:30px 24px}}
+  .aud-cta{display:inline-block;margin-top:14px;color:var(--gold-soft);font-weight:650;font-size:.9rem;border-bottom:1px solid rgba(232,217,172,.4);padding-bottom:2px;transition:.2s}
+  .aud-cta:hover{color:#fff;border-color:#fff}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <div class="logo"><span class="mark"></span>Plotworthy</div>
+    <nav class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#reports">Reports</a>
+      <a href="#membership">Membership</a>
+      <a href="#architects">For architects</a>
+      <a href="#builders">For builders</a>
+      <a href="#start" class="btn">Get my report</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Property potential, decoded</span>
+      <h1>Find out what your property could <em>really</em> become.</h1>
+      <p class="lead">Thinking about a change of use, a conversion or a development — but not sure where to start? Plotworthy gives you a clear, expert report on what's possible, then connects you to the right local architect and builder.</p>
+      <div class="hero-cta">
+        <a href="#start" class="btn">Get my feasibility report</a>
+        <a href="#how" class="btn ghost">See how it works</a>
+      </div>
+      <p class="hero-note">No jargon. No obligation. Written by planning &amp; development experts.</p>
+    </div>
+    <div>
+      <div class="report-card">
+        <div class="rc-top">
+          <span class="eyebrow">Feasibility snapshot</span>
+          <h3>14 Elm Road — C3 → C2 change of use</h3>
+        </div>
+        <div class="rc-body">
+          <div class="rc-row"><span class="tag">Planning route</span><span class="pill amber">Full permission</span></div>
+          <div class="rc-row"><span class="tag">Feasibility</span><span class="pill green">Promising</span></div>
+          <div class="rc-row"><span class="tag">Indicative build cost</span><span>£310k–£380k</span></div>
+          <div class="rc-row"><span class="tag">Est. value uplift</span><span>+£240k</span></div>
+          <div class="rc-row"><span class="tag">Key watch-outs</span><span>3 flagged</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="wrap strip-in">
+    <span><b>1</b> plain-English report</span>
+    <span><b>Local</b> vetted architects</span>
+    <span><b>Trusted</b> builders who can quote</span>
+    <span><b>You</b> stay in control</span>
+  </div>
+</div>
+
+<!-- HOW -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">How it works</span>
+      <h2>From "I wonder if I could…" to a clear plan of action.</h2>
+      <p>Most people sitting on a property with potential never move forward — because they don't know what's allowed, what it costs, or who to call first. Plotworthy removes all three unknowns.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="n">STEP 01</span>
+        <h3>Tell us about the property</h3>
+        <p>Address, what you own or are thinking of buying, and what you're curious about — a change of use, an extension, splitting into flats, or a full development. Two minutes.</p>
+      </div>
+      <div class="step">
+        <span class="n">STEP 02</span>
+        <h3>Get your feasibility report</h3>
+        <p>Our experts assess what's realistically possible: planning route, opportunities, risks to be aware of, indicative costs and value. Start with a free snapshot, then go as deep as you need.</p>
+      </div>
+      <div class="step">
+        <span class="n">STEP 03</span>
+        <h3>Get matched &amp; get quotes</h3>
+        <p>When you're ready, we introduce you to local architects and builders on our network who can quote for the work. You compare, you choose. No pressure, no lock-in.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIENCES -->
+<section style="background:var(--paper-2)" id="pros">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">One platform, three sides</span>
+      <h2>Everyone a project needs, in one place.</h2>
+      <p>Plotworthy connects the person with the property to the professionals who can make it happen — and gives the professionals a stream of warm, report-ready leads.</p>
+    </div>
+    <div class="aud">
+      <div class="aud-card c1">
+        <span class="role">Homeowners &amp; developers</span>
+        <h3>Explore with confidence</h3>
+        <ul>
+          <li>Understand what your site could become</li>
+          <li>See the planning route &amp; the risks up front</li>
+          <li>Ballpark costs &amp; potential value uplift</li>
+          <li>Buy only the depth of detail you need</li>
+        </ul>
+        <div class="price">From <b>Free</b> snapshot → paid deep-dive reports</div>
+      </div>
+      <div class="aud-card c2">
+        <span class="role">Architects</span>
+        <h3>Warm, local leads</h3>
+        <ul>
+          <li>Receive enquiries from clients in your area</li>
+          <li>Clients already have a feasibility report</li>
+          <li>Quote for design &amp; planning work</li>
+          <li>Build a profile &amp; win repeat referrals</li>
+        </ul>
+        <div class="price">From <b>£99/mo</b> subscription + lead access</div>
+        <a href="#architects" class="aud-cta">Join as an architect →</a>
+      </div>
+      <div class="aud-card c3">
+        <span class="role">Builders &amp; contractors</span>
+        <h3>Projects ready to price</h3>
+        <ul>
+          <li>Get recommended for live projects</li>
+          <li>Quote once designs are in progress</li>
+          <li>Verified profile builds client trust</li>
+          <li>Fill your pipeline without ad spend</li>
+        </ul>
+        <div class="price">From <b>£99/mo</b> subscription + quote access</div>
+        <a href="#builders" class="aud-cta">Join as a builder →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REPORT TIERS -->
+<section id="reports">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Layered reports</span>
+      <h2>Start free. Go as deep as your ambitions.</h2>
+      <p>You shouldn't have to commit to a full study to find out if an idea is even worth exploring. Our reports layer up — pay only for the depth you actually need.</p>
+    </div>
+    <div class="tiers">
+      <div class="tier">
+        <h3>Snapshot</h3>
+        <div class="cost">Free</div>
+        <div class="who">"Is this even worth exploring?"</div>
+        <ul>
+          <li>Instant feasibility verdict</li>
+          <li>Likely planning route</li>
+          <li>Headline opportunity &amp; value signal</li>
+          <li class="off">Detailed planning analysis</li>
+          <li class="off">Costed development appraisal</li>
+        </ul>
+        <a href="#start" class="btn ghost">Start free</a>
+      </div>
+      <div class="tier feat">
+        <h3>Feasibility Report</h3>
+        <div class="cost">£<span>from £149</span></div>
+        <div class="who">"Show me what's really possible."</div>
+        <ul>
+          <li>Everything in Snapshot</li>
+          <li>Full planning &amp; policy assessment</li>
+          <li>Options with pros, cons &amp; risks</li>
+          <li>Indicative costs &amp; value uplift</li>
+          <li class="off">Detailed development appraisal</li>
+        </ul>
+        <a href="#start" class="btn">Get this report</a>
+      </div>
+      <div class="tier">
+        <h3>Development Deep-Dive</h3>
+        <div class="cost">£<span>from £495</span></div>
+        <div class="who">"I'm serious — build me the numbers."</div>
+        <ul>
+          <li>Everything in Feasibility Report</li>
+          <li>Detailed, line-by-line cost model</li>
+          <li>Development appraisal &amp; return</li>
+          <li>Design concept &amp; next-step roadmap</li>
+          <li>Matched architect &amp; builder intros</li>
+        </ul>
+        <a href="#start" class="btn ghost">Go deep</a>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:.82rem;color:var(--ink-2);opacity:.6">Illustrative pricing — final tiers &amp; prices to be confirmed.</p>
+  </div>
+</section>
+
+<!-- MEMBERSHIP -->
+<section id="membership" style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Membership</span>
+      <h2>Explore once — or unlock everything as a member.</h2>
+      <p>Buying a report? A membership includes it. You pay barely more than the report alone, and get ongoing value that keeps working long after your first project — planning alerts, discounted professional fees, priority matching and more.</p>
+    </div>
+
+    <div style="background:var(--ink);color:var(--paper);border-radius:16px;padding:24px 28px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:28px">
+      <div style="font-size:1.9rem">💡</div>
+      <div style="flex:1;min-width:240px">
+        <div style="font-weight:750;font-size:1.12rem;margin-bottom:3px">Your report is <span style="color:var(--gold-soft)">included</span> with membership.</div>
+        <div style="opacity:.85;font-size:.95rem">About to pay £149 for a Feasibility Report? Become a member from £29/mo and it's free — plus everything below.</div>
+      </div>
+      <a href="#start" class="btn" style="white-space:nowrap">Start &amp; unlock</a>
+    </div>
+
+    <div class="tiers">
+      <div class="tier">
+        <h3>Explorer</h3>
+        <div class="cost">£29<span>/month</span></div>
+        <div class="who">For homeowners with a project on the go.</div>
+        <ul>
+          <li>1 Feasibility Report included</li>
+          <li>Planning &amp; opportunity alerts on your property</li>
+          <li>Member discount on architect &amp; builder fees</li>
+          <li>Priority matching &amp; faster turnaround</li>
+          <li>Members-only guides, checklists &amp; expert Q&amp;A</li>
+          <li class="off">Portfolio dashboard &amp; deal flow</li>
+        </ul>
+        <a href="#start" class="btn ghost">Become an Explorer</a>
+      </div>
+      <div class="tier feat">
+        <h3>Developer / Pro</h3>
+        <div class="cost">£79<span>/month</span></div>
+        <div class="who">For investors, landlords &amp; portfolio owners.</div>
+        <ul>
+          <li>Everything in Explorer</li>
+          <li>Multiple report credits each month</li>
+          <li>Portfolio dashboard — save &amp; compare sites</li>
+          <li>Sourced opportunities &amp; off-market deal flow</li>
+          <li>Fastest turnaround &amp; dedicated support</li>
+          <li>Best-rate access to top local professionals</li>
+        </ul>
+        <a href="#start" class="btn">Go Pro</a>
+      </div>
+      <div class="tier">
+        <h3>Pay as you go</h3>
+        <div class="cost">£0<span>/month</span></div>
+        <div class="who">Just want a single report? No problem.</div>
+        <ul>
+          <li>Free feasibility Snapshot</li>
+          <li>Buy any report as a one-off</li>
+          <li>Upgrade to a membership any time</li>
+          <li>One-off fee credited if you upgrade within 14 days</li>
+          <li class="off">Ongoing alerts &amp; member discounts</li>
+          <li class="off">Portfolio dashboard &amp; deal flow</li>
+        </ul>
+        <a href="#start" class="btn ghost">Get a one-off report</a>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:.82rem;color:var(--ink-2);opacity:.6">Illustrative membership tiers &amp; pricing — to be confirmed.</p>
+  </div>
+</section>
+
+<!-- CASE STUDY -->
+<section>
+  <div class="wrap">
+    <div class="case">
+      <div>
+        <span class="eyebrow">Worked example</span>
+        <h2>Turning a tired family home into a small care home (C3 → C2)</h2>
+        <p>C2 "residential institution" schemes — care homes, children's homes, supported living — are in high demand, but every change to or from C2 needs full planning permission, with no shortcut. That's exactly where expert guidance pays for itself. Here's what a Plotworthy report unpacks.</p>
+      </div>
+      <div class="case-facts">
+        <div class="fact"><div class="k">What's possible</div><div class="v">6-bed registered care use, subject to planning &amp; CQC</div></div>
+        <div class="fact"><div class="k">The planning route</div><div class="v">Full permission — no permitted development right applies</div></div>
+        <div class="fact"><div class="k">Watch-outs</div><div class="v">Parking, neighbour amenity, highways, fire &amp; care standards</div></div>
+        <div class="fact"><div class="k">The numbers</div><div class="v">Indicative conversion cost &amp; projected operating value</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR ARCHITECTS -->
+<section id="architects">
+  <div class="wrap">
+    <div class="join-band">
+      <span class="eyebrow" style="color:var(--gold-soft)">For architects</span>
+      <h2>Warm, local leads — already halfway to a brief.</h2>
+      <p>Stop chasing cold enquiries. Plotworthy sends you clients in your area who already have a feasibility report and understand what they want. You receive a pre-qualified brief, so you can quote quickly and win more of the work you actually want.</p>
+    </div>
+
+    <div class="steps" style="margin-top:34px">
+      <div class="step"><span class="n">01</span><h3>Subscribe &amp; set your patch</h3><p>Choose your coverage area and specialisms (e.g. C2 care, conversions, extensions). Build a profile that showcases your portfolio.</p></div>
+      <div class="step"><span class="n">02</span><h3>Receive report-ready leads</h3><p>Get notified when a matched client in your area is ready. Each comes with a vetted brief — property, objective and planning route.</p></div>
+      <div class="step"><span class="n">03</span><h3>Quote &amp; win</h3><p>Send a fee proposal through the platform. Deliver great work, earn reviews, and climb the local recommendation ranking.</p></div>
+    </div>
+
+    <div class="tiers" style="margin-top:34px">
+      <div class="tier">
+        <h3>Starter</h3>
+        <div class="cost">£99<span>/month</span></div>
+        <div class="who">For a single practice, one local area.</div>
+        <ul>
+          <li>Lead access in one coverage area</li>
+          <li>Professional profile &amp; portfolio</li>
+          <li>Quote on matched projects</li>
+          <li>Verified badge &amp; client reviews</li>
+          <li class="off">Featured placement &amp; priority</li>
+        </ul>
+        <a href="#architect-signup" class="btn ghost">Get started</a>
+      </div>
+      <div class="tier feat">
+        <h3>Growth</h3>
+        <div class="cost">£199<span>/month</span></div>
+        <div class="who">For practices that want to scale.</div>
+        <ul>
+          <li>Wider, multi-area lead access</li>
+          <li>Featured placement in your patch</li>
+          <li>Priority on the best matches</li>
+          <li>Enhanced portfolio &amp; case studies</li>
+          <li>Keep 100% of what you win — no commission</li>
+        </ul>
+        <a href="#architect-signup" class="btn">Join as Growth</a>
+      </div>
+      <div class="tier">
+        <h3>How fees work</h3>
+        <div class="cost" style="font-size:1.25rem;font-weight:700">Simple &amp; fair</div>
+        <div class="who">No surprises.</div>
+        <ul>
+          <li>Flat monthly subscription</li>
+          <li>No commission — keep everything you earn</li>
+          <li>No lead fees or hidden charges</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <a href="#architect-signup" class="btn ghost">Talk to us</a>
+      </div>
+    </div>
+
+    <div class="cta" id="architect-signup" style="margin-top:36px">
+      <div>
+        <span class="eyebrow">Join the network</span>
+        <h2>Start receiving local leads.</h2>
+        <p>Tell us about your practice and where you work. We'll set up your profile and start matching you with report-ready clients.</p>
+      </div>
+      <form class="lead-form" data-type="architect">
+        <div class="fld"><label>Practice name</label><input name="Practice" type="text" placeholder="e.g. Marsh &amp; Lowe Architects" required></div>
+        <div class="fld"><label>Coverage area / postcodes</label><input name="Coverage area" type="text" placeholder="e.g. Greenwich &amp; SE London" required></div>
+        <div class="fld"><label>Specialisms</label><input name="Specialisms" type="text" placeholder="e.g. C2 care, conversions, extensions"></div>
+        <div class="fld"><label>Email</label><input name="Email" type="email" placeholder="you@practice.com" required></div>
+        <button type="submit" class="btn">Join as an architect</button>
+        <p class="form-note">We'll never share your details.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOR BUILDERS -->
+<section id="builders" style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="join-band">
+      <span class="eyebrow" style="color:var(--gold-soft)">For builders &amp; contractors</span>
+      <h2>A pipeline of projects ready to price.</h2>
+      <p>Get recommended for live, funded projects in your area — the kind where designs are progressing and the client is ready to build. No ad spend, no cold leads. Just verified opportunities you can quote for.</p>
+    </div>
+
+    <div class="steps" style="margin-top:34px">
+      <div class="step"><span class="n">01</span><h3>Get verified</h3><p>Add your insurance, accreditations and past work. A verified, reviewed profile builds instant client confidence.</p></div>
+      <div class="step"><span class="n">02</span><h3>See live opportunities</h3><p>Be notified when a matched project in your area is ready to price — with the scope and design context already in hand.</p></div>
+      <div class="step"><span class="n">03</span><h3>Quote &amp; build</h3><p>Submit your quote, win the work, and grow your reputation with every review to climb the recommendation ranking.</p></div>
+    </div>
+
+    <div class="tiers" style="margin-top:34px">
+      <div class="tier">
+        <h3>Verified</h3>
+        <div class="cost">£99<span>/month</span></div>
+        <div class="who">Get on the map in your area.</div>
+        <ul>
+          <li>Verified, insured profile</li>
+          <li>Project opportunities in your area</li>
+          <li>Quote on matched projects</li>
+          <li>Client reviews &amp; ratings</li>
+          <li class="off">Featured recommendation &amp; priority</li>
+        </ul>
+        <a href="#builder-signup" class="btn ghost">Get verified</a>
+      </div>
+      <div class="tier feat">
+        <h3>Pro</h3>
+        <div class="cost">£199<span>/month</span></div>
+        <div class="who">For contractors wanting steady flow.</div>
+        <ul>
+          <li>Wider coverage &amp; more opportunities</li>
+          <li>Featured recommendation to clients</li>
+          <li>Priority on the best-fit projects</li>
+          <li>Enhanced profile &amp; case studies</li>
+          <li>Keep 100% of what you win — no commission</li>
+        </ul>
+        <a href="#builder-signup" class="btn">Join as Pro</a>
+      </div>
+      <div class="tier">
+        <h3>How fees work</h3>
+        <div class="cost" style="font-size:1.25rem;font-weight:700">Simple &amp; fair</div>
+        <div class="who">No surprises.</div>
+        <ul>
+          <li>Flat monthly subscription</li>
+          <li>No commission — keep everything you earn</li>
+          <li>No hidden charges or commissions</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <a href="#builder-signup" class="btn ghost">Talk to us</a>
+      </div>
+    </div>
+
+    <div class="cta" id="builder-signup" style="margin-top:36px">
+      <div>
+        <span class="eyebrow">Join the network</span>
+        <h2>Fill your pipeline.</h2>
+        <p>Tell us about your business and where you work. We'll verify your profile and start matching you with live projects.</p>
+      </div>
+      <form class="lead-form" data-type="builder">
+        <div class="fld"><label>Company name</label><input name="Company" type="text" placeholder="e.g. Kentfield Construction Ltd" required></div>
+        <div class="fld"><label>Coverage area / postcodes</label><input name="Coverage area" type="text" placeholder="e.g. South East London" required></div>
+        <div class="fld"><label>Type of work</label><input name="Type of work" type="text" placeholder="e.g. conversions, care-compliant fit-out, extensions"></div>
+        <div class="fld"><label>Email</label><input name="Email" type="email" placeholder="you@company.com" required></div>
+        <button type="submit" class="btn">Join as a builder</button>
+        <p class="form-note">We'll never share your details.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / LEAD FORM -->
+<section id="start" style="padding-top:40px">
+  <div class="wrap">
+    <div class="cta">
+      <div>
+        <span class="eyebrow">Get started</span>
+        <h2>Get your free feasibility snapshot.</h2>
+        <p>Tell us a little about the property and what you're imagining. We'll come back with an honest read on what's possible — and what to do next.</p>
+      </div>
+      <form class="lead-form" data-type="client">
+        <div class="fld">
+          <label>I am a…</label>
+          <select name="I am a" required>
+            <option value="">Select…</option>
+            <option>Homeowner</option>
+            <option>Property developer / investor</option>
+            <option>Architect (join the network)</option>
+            <option>Builder / contractor (join the network)</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label>Property address or postcode</label>
+          <input name="Property" type="text" placeholder="e.g. 14 Elm Road, SE10" required>
+        </div>
+        <div class="fld">
+          <label>What are you thinking of doing?</label>
+          <input name="Objective" type="text" placeholder="e.g. change of use to a small care home">
+        </div>
+        <div class="fld">
+          <label>Email</label>
+          <input name="Email" type="email" placeholder="you@email.com" required>
+        </div>
+        <button type="submit" class="btn">Send me my snapshot</button>
+        <p class="form-note">We'll never share your details.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="logo"><span class="mark"></span>Plotworthy</div>
+        <p>Helping homeowners and developers see what their property could become — and connecting them to the professionals who can deliver it.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="#how">How it works</a>
+        <a href="#reports">Reports &amp; pricing</a>
+        <a href="#start">Get a report</a>
+      </div>
+      <div class="foot-col">
+        <h4>For professionals</h4>
+        <a href="#pros">Join as an architect</a>
+        <a href="#pros">Join as a builder</a>
+        <a href="#start">Partner with us</a>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 Plotworthy. All rights reserved.</span>
+      <span>Concept demo</span>
+    </div>
+  </div>
+  <p class="disc">Plotworthy reports are guidance based on available information and professional judgement; they are not a formal planning decision, valuation or a guarantee of consent. Always confirm with the local planning authority and appointed professionals before committing to a project.</p>
+</footer>
+
+<!-- ===== Lead capture (free — no backend required) ===== -->
+<script>
+  window.PLOT = {
+    LEAD_EMAIL: "dlhepburn@gmail.com",
+    /* Optional: paste a free access key from https://web3forms.com below to collect
+       every submission centrally by email. Leave blank to use the email fallback
+       (opens the visitor's email app pre-addressed to you). */
+    WEB3FORMS_KEY: ""
+  };
+  function plotMailto(type,data){
+    var body = Object.keys(data).map(function(k){return k+": "+(data[k]||"—");}).join("\n");
+    return "mailto:"+window.PLOT.LEAD_EMAIL+"?subject="+encodeURIComponent("New Plotworthy "+type+" lead")+"&body="+encodeURIComponent(body);
+  }
+  window.plotSubmitLead = function(type,data,done){
+    var key = window.PLOT.WEB3FORMS_KEY;
+    if(key){
+      fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
+        body:JSON.stringify(Object.assign({access_key:key,subject:"New Plotworthy "+type+" lead",from_name:"Plotworthy website"},data))})
+        .then(function(){done&&done(true);}).catch(function(){window.location.href=plotMailto(type,data);done&&done(true);});
+    } else {
+      window.location.href = plotMailto(type,data);
+      setTimeout(function(){done&&done(true);},300);
+    }
+  };
+  document.querySelectorAll('form.lead-form').forEach(function(f){
+    f.addEventListener('submit',function(e){
+      e.preventDefault();
+      var data={}; f.querySelectorAll('[name]').forEach(function(el){data[el.getAttribute('name')]=el.value;});
+      var btn=f.querySelector('button[type=submit]'); if(btn){btn.disabled=true;btn.textContent='Sending…';}
+      window.plotSubmitLead(f.dataset.type,data,function(){
+        f.innerHTML='<div style="padding:26px;text-align:center;font-weight:650">Thanks — we\'ll be in touch shortly.<br><span style="font-weight:400;font-size:.85rem;opacity:.7">(Your email app may open to send us the details.)</span></div>';
+      });
+    });
+  });
+</script>
+
+<!-- ================= ONBOARDING WIZARD (overlay) ================= -->
+<style>
+  #wizM{position:fixed;inset:0;z-index:1000;background:rgba(19,42,38,.55);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:26px 16px 60px}
+  #wizM.open{display:flex;animation:wfade .25s ease}
+  @keyframes wfade{from{opacity:0}to{opacity:1}}
+  #wizM .wcard{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 30px 70px -28px rgba(19,42,38,.6);width:100%;max-width:720px;padding:30px 34px 28px;position:relative;margin-top:10px}
+  @media(max-width:560px){#wizM .wcard{padding:24px 20px}}
+  #wizM .wclose{position:absolute;top:16px;right:18px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--paper);cursor:pointer;font-size:1.1rem;color:var(--ink);line-height:1;display:flex;align-items:center;justify-content:center}
+  #wizM .wclose:hover{background:var(--ink);color:#fff}
+  #wizM .wlogo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.05rem;margin-bottom:14px}
+  #wizM .wlogo .m{width:24px;height:24px;border-radius:6px;background:var(--ink);position:relative}
+  #wizM .wlogo .m:before{content:"";position:absolute;inset:6px;border:2px solid var(--gold);border-radius:3px}
+  #wizM .prog{display:flex;gap:6px;margin-bottom:6px}
+  #wizM .prog i{height:5px;flex:1;border-radius:999px;background:var(--paper-2);transition:.3s}
+  #wizM .prog i.on{background:var(--gold)}
+  #wizM .smeta{display:flex;justify-content:space-between;margin:14px 0 2px}
+  #wizM .smeta .n{font-size:.7rem;font-weight:800;letter-spacing:.14em;color:var(--gold);text-transform:uppercase}
+  #wizM .smeta .t{font-size:.76rem;opacity:.55}
+  #wizM .wstep{display:none;animation:wfade .3s}
+  #wizM .wstep.active{display:block}
+  #wizM h2{font-size:1.5rem;margin:6px 0 6px;letter-spacing:-.02em}
+  #wizM .sub{color:var(--ink-2);opacity:.85;margin-bottom:20px;font-size:.98rem}
+  #wizM .addr{position:relative}
+  #wizM .addr input{width:100%;padding:15px 16px 15px 44px;font-size:1.02rem;border:1.5px solid var(--line);border-radius:13px;font-family:inherit;background:var(--paper);color:var(--ink)}
+  #wizM .addr input:focus{outline:none;border-color:var(--gold);background:#fff}
+  #wizM .addr .pin{position:absolute;left:15px;top:50%;transform:translateY(-50%);opacity:.5}
+  #wizM .suggest{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+  #wizM .suggest button{text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 13px;font-size:.88rem;cursor:pointer;font-family:inherit;color:var(--ink)}
+  #wizM .suggest button:hover{border-color:var(--gold);background:#fff}
+  #wizM .suggest small{opacity:.5}
+  #wizM .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+  #wizM .opts.two{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:560px){#wizM .opts,#wizM .opts.two{grid-template-columns:1fr 1fr}}
+  #wizM .opt{background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;transition:.18s;font-family:inherit;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:7px}
+  #wizM .opt:hover{border-color:var(--gold);transform:translateY(-2px)}
+  #wizM .opt.sel{border-color:var(--gold);background:linear-gradient(160deg,#fff,var(--gold-soft));box-shadow:0 10px 22px -14px rgba(200,153,43,.7)}
+  #wizM .opt .ic{font-size:1.5rem;line-height:1}
+  #wizM .opt .lab{font-weight:650;font-size:.92rem}
+  #wizM .opt .desc{font-size:.72rem;opacity:.65;line-height:1.3}
+  #wizM .opt.wide{flex-direction:row;text-align:left;justify-content:flex-start;gap:13px}
+  #wizM .opt.wide .ic{font-size:1.4rem}
+  #wizM .subblock{margin-top:15px;padding-top:15px;border-top:1px dashed var(--line);display:none}
+  #wizM .subblock.show{display:block;animation:wfade .3s}
+  #wizM .subblock .lbl{font-size:.8rem;font-weight:700;margin-bottom:10px;opacity:.8}
+  #wizM .wnav{display:flex;justify-content:space-between;align-items:center;margin-top:24px}
+  #wizM .wbtn{background:var(--gold);color:var(--ink);font-weight:700;padding:12px 26px;border:none;border-radius:999px;cursor:pointer;font-size:1rem;font-family:inherit;transition:.2s}
+  #wizM .wbtn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(200,153,43,.8)}
+  #wizM .wbtn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+  #wizM .back{background:none;border:none;color:var(--ink-2);cursor:pointer;font-size:.9rem;font-family:inherit;opacity:.7}
+  #wizM .back:hover{opacity:1}
+  #wizM .back.hidden{visibility:hidden}
+  #wizM .rhead{text-align:center;margin-bottom:20px}
+  #wizM .rhead .tick{width:52px;height:52px;border-radius:50%;background:#1d6b52;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 12px}
+  #wizM .rhead h2{font-size:1.55rem}
+  #wizM .rhead p{opacity:.8;margin-top:6px}
+  #wizM .route{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+  #wizM .route h3{font-size:.76rem;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
+  #wizM .path{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  #wizM .chip{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:.83rem;font-weight:600}
+  #wizM .chip.hi{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  #wizM .arrow{color:var(--gold);font-weight:800}
+  #wizM .brief{background:var(--ink);color:var(--paper);border-radius:16px;padding:22px}
+  #wizM .brief .tag{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold-soft);font-weight:700}
+  #wizM .brief h3{font-size:1.1rem;margin:6px 0 12px}
+  #wizM .bgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  @media(max-width:520px){#wizM .bgrid{grid-template-columns:1fr}}
+  #wizM .brow{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 12px}
+  #wizM .brow .k{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-soft)}
+  #wizM .brow .v{font-size:.92rem;margin-top:3px;font-weight:550}
+  #wizM .brief .bfoot{margin-top:14px;font-size:.8rem;opacity:.78}
+  #wizM .whoget{font-size:.8rem;opacity:.75;margin-top:12px;text-align:center}
+  #wizM .restart{margin-top:16px;text-align:center}
+  #wizM .restart button{background:none;border:1px solid var(--line);border-radius:999px;padding:8px 18px;cursor:pointer;font-family:inherit;font-size:.84rem;color:var(--ink-2)}
+  #wizM .wlead{margin-top:16px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  #wizM .wlead-label{font-weight:650;font-size:.92rem;margin-bottom:10px}
+  #wizM .wlead-row{display:flex;gap:10px;flex-wrap:wrap}
+  #wizM .wlead-row input{flex:1;min-width:170px;padding:12px 14px;border:1.5px solid var(--line);border-radius:11px;font-family:inherit;font-size:.95rem;background:#fff;color:var(--ink)}
+  #wizM .wlead-row input:focus{outline:none;border-color:var(--gold)}
+  #wizM .wlead-note{font-size:.82rem;margin-top:9px;color:#1d6b52;font-weight:600;display:none}
+  #wizM .wlead-note.show{display:block}
+  #wizM .upsell{display:flex;gap:13px;align-items:center;flex-wrap:wrap;margin-top:14px;background:linear-gradient(160deg,#fff,var(--gold-soft));border:1.5px solid var(--gold);border-radius:14px;padding:15px 17px}
+  #wizM .upsell .u-ic{font-size:1.5rem}
+  #wizM .upsell .u-body{flex:1;min-width:200px}
+  #wizM .upsell .u-body b{display:block;font-size:.98rem;color:var(--ink)}
+  #wizM .upsell .u-body span{font-size:.84rem;opacity:.8}
+  #wizM .upsell .u-btn{background:var(--ink);color:var(--paper);border:none;border-radius:999px;padding:10px 18px;font-weight:650;cursor:pointer;font-family:inherit;font-size:.88rem;white-space:nowrap}
+  #wizM .upsell .u-btn:hover{background:var(--gold);color:var(--ink)}
+</style>
+
+<div id="wizM" role="dialog" aria-modal="true">
+  <div class="wcard">
+    <button class="wclose" id="wizClose" aria-label="Close">✕</button>
+    <div class="wlogo"><span class="m"></span>Plotworthy</div>
+    <div class="prog"><i class="on" data-p="1"></i><i data-p="2"></i><i data-p="3"></i><i data-p="4"></i><i data-p="5"></i></div>
+
+    <div class="wstep active" data-step="1">
+      <div class="smeta"><span class="n">Step 1 of 5</span><span class="t">Your property</span></div>
+      <h2>What's the address?</h2>
+      <p class="sub">Start typing the property or site you're curious about. That's all we need to begin.</p>
+      <div class="addr"><span class="pin">📍</span><input id="wAddr" type="text" placeholder="e.g. 14 Elm Road, London SE10" autocomplete="off"></div>
+      <div class="suggest" id="wSuggest">
+        <button data-addr="14 Elm Road, London SE10 8QT">📍 14 Elm Road, London SE10 8QT <small>· Greenwich</small></button>
+        <button data-addr="Land at Mill Lane, Sevenoaks TN13">📍 Land at Mill Lane, Sevenoaks TN13 <small>· development plot</small></button>
+        <button data-addr="Use my current location">📌 Use my current location</button>
+      </div>
+      <div class="wnav"><button class="back hidden">← Back</button><button class="wbtn" id="wNext1" disabled>Continue →</button></div>
+    </div>
+
+    <div class="wstep" data-step="2">
+      <div class="smeta"><span class="n">Step 2 of 5</span><span class="t">Property type</span></div>
+      <h2>What kind of property is it?</h2>
+      <p class="sub">Just tap the closest match — no need to be precise.</p>
+      <div class="opts" data-group="ptype">
+        <button class="opt" data-val="Detached house"><span class="ic">🏠</span><span class="lab">Detached</span></button>
+        <button class="opt" data-val="Semi-detached house"><span class="ic">🏘️</span><span class="lab">Semi-detached</span></button>
+        <button class="opt" data-val="Terraced house"><span class="ic">🏙️</span><span class="lab">Terraced</span></button>
+        <button class="opt" data-val="Flat / apartment"><span class="ic">🏢</span><span class="lab">Flat</span></button>
+        <button class="opt" data-val="Commercial building"><span class="ic">🏬</span><span class="lab">Commercial</span></button>
+        <button class="opt" data-val="Land / vacant plot"><span class="ic">🌳</span><span class="lab">Land / plot</span></button>
+      </div>
+      <div class="wnav"><button class="back">← Back</button><button class="wbtn" id="wNext2" disabled>Continue →</button></div>
+    </div>
+
+    <div class="wstep" data-step="3">
+      <div class="smeta"><span class="n">Step 3 of 5</span><span class="t">Your idea</span></div>
+      <h2>What are you thinking of doing?</h2>
+      <p class="sub">Pick the one that's closest. Not sure? That's a perfectly good answer too.</p>
+      <div class="opts two" data-group="intent">
+        <button class="opt wide" data-val="Change of use" data-sub="useclass"><span class="ic">🔁</span><span><span class="lab">Change of use</span><span class="desc">e.g. into a care home, HMO, offices</span></span></button>
+        <button class="opt wide" data-val="Extend / renovate"><span class="ic">📐</span><span><span class="lab">Extend or renovate</span><span class="desc">more space or an upgrade</span></span></button>
+        <button class="opt wide" data-val="Convert into flats"><span class="ic">🪟</span><span><span class="lab">Convert into flats</span><span class="desc">split into multiple units</span></span></button>
+        <button class="opt wide" data-val="New build / develop"><span class="ic">🏗️</span><span><span class="lab">Build / develop</span><span class="desc">new homes on the site</span></span></button>
+        <button class="opt wide" data-val="Not sure yet"><span class="ic">🤔</span><span><span class="lab">I'm not sure yet</span><span class="desc">show me what's possible</span></span></button>
+      </div>
+      <div class="subblock" id="wSubUse">
+        <div class="lbl">Change of use to what? (optional)</div>
+        <div class="opts" data-group="useclass">
+          <button class="opt" data-val="C2 — care home / supported living"><span class="ic">🏥</span><span class="lab">C2 care</span><span class="desc">care / children's home</span></button>
+          <button class="opt" data-val="C4 / HMO — shared house"><span class="ic">👥</span><span class="lab">HMO</span><span class="desc">shared house</span></button>
+          <button class="opt" data-val="C1 — guest house / hotel"><span class="ic">🛎️</span><span class="lab">C1 guest</span><span class="desc">guest house</span></button>
+          <button class="opt" data-val="Class E — commercial"><span class="ic">💼</span><span class="lab">Commercial</span><span class="desc">shop / office</span></button>
+          <button class="opt" data-val="Back to residential (C3)"><span class="ic">🏠</span><span class="lab">Residential</span><span class="desc">back to a home</span></button>
+          <button class="opt" data-val="Not sure which"><span class="ic">❓</span><span class="lab">Not sure</span><span class="desc">advise me</span></button>
+        </div>
+      </div>
+      <div class="wnav"><button class="back">← Back</button><button class="wbtn" id="wNext3" disabled>Continue →</button></div>
+    </div>
+
+    <div class="wstep" data-step="4">
+      <div class="smeta"><span class="n">Step 4 of 5</span><span class="t">Support you need</span></div>
+      <h2>How much help do you want?</h2>
+      <p class="sub">This tells us who to line up for you. You can always change your mind later.</p>
+      <div class="opts two" data-group="support">
+        <button class="opt wide" data-val="I don't know where to start"><span class="ic">🧭</span><span><span class="lab">I don't know where to start</span><span class="desc">guide me through it</span></span></button>
+        <button class="opt wide" data-val="Just the report for now"><span class="ic">📄</span><span><span class="lab">Just a report for now</span><span class="desc">tell me what's possible</span></span></button>
+        <button class="opt wide" data-val="I need an architect"><span class="ic">✏️</span><span><span class="lab">I need an architect</span><span class="desc">design &amp; planning</span></span></button>
+        <button class="opt wide" data-val="I need a builder"><span class="ic">🔨</span><span><span class="lab">I need a builder</span><span class="desc">someone to do the work</span></span></button>
+        <button class="opt wide" data-val="I need the full team"><span class="ic">⭐</span><span><span class="lab">The full team</span><span class="desc">report, architect &amp; builder</span></span></button>
+      </div>
+      <div class="wnav"><button class="back">← Back</button><button class="wbtn" id="wNext4" disabled>See my plan →</button></div>
+    </div>
+
+    <div class="wstep" data-step="5">
+      <div class="rhead">
+        <div class="tick">✓</div>
+        <h2>Here's your plan</h2>
+        <p>Based on your answers, we've mapped your route and prepared a brief for the right professionals.</p>
+      </div>
+      <div class="route"><h3>What happens next for you</h3><div class="path" id="wPath"></div></div>
+      <div class="brief">
+        <span class="tag">Vetted onboarding brief · sent to your matched professional</span>
+        <h3>Project summary — <span id="wBriefAddr">your property</span></h3>
+        <div class="bgrid">
+          <div class="brow"><div class="k">Property</div><div class="v" id="wbPtype">—</div></div>
+          <div class="brow"><div class="k">Objective</div><div class="v" id="wbIntent">—</div></div>
+          <div class="brow"><div class="k">Planning route</div><div class="v" id="wbRoute">—</div></div>
+          <div class="brow"><div class="k">Support requested</div><div class="v" id="wbSupport">—</div></div>
+        </div>
+        <div class="bfoot">🔒 The professional receives this pre-qualified brief, so they can approach you already understanding the job — and give you a proper fee quote.</div>
+      </div>
+      <div class="wlead">
+        <div class="wlead-label">Enter your email to get your free snapshot &amp; save this plan</div>
+        <div class="wlead-row">
+          <input id="wLeadEmail" type="email" placeholder="you@email.com">
+          <button id="wLeadBtn" class="wbtn">Send it to me</button>
+        </div>
+        <div class="wlead-note" id="wLeadNote"></div>
+      </div>
+      <div class="upsell">
+        <div class="u-ic">💡</div>
+        <div class="u-body">
+          <b>Make this report free — become a member</b>
+          <span>Your Feasibility Report is included with membership from £29/mo, plus planning alerts, discounted architect &amp; builder fees, and priority matching.</span>
+        </div>
+        <button id="wMember" class="u-btn">See membership</button>
+      </div>
+      <p class="whoget">This is what makes Plotworthy leads warm: the pro isn't cold-calling — they're responding to a vetted, ready-to-quote project.</p>
+      <div class="restart"><button id="wRestart">↺ Start again</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const modal=document.getElementById('wizM');
+  const state={addr:"",ptype:"",intent:"",useclass:"",support:""};
+  let cur=1;
+  function openWiz(){modal.classList.add('open');document.body.style.overflow='hidden';}
+  function closeWiz(){modal.classList.remove('open');document.body.style.overflow='';}
+  // open on any #start CTA
+  document.querySelectorAll('a[href="#start"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();openWiz();}));
+  document.getElementById('wizClose').addEventListener('click',closeWiz);
+  modal.addEventListener('click',e=>{if(e.target===modal)closeWiz();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeWiz();});
+
+  const $=(s)=>modal.querySelector(s);
+  const $$=(s)=>modal.querySelectorAll(s);
+  function show(step){
+    $$('.wstep').forEach(s=>s.classList.toggle('active',+s.dataset.step===step));
+    $$('.prog i').forEach(i=>i.classList.toggle('on',+i.dataset.p<=step));
+    cur=step; if(step===5) buildResult();
+    modal.scrollTop=0;
+  }
+  const wAddr=$('#wAddr'), wNext1=$('#wNext1');
+  wAddr.addEventListener('input',()=>{state.addr=wAddr.value.trim();wNext1.disabled=state.addr.length<4;});
+  $$('#wSuggest button').forEach(b=>b.addEventListener('click',()=>{
+    const a=b.dataset.addr;
+    if(a==="Use my current location"){wAddr.value="Detected: 14 Elm Road, London SE10 8QT";state.addr="14 Elm Road, London SE10 8QT";}
+    else{wAddr.value=a;state.addr=a;}
+    wNext1.disabled=false;
+  }));
+  wNext1.addEventListener('click',()=>show(2));
+  function wireGroup(group,onPick){
+    $$(`[data-group="${group}"] .opt`).forEach(o=>o.addEventListener('click',()=>{
+      o.parentElement.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+      o.classList.add('sel'); onPick(o.dataset.val,o);
+    }));
+  }
+  wireGroup('ptype',v=>{state.ptype=v;$('#wNext2').disabled=false;});
+  wireGroup('intent',(v,o)=>{
+    state.intent=v;state.useclass="";
+    const sub=$('#wSubUse'); sub.classList.toggle('show',o.dataset.sub==='useclass');
+    if(o.dataset.sub!=='useclass') sub.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+    $('#wNext3').disabled=false;
+  });
+  wireGroup('useclass',v=>{state.useclass=v;});
+  wireGroup('support',v=>{state.support=v;$('#wNext4').disabled=false;});
+  $('#wNext2').addEventListener('click',()=>show(3));
+  $('#wNext3').addEventListener('click',()=>show(4));
+  $('#wNext4').addEventListener('click',()=>show(5));
+  $$('.back').forEach(b=>b.addEventListener('click',()=>show(cur-1)));
+
+  function routeFor(){
+    const s=state.support,c=[{t:'Free feasibility snapshot',hi:true}];
+    if(s==="I don't know where to start"){c.push({t:'Guided next-steps report'});c.push({t:'Optional expert call'});}
+    else if(s==="Just the report for now"){c.push({t:'Feasibility report'});}
+    else if(s==="I need an architect"){c.push({t:'Feasibility report'});c.push({t:'Matched local architect',hi:true});}
+    else if(s==="I need a builder"){c.push({t:'Feasibility report'});c.push({t:'Matched verified builder',hi:true});}
+    else if(s==="I need the full team"){c.push({t:'Feasibility report'});c.push({t:'Architect',hi:true});c.push({t:'Builder',hi:true});}
+    return c;
+  }
+  function planningRoute(){
+    if(state.useclass.startsWith('C2')) return 'Full planning permission required (no PD right for C2)';
+    if(state.intent==='Change of use') return 'Likely planning application — confirmed in report';
+    if(state.intent==='Convert into flats') return 'Planning permission likely; check Article 4 / PD';
+    if(state.intent==='New build / develop') return 'Full planning application';
+    if(state.intent==='Extend / renovate') return 'May fall under permitted development — to confirm';
+    return 'Assessed in your feasibility report';
+  }
+  function buildResult(){
+    $('#wBriefAddr').textContent=state.addr||'your property';
+    $('#wbPtype').textContent=state.ptype||'—';
+    let it=state.intent||'—'; if(state.useclass&&state.useclass!=='Not sure which') it+=' → '+state.useclass;
+    $('#wbIntent').textContent=it;
+    $('#wbRoute').textContent=planningRoute();
+    $('#wbSupport').textContent=state.support||'—';
+    const path=$('#wPath'); path.innerHTML='';
+    routeFor().forEach((c,i)=>{
+      if(i>0){const a=document.createElement('span');a.className='arrow';a.textContent='→';path.appendChild(a);}
+      const el=document.createElement('span');el.className='chip'+(c.hi?' hi':'');el.textContent=c.t;path.appendChild(el);
+    });
+  }
+  $('#wLeadBtn').addEventListener('click',()=>{
+    const em=$('#wLeadEmail').value.trim();
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){$('#wLeadEmail').focus();return;}
+    const data={
+      Email:em, Address:state.addr, Property:state.ptype,
+      Objective:state.intent+(state.useclass&&state.useclass!=='Not sure which'?(' → '+state.useclass):''),
+      'Planning route':planningRoute(), 'Support requested':state.support
+    };
+    const btn=$('#wLeadBtn'); btn.disabled=true; btn.textContent='Sending…';
+    window.plotSubmitLead('client (wizard)',data,()=>{
+      const n=$('#wLeadNote'); n.textContent="Thanks — your snapshot is on its way. We'll be in touch shortly."; n.classList.add('show');
+      btn.textContent='Sent ✓';
+    });
+  });
+  $('#wMember').addEventListener('click',()=>{
+    closeWiz();
+    const m=document.getElementById('membership');
+    if(m) m.scrollIntoView({behavior:'smooth'});
+  });
+  $('#wRestart').addEventListener('click',()=>{
+    Object.keys(state).forEach(k=>state[k]="");
+    wAddr.value="";wNext1.disabled=true;
+    $$('.opt').forEach(x=>x.classList.remove('sel'));
+    $$('.wbtn').forEach(b=>{if(b.id!=='wNext1')b.disabled=true;});
+    $('#wSubUse').classList.remove('show');
+    const le=$('#wLeadEmail'); if(le) le.value="";
+    const lb=$('#wLeadBtn'); if(lb){lb.disabled=false;lb.textContent='Send it to me';}
+    const ln=$('#wLeadNote'); if(ln){ln.classList.remove('show');ln.textContent="";}
+    show(1);
+  });
+})();
+</script>
+</body>
+</html>
