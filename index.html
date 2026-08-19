@@ -771,6 +771,8 @@
   #wizM .snap-watch li{font-size:.85rem;padding-left:18px;position:relative;color:var(--ink)}
   #wizM .snap-watch li:before{content:"•";position:absolute;left:4px;color:var(--gold);font-weight:800}
   #wizM .snap-disc{font-size:.72rem;opacity:.6;margin-top:12px;line-height:1.4}
+  #wizM .wdownload{width:100%;margin-bottom:16px;background:var(--ink);color:var(--paper)}
+  #wizM .wdownload:hover{background:var(--gold);color:var(--ink)}
   #wizM .wlead{margin-top:16px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
   #wizM .wlead-label{font-weight:650;font-size:.92rem;margin-bottom:10px}
   #wizM .wlead-row{display:flex;gap:10px;flex-wrap:wrap}
@@ -882,6 +884,7 @@
           <p class="snap-disc">Indicative guidance based on your answers — not a formal planning decision or valuation. Your full report goes much deeper.</p>
         </div>
       </div>
+      <button id="wDownload" class="wbtn wdownload">⤓ Download my snapshot (PDF)</button>
       <div class="route"><h3>What happens next for you</h3><div class="path" id="wPath"></div></div>
       <div class="brief">
         <span class="tag">Vetted onboarding brief · sent to your matched professional</span>
@@ -1004,6 +1007,71 @@
     }
     return s;
   }
+  function nextSteps(){
+    const s=state.support;
+    if(s==="I don't know where to start") return ['Talk it through with our team — we\'ll point you to the right first step','Order a full feasibility report to firm up options, costs & value','We can then match you with the professionals you need'];
+    if(s==='Just the report for now') return ['Order your full Plotworthy feasibility report','We assess planning, options, indicative costs & value uplift','Use it to decide whether and how to proceed'];
+    if(s==='I need an architect') return ['We match you with a vetted local architect','They review this snapshot and quote for design & planning','You compare and choose — no obligation'];
+    if(s==='I need a builder') return ['We match you with a verified, insured local builder','They quote once your designs are progressing','You compare quotes and choose'];
+    if(s==='I need the full team') return ['We line up a feasibility report, an architect and a builder','Each receives your pre-qualified brief','You review and pick your team — you stay in control'];
+    return ['Explore a full feasibility report for the detail','Get matched with vetted local professionals when ready','You stay in control at every step'];
+  }
+  function generateSnapshotDoc(){
+    const snap=computeSnapshot();
+    const tone = snap.tone==='warn' ? {bg:'#f6ecc9',fg:'#8a6a12'} : {bg:'#dcece3',fg:'#1c6b4a'};
+    const objective = state.intent + (state.useclass && state.useclass!=='Not sure which' ? (' → '+state.useclass) : '');
+    const watch = snap.watch.map(w=>'<li>'+w+'</li>').join('');
+    const steps = nextSteps().map(x=>'<li>'+x+'</li>').join('');
+    const addr = state.addr || 'Your property';
+    return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Plotworthy Snapshot — '+addr+'</title><style>'
+      +'*{margin:0;padding:0;box-sizing:border-box}'
+      +'body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:#132a26;background:#fff;line-height:1.55}'
+      +'.wrap{max-width:760px;margin:0 auto}'
+      +'.head{background:#132a26;color:#f7f4ee;padding:32px 40px;position:relative;overflow:hidden}'
+      +'.head:after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(200,153,43,.35),transparent 65%)}'
+      +'.brand{font-weight:800;font-size:1.2rem;letter-spacing:-.02em;position:relative;display:flex;align-items:center;gap:9px}'
+      +'.mk{width:22px;height:22px;background:#f7f4ee;border-radius:6px;position:relative}'
+      +'.mk:before{content:"";position:absolute;inset:5px;border:2px solid #c8992b;border-radius:3px}'
+      +'.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.68rem;font-weight:700;color:#e8d9ac;margin-top:24px;position:relative}'
+      +'.head h1{font-size:1.65rem;margin-top:8px;position:relative;letter-spacing:-.02em}'
+      +'.head .addr{opacity:.85;margin-top:4px;position:relative;font-size:1rem}'
+      +'.body{padding:30px 40px}'
+      +'.verdrow{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-end;border-bottom:1px solid #e6e0d2;padding-bottom:16px;margin-bottom:18px}'
+      +'.vlab{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:#8a8f8b;font-weight:700;margin-bottom:5px}'
+      +'.verd{font-weight:800;padding:5px 14px;border-radius:999px;font-size:.9rem;background:'+tone.bg+';color:'+tone.fg+';display:inline-block}'
+      +'.route{text-align:right;font-size:.95rem;max-width:60%}'
+      +'.summary{font-size:1.02rem;color:#1d3a34;margin-bottom:22px}'
+      +'.sec{margin-bottom:22px}'
+      +'.sec h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:#c8992b;font-weight:800;margin-bottom:10px}'
+      +'ul{list-style:none}'
+      +'li{position:relative;padding:6px 0 6px 22px;font-size:.95rem}'
+      +'li:before{content:"";position:absolute;left:2px;top:13px;width:7px;height:7px;border-radius:50%;background:#c8992b}'
+      +'.meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}'
+      +'.m{background:#f7f4ee;border:1px solid #e6e0d2;border-radius:10px;padding:11px 14px}'
+      +'.m .k{font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;color:#8a8f8b;font-weight:700}'
+      +'.m .v{font-size:.93rem;margin-top:2px;font-weight:550}'
+      +'.disc{font-size:.72rem;color:#8a8f8b;border-top:1px solid #e6e0d2;padding-top:14px}'
+      +'.foot{background:#132a26;color:#f7f4ee;padding:16px 40px;font-size:.82rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}'
+      +'.foot a{color:#e8d9ac;text-decoration:none}'
+      +'body{-webkit-print-color-adjust:exact;print-color-adjust:exact}'
+      +'</style></head><body><div class="wrap">'
+      +'<div class="head"><div class="brand"><span class="mk"></span>Plotworthy</div>'
+      +'<div class="eyebrow">Feasibility Snapshot</div><h1>'+snap.title+'</h1><div class="addr">'+addr+'</div></div>'
+      +'<div class="body">'
+      +'<div class="verdrow"><div><div class="vlab">Feasibility</div><span class="verd">'+snap.verdict+'</span></div>'
+      +'<div class="route"><div class="vlab">Planning route</div>'+planningRoute()+'</div></div>'
+      +'<p class="summary">'+snap.headline+'</p>'
+      +'<div class="sec"><h2>Things to be aware of</h2><ul>'+watch+'</ul></div>'
+      +'<div class="sec"><h2>Recommended next steps</h2><ul>'+steps+'</ul></div>'
+      +'<div class="meta">'
+      +'<div class="m"><div class="k">Property</div><div class="v">'+(state.ptype||'—')+'</div></div>'
+      +'<div class="m"><div class="k">Objective</div><div class="v">'+(objective||'—')+'</div></div>'
+      +'<div class="m"><div class="k">Support requested</div><div class="v">'+(state.support||'—')+'</div></div>'
+      +'<div class="m"><div class="k">Prepared by</div><div class="v">Plotworthy</div></div></div>'
+      +'<p class="disc">This snapshot is indicative guidance based on the information provided — it is not a formal planning decision, valuation or a guarantee of consent. Your full Plotworthy feasibility report goes into detail on planning, options, costs and value. Always confirm the position with the local planning authority and your appointed professionals before committing.</p>'
+      +'</div><div class="foot"><span>Plotworthy — property potential, decoded</span><span><a href="mailto:hello@plotworthy.co.uk">hello@plotworthy.co.uk</a> · plotworthy.co.uk</span></div>'
+      +'</div><scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},350);};<\/scr'+'ipt></body></html>';
+  }
   function buildResult(){
     const snap=computeSnapshot();
     $('#wSnapTitle').textContent=snap.title+(state.addr?(' — '+state.addr):'');
@@ -1041,6 +1109,11 @@
       const n=$('#wLeadNote'); n.textContent="Thanks — we've got your details and we'll be in touch shortly with your next steps."; n.classList.add('show');
       btn.textContent='Sent ✓';
     });
+  });
+  $('#wDownload').addEventListener('click',()=>{
+    const w=window.open('','_blank');
+    if(!w){alert('Please allow pop-ups so we can open your snapshot to download.');return;}
+    w.document.open(); w.document.write(generateSnapshotDoc()); w.document.close();
   });
   $('#wMember').addEventListener('click',()=>{
     closeWiz();
