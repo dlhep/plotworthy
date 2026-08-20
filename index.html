@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Plotworthy — Know what your property could become</title>
+<meta name="description" content="Plotworthy gives homeowners and developers a clear feasibility report on what their property could become — change of use, conversion or development — then connects you to vetted local architects and builders.">
+<link rel="canonical" href="https://plotworthy.co.uk/">
+<meta property="og:title" content="Plotworthy — Know what your property could become">
+<meta property="og:description" content="A free instant feasibility snapshot for your property, then matched local architects and builders who can quote.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://plotworthy.co.uk/">
+<script defer src="/_vercel/insights/script.js"></script>
 <style>
   :root{
     --ink:#132a26;        /* deep plot green */
@@ -168,6 +175,7 @@
       <a href="#how">How it works</a>
       <a href="#reports">Reports</a>
       <a href="#membership">Membership</a>
+      <a href="/c2-change-of-use-guide.html">Guides</a>
       <a href="#architects">For architects</a>
       <a href="#builders">For builders</a>
       <a href="#start" class="btn">Get my report</a>
@@ -628,6 +636,7 @@
         <h4>Explore</h4>
         <a href="#how">How it works</a>
         <a href="#reports">Reports &amp; pricing</a>
+        <a href="/c2-change-of-use-guide.html">Knowledge hub</a>
         <a href="#start">Get a report</a>
       </div>
       <div class="foot-col">
@@ -639,7 +648,7 @@
     </div>
     <div class="foot-bot">
       <span>© 2026 Plotworthy. All rights reserved.</span>
-      <span>Concept demo</span>
+      <span><a href="/c2-change-of-use-guide.html" style="color:var(--gold-soft)">Guides</a> · <a href="/privacy.html" style="color:var(--gold-soft)">Privacy</a> · <a href="/terms.html" style="color:var(--gold-soft)">Terms</a></span>
     </div>
   </div>
   <p class="disc">Plotworthy reports are guidance based on available information and professional judgement; they are not a formal planning decision, valuation or a guarantee of consent. Always confirm with the local planning authority and appointed professionals before committing to a project.</p>
@@ -787,29 +796,40 @@
   #wizM .upsell .u-body span{font-size:.84rem;opacity:.8}
   #wizM .upsell .u-btn{background:var(--ink);color:var(--paper);border:none;border-radius:999px;padding:10px 18px;font-weight:650;cursor:pointer;font-family:inherit;font-size:.88rem;white-space:nowrap}
   #wizM .upsell .u-btn:hover{background:var(--gold);color:var(--ink)}
+  #wizM .pcstatus{font-size:.82rem;margin-top:10px;min-height:18px}
+  #wizM .pcstatus.ok{color:#1d6b52;font-weight:650}
+  #wizM .pcstatus.warn{color:#8a6a12}
+  #wizM .sit{display:flex;flex-direction:column;gap:5px}
+  #wizM .sitlbl{font-size:.85rem;font-weight:700;color:var(--ink);margin-top:14px}
+  #wizM .pills{display:flex;flex-wrap:wrap;gap:8px}
+  #wizM .pill{background:var(--paper);border:1.5px solid var(--line);border-radius:999px;padding:9px 15px;font-size:.88rem;cursor:pointer;font-family:inherit;color:var(--ink);transition:.15s}
+  #wizM .pill:hover{border-color:var(--gold)}
+  #wizM .pill.sel{border-color:var(--gold);background:var(--gold-soft);font-weight:650}
+  #wizM .wfields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  #wizM .wfields input{padding:12px 14px;border:1.5px solid var(--line);border-radius:11px;font-family:inherit;font-size:.95rem;background:#fff;color:var(--ink)}
+  #wizM .wfields input:focus{outline:none;border-color:var(--gold)}
+  #wizM .wfields input#wEmail{grid-column:1 / -1}
+  @media(max-width:520px){#wizM .wfields{grid-template-columns:1fr}}
 </style>
 
 <div id="wizM" role="dialog" aria-modal="true">
   <div class="wcard">
     <button class="wclose" id="wizClose" aria-label="Close">✕</button>
     <div class="wlogo"><span class="m"></span>Plotworthy</div>
-    <div class="prog"><i class="on" data-p="1"></i><i data-p="2"></i><i data-p="3"></i><i data-p="4"></i><i data-p="5"></i></div>
+    <div class="prog"><i class="on" data-p="1"></i><i data-p="2"></i><i data-p="3"></i><i data-p="4"></i><i data-p="5"></i><i data-p="6"></i></div>
 
     <div class="wstep active" data-step="1">
-      <div class="smeta"><span class="n">Step 1 of 5</span><span class="t">Your property</span></div>
-      <h2>What's the address?</h2>
-      <p class="sub">Start typing the property or site you're curious about. That's all we need to begin.</p>
-      <div class="addr"><span class="pin">📍</span><input id="wAddr" type="text" placeholder="e.g. 14 Elm Road, London SE10" autocomplete="off"></div>
-      <div class="suggest" id="wSuggest">
-        <button data-addr="14 Elm Road, London SE10 8QT">📍 14 Elm Road, London SE10 8QT <small>· Greenwich</small></button>
-        <button data-addr="Land at Mill Lane, Sevenoaks TN13">📍 Land at Mill Lane, Sevenoaks TN13 <small>· development plot</small></button>
-        <button data-addr="Use my current location">📌 Use my current location</button>
-      </div>
+      <div class="smeta"><span class="n">Step 1 of 6</span><span class="t">Your property</span></div>
+      <h2>Which property or site?</h2>
+      <p class="sub">Enter the address and postcode of the property you're curious about.</p>
+      <div class="addr"><span class="pin">🏠</span><input id="wLine1" type="text" placeholder="Address or street — e.g. 14 Elm Road" autocomplete="off"></div>
+      <div class="addr" style="margin-top:10px"><span class="pin">📮</span><input id="wPostcode" type="text" placeholder="Postcode — e.g. SE10 8QT" autocomplete="off" maxlength="9"></div>
+      <div class="pcstatus" id="wPcStatus"></div>
       <div class="wnav"><button class="back hidden">← Back</button><button class="wbtn" id="wNext1" disabled>Continue →</button></div>
     </div>
 
     <div class="wstep" data-step="2">
-      <div class="smeta"><span class="n">Step 2 of 5</span><span class="t">Property type</span></div>
+      <div class="smeta"><span class="n">Step 2 of 6</span><span class="t">Property type</span></div>
       <h2>What kind of property is it?</h2>
       <p class="sub">Just tap the closest match — no need to be precise.</p>
       <div class="opts" data-group="ptype">
@@ -824,7 +844,7 @@
     </div>
 
     <div class="wstep" data-step="3">
-      <div class="smeta"><span class="n">Step 3 of 5</span><span class="t">Your idea</span></div>
+      <div class="smeta"><span class="n">Step 3 of 6</span><span class="t">Your idea</span></div>
       <h2>What are you thinking of doing?</h2>
       <p class="sub">Pick the one that's closest. Not sure? That's a perfectly good answer too.</p>
       <div class="opts two" data-group="intent">
@@ -849,7 +869,38 @@
     </div>
 
     <div class="wstep" data-step="4">
-      <div class="smeta"><span class="n">Step 4 of 5</span><span class="t">Support you need</span></div>
+      <div class="smeta"><span class="n">Step 4 of 6</span><span class="t">Your situation</span></div>
+      <h2>A bit about your situation</h2>
+      <p class="sub">This helps us qualify your project and line up the right people. Tap what applies.</p>
+      <div class="sit">
+        <div class="sitlbl">Do you own the property?</div>
+        <div class="pills" data-group="ownership">
+          <button class="pill" data-val="I own it">I own it</button>
+          <button class="pill" data-val="I'm buying it">I'm buying it</button>
+          <button class="pill" data-val="Considering buying">Considering buying</button>
+          <button class="pill" data-val="Just researching">Just researching</button>
+        </div>
+        <div class="sitlbl">Timescale</div>
+        <div class="pills" data-group="timescale">
+          <button class="pill" data-val="As soon as possible">ASAP</button>
+          <button class="pill" data-val="3–6 months">3–6 months</button>
+          <button class="pill" data-val="6–12 months">6–12 months</button>
+          <button class="pill" data-val="Just exploring">Just exploring</button>
+        </div>
+        <div class="sitlbl">Rough budget <span style="opacity:.5;font-weight:400">(optional)</span></div>
+        <div class="pills" data-group="budget">
+          <button class="pill" data-val="Under £100k">Under £100k</button>
+          <button class="pill" data-val="£100k–£250k">£100–250k</button>
+          <button class="pill" data-val="£250k–£500k">£250–500k</button>
+          <button class="pill" data-val="£500k+">£500k+</button>
+          <button class="pill" data-val="Not sure yet">Not sure</button>
+        </div>
+      </div>
+      <div class="wnav"><button class="back">← Back</button><button class="wbtn" id="wNext4" disabled>Continue →</button></div>
+    </div>
+
+    <div class="wstep" data-step="5">
+      <div class="smeta"><span class="n">Step 5 of 6</span><span class="t">Support you need</span></div>
       <h2>How much help do you want?</h2>
       <p class="sub">This tells us who to line up for you. You can always change your mind later.</p>
       <div class="opts two" data-group="support">
@@ -859,10 +910,10 @@
         <button class="opt wide" data-val="I need a builder"><span class="ic">🔨</span><span><span class="lab">I need a builder</span><span class="desc">someone to do the work</span></span></button>
         <button class="opt wide" data-val="I need the full team"><span class="ic">⭐</span><span><span class="lab">The full team</span><span class="desc">report, architect &amp; builder</span></span></button>
       </div>
-      <div class="wnav"><button class="back">← Back</button><button class="wbtn" id="wNext4" disabled>See my plan →</button></div>
+      <div class="wnav"><button class="back">← Back</button><button class="wbtn" id="wNext5" disabled>See my snapshot →</button></div>
     </div>
 
-    <div class="wstep" data-step="5">
+    <div class="wstep" data-step="6">
       <div class="rhead">
         <div class="tick">✓</div>
         <h2>Here's your free snapshot</h2>
@@ -893,16 +944,20 @@
           <div class="brow"><div class="k">Property</div><div class="v" id="wbPtype">—</div></div>
           <div class="brow"><div class="k">Objective</div><div class="v" id="wbIntent">—</div></div>
           <div class="brow"><div class="k">Planning route</div><div class="v" id="wbRoute">—</div></div>
+          <div class="brow"><div class="k">Ownership</div><div class="v" id="wbOwnership">—</div></div>
+          <div class="brow"><div class="k">Timescale</div><div class="v" id="wbTimescale">—</div></div>
           <div class="brow"><div class="k">Support requested</div><div class="v" id="wbSupport">—</div></div>
         </div>
         <div class="bfoot">🔒 The professional receives this pre-qualified brief, so they can approach you already understanding the job — and give you a proper fee quote.</div>
       </div>
       <div class="wlead">
-        <div class="wlead-label">Like us to follow up? Leave your email and we'll be in touch with your report &amp; next steps</div>
-        <div class="wlead-row">
-          <input id="wLeadEmail" type="email" placeholder="you@email.com">
-          <button id="wLeadBtn" class="wbtn">Send it to me</button>
+        <div class="wlead-label">Get your full write-up &amp; recommended next steps</div>
+        <div class="wfields">
+          <input id="wName" type="text" placeholder="Your name">
+          <input id="wPhone" type="tel" placeholder="Phone (optional)">
+          <input id="wEmail" type="email" placeholder="Email address">
         </div>
+        <button id="wLeadBtn" class="wbtn" style="width:100%;margin-top:12px">Send me my next steps</button>
         <div class="wlead-note" id="wLeadNote"></div>
       </div>
       <div class="upsell">
@@ -922,12 +977,13 @@
 <script>
 (function(){
   const modal=document.getElementById('wizM');
-  const state={addr:"",ptype:"",intent:"",useclass:"",support:""};
+  const state={line1:"",postcode:"",area:"",district:"",addr:"",ptype:"",intent:"",useclass:"",ownership:"",timescale:"",budget:"",support:"",name:"",phone:"",email:""};
   let cur=1;
   function openWiz(){modal.classList.add('open');document.body.style.overflow='hidden';}
   function closeWiz(){modal.classList.remove('open');document.body.style.overflow='';}
   // open on any #start CTA
   document.querySelectorAll('a[href="#start"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();openWiz();}));
+  if(location.hash==='#start'){openWiz();}
   document.getElementById('wizClose').addEventListener('click',closeWiz);
   modal.addEventListener('click',e=>{if(e.target===modal)closeWiz();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeWiz();});
@@ -937,21 +993,38 @@
   function show(step){
     $$('.wstep').forEach(s=>s.classList.toggle('active',+s.dataset.step===step));
     $$('.prog i').forEach(i=>i.classList.toggle('on',+i.dataset.p<=step));
-    cur=step; if(step===5) buildResult();
+    cur=step; if(step===6) buildResult();
     modal.scrollTop=0;
   }
-  const wAddr=$('#wAddr'), wNext1=$('#wNext1');
-  wAddr.addEventListener('input',()=>{state.addr=wAddr.value.trim();wNext1.disabled=state.addr.length<4;});
-  $$('#wSuggest button').forEach(b=>b.addEventListener('click',()=>{
-    const a=b.dataset.addr;
-    if(a==="Use my current location"){wAddr.value="Detected: 14 Elm Road, London SE10 8QT";state.addr="14 Elm Road, London SE10 8QT";}
-    else{wAddr.value=a;state.addr=a;}
-    wNext1.disabled=false;
-  }));
+  const wLine1=$('#wLine1'), wPostcode=$('#wPostcode'), wPcStatus=$('#wPcStatus'), wNext1=$('#wNext1');
+  let pcTimer=null;
+  function updateAddr(){
+    const l1=(wLine1.value||'').trim(), pc=(wPostcode.value||'').trim();
+    state.line1=l1; state.postcode=pc.toUpperCase();
+    state.addr=l1+(pc?(', '+pc.toUpperCase()):'');
+    wNext1.disabled=!(l1.length>2 && pc.length>=5);
+  }
+  wLine1.addEventListener('input',updateAddr);
+  wPostcode.addEventListener('input',()=>{
+    updateAddr(); clearTimeout(pcTimer);
+    const pc=(wPostcode.value||'').trim();
+    if(pc.length<5){wPcStatus.className='pcstatus';wPcStatus.textContent='';return;}
+    wPcStatus.className='pcstatus';wPcStatus.textContent='Checking postcode…';
+    pcTimer=setTimeout(function(){
+      fetch('https://api.postcodes.io/postcodes/'+encodeURIComponent(pc)).then(r=>r.json()).then(j=>{
+        if(j&&j.status===200&&j.result){
+          const r=j.result; state.district=r.admin_district||'';
+          state.area=(r.admin_district||'')+(r.region?', '+r.region:'');
+          wPcStatus.className='pcstatus ok';wPcStatus.textContent='✓ '+state.area;
+        } else {state.area='';state.district='';wPcStatus.className='pcstatus warn';wPcStatus.textContent='Postcode not recognised — you can still continue';}
+      }).catch(()=>{wPcStatus.className='pcstatus';wPcStatus.textContent='';});
+    },500);
+  });
+  [wLine1,wPostcode].forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter'&&!wNext1.disabled)show(2);}));
   wNext1.addEventListener('click',()=>show(2));
   function wireGroup(group,onPick){
-    $$(`[data-group="${group}"] .opt`).forEach(o=>o.addEventListener('click',()=>{
-      o.parentElement.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+    $$('[data-group="'+group+'"] button[data-val]').forEach(o=>o.addEventListener('click',()=>{
+      o.parentElement.querySelectorAll('button[data-val]').forEach(x=>x.classList.remove('sel'));
       o.classList.add('sel'); onPick(o.dataset.val,o);
     }));
   }
@@ -959,14 +1032,19 @@
   wireGroup('intent',(v,o)=>{
     state.intent=v;state.useclass="";
     const sub=$('#wSubUse'); sub.classList.toggle('show',o.dataset.sub==='useclass');
-    if(o.dataset.sub!=='useclass') sub.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+    if(o.dataset.sub!=='useclass') sub.querySelectorAll('button[data-val]').forEach(x=>x.classList.remove('sel'));
     $('#wNext3').disabled=false;
   });
   wireGroup('useclass',v=>{state.useclass=v;});
-  wireGroup('support',v=>{state.support=v;$('#wNext4').disabled=false;});
+  function checkSit(){ $('#wNext4').disabled=!(state.ownership&&state.timescale); }
+  wireGroup('ownership',v=>{state.ownership=v;checkSit();});
+  wireGroup('timescale',v=>{state.timescale=v;checkSit();});
+  wireGroup('budget',v=>{state.budget=v;});
+  wireGroup('support',v=>{state.support=v;$('#wNext5').disabled=false;});
   $('#wNext2').addEventListener('click',()=>show(3));
   $('#wNext3').addEventListener('click',()=>show(4));
   $('#wNext4').addEventListener('click',()=>show(5));
+  $('#wNext5').addEventListener('click',()=>show(6));
   $$('.back').forEach(b=>b.addEventListener('click',()=>show(cur-1)));
 
   function routeFor(){
@@ -1005,16 +1083,24 @@
     } else {
       s.title='Exploring your options';s.verdict='Worth exploring';s.tone='good';s.headline='There are usually several options for a site like this — a feasibility report will lay them out with the planning route, indicative costs and value for each.';s.watch=["We'll assess the realistic planning options",'Indicative costs & value uplift','The best route to reach your goals'];
     }
+    if(state.ptype==='Flat / apartment' && s.watch.length<4) s.watch.push('As a flat, you may also need lease / freeholder consent alongside planning');
+    if(state.ptype==='Land / vacant plot' && intent!=='New build / develop' && s.watch.length<4) s.watch.push('On a vacant plot, a new-build scheme may be worth appraising too');
     return s;
   }
-  function nextSteps(){
-    const s=state.support;
+  function baseSteps(s){
     if(s==="I don't know where to start") return ['Talk it through with our team — we\'ll point you to the right first step','Order a full feasibility report to firm up options, costs & value','We can then match you with the professionals you need'];
     if(s==='Just the report for now') return ['Order your full Plotworthy feasibility report','We assess planning, options, indicative costs & value uplift','Use it to decide whether and how to proceed'];
     if(s==='I need an architect') return ['We match you with a vetted local architect','They review this snapshot and quote for design & planning','You compare and choose — no obligation'];
     if(s==='I need a builder') return ['We match you with a verified, insured local builder','They quote once your designs are progressing','You compare quotes and choose'];
     if(s==='I need the full team') return ['We line up a feasibility report, an architect and a builder','Each receives your pre-qualified brief','You review and pick your team — you stay in control'];
     return ['Explore a full feasibility report for the detail','Get matched with vetted local professionals when ready','You stay in control at every step'];
+  }
+  function nextSteps(){
+    let arr=baseSteps(state.support).slice();
+    if(state.ownership==='Considering buying'||state.ownership==="I'm buying it"){
+      arr.unshift('Get feasibility clarity before you commit — you can make any offer subject to planning');
+    }
+    return arr.slice(0,4);
   }
   function generateSnapshotDoc(){
     const snap=computeSnapshot();
@@ -1066,6 +1152,8 @@
       +'<div class="meta">'
       +'<div class="m"><div class="k">Property</div><div class="v">'+(state.ptype||'—')+'</div></div>'
       +'<div class="m"><div class="k">Objective</div><div class="v">'+(objective||'—')+'</div></div>'
+      +'<div class="m"><div class="k">Ownership</div><div class="v">'+(state.ownership||'—')+'</div></div>'
+      +'<div class="m"><div class="k">Timescale</div><div class="v">'+(state.timescale||'—')+'</div></div>'
       +'<div class="m"><div class="k">Support requested</div><div class="v">'+(state.support||'—')+'</div></div>'
       +'<div class="m"><div class="k">Prepared by</div><div class="v">Plotworthy</div></div></div>'
       +'<p class="disc">This snapshot is indicative guidance based on the information provided — it is not a formal planning decision, valuation or a guarantee of consent. Your full Plotworthy feasibility report goes into detail on planning, options, costs and value. Always confirm the position with the local planning authority and your appointed professionals before committing.</p>'
@@ -1084,6 +1172,8 @@
     let it=state.intent||'—'; if(state.useclass&&state.useclass!=='Not sure which') it+=' → '+state.useclass;
     $('#wbIntent').textContent=it;
     $('#wbRoute').textContent=planningRoute();
+    $('#wbOwnership').textContent=state.ownership||'—';
+    $('#wbTimescale').textContent=state.timescale||'—';
     $('#wbSupport').textContent=state.support||'—';
     const path=$('#wPath'); path.innerHTML='';
     routeFor().forEach((c,i)=>{
@@ -1092,12 +1182,17 @@
     });
   }
   $('#wLeadBtn').addEventListener('click',()=>{
-    const em=$('#wLeadEmail').value.trim();
-    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){$('#wLeadEmail').focus();return;}
+    const nm=($('#wName').value||'').trim();
+    const ph=($('#wPhone').value||'').trim();
+    const em=($('#wEmail').value||'').trim();
+    if(!nm){$('#wName').focus();return;}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){$('#wEmail').focus();return;}
     const snap=computeSnapshot();
     const data={
-      Email:em, Address:state.addr, Property:state.ptype,
+      Name:nm, Phone:ph||'—', Email:em,
+      Address:state.addr, Area:state.area||'—', Property:state.ptype,
       Objective:state.intent+(state.useclass&&state.useclass!=='Not sure which'?(' → '+state.useclass):''),
+      Ownership:state.ownership||'—', Timescale:state.timescale||'—', Budget:state.budget||'—',
       'Feasibility verdict':snap.verdict,
       'Planning route':planningRoute(),
       'Snapshot summary':snap.headline,
@@ -1106,7 +1201,7 @@
     };
     const btn=$('#wLeadBtn'); btn.disabled=true; btn.textContent='Sending…';
     window.plotSubmitLead('client (wizard)',data,()=>{
-      const n=$('#wLeadNote'); n.textContent="Thanks — we've got your details and we'll be in touch shortly with your next steps."; n.classList.add('show');
+      const n=$('#wLeadNote'); n.textContent="Thanks "+nm.split(' ')[0]+" — we've got your details and we'll be in touch shortly with your next steps."; n.classList.add('show');
       btn.textContent='Sent ✓';
     });
   });
@@ -1122,12 +1217,12 @@
   });
   $('#wRestart').addEventListener('click',()=>{
     Object.keys(state).forEach(k=>state[k]="");
-    wAddr.value="";wNext1.disabled=true;
-    $$('.opt').forEach(x=>x.classList.remove('sel'));
-    $$('.wbtn').forEach(b=>{if(b.id!=='wNext1')b.disabled=true;});
+    wLine1.value="";wPostcode.value="";wPcStatus.textContent="";wPcStatus.className='pcstatus';wNext1.disabled=true;
+    $$('button[data-val]').forEach(x=>x.classList.remove('sel'));
+    $$('.wbtn').forEach(b=>{if(b.id!=='wNext1'&&b.id!=='wDownload'&&b.id!=='wLeadBtn')b.disabled=true;});
     $('#wSubUse').classList.remove('show');
-    const le=$('#wLeadEmail'); if(le) le.value="";
-    const lb=$('#wLeadBtn'); if(lb){lb.disabled=false;lb.textContent='Send it to me';}
+    ['#wName','#wPhone','#wEmail'].forEach(s=>{const el=$(s);if(el)el.value="";});
+    const lb=$('#wLeadBtn'); if(lb){lb.disabled=false;lb.textContent='Send me my next steps';}
     const ln=$('#wLeadNote'); if(ln){ln.classList.remove('show');ln.textContent="";}
     show(1);
   });
