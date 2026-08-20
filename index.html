@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +21,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebSite","name":"Plotworthy","url":"https://plotworthy.co.uk/"}
 </script>
-<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/cookies.js"></script>
 <style>
   :root{
     --ink:#132a26;        /* deep plot green */
@@ -56,7 +56,15 @@
   .logo .mark:after{content:"";position:absolute;left:13px;top:5px;width:4px;height:20px;background:var(--gold)}
   .nav-links{display:flex;gap:28px;align-items:center;font-size:.94rem;font-weight:550}
   .nav-links a:hover{color:var(--gold)}
-  @media(max-width:820px){.nav-links a:not(.btn){display:none}}
+  .nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;color:var(--ink)}
+  .nav-toggle svg{display:block}
+  @media(max-width:820px){
+    .nav-toggle{display:block}
+    .nav-links{position:absolute;top:70px;left:0;right:0;background:var(--paper);border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;gap:0;padding:6px 24px 18px;display:none;box-shadow:0 24px 40px -24px rgba(19,42,38,.45)}
+    .nav-links.open{display:flex}
+    .nav-links a{padding:13px 0;border-bottom:1px solid var(--line)}
+    .nav-links a.btn{margin-top:14px;text-align:center;border-bottom:none}
+  }
 
   /* HERO */
   .hero{position:relative;overflow:hidden;padding:84px 0 72px}
@@ -181,18 +189,28 @@
 
 <header class="nav">
   <div class="wrap nav-in">
-    <div class="logo"><span class="mark"></span>Plotworthy</div>
+    <a href="/" class="logo" style="text-decoration:none;color:inherit"><span class="mark"></span>Plotworthy</a>
     <nav class="nav-links">
       <a href="#how">How it works</a>
       <a href="#reports">Reports</a>
       <a href="#membership">Membership</a>
-      <a href="/c2-change-of-use-guide.html">Guides</a>
+      <a href="/guides.html">Guides</a>
       <a href="/architects.html">For architects</a>
       <a href="/builders.html">For builders</a>
       <a href="#start" class="btn">Get my report</a>
     </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" style="font-size:1.6rem;line-height:1">☰</button>
   </div>
 </header>
+<script>
+  (function(){
+    var t=document.getElementById('navToggle'), links=document.querySelector('.nav-links');
+    if(t&&links){
+      t.addEventListener('click',function(){links.classList.toggle('open');t.textContent=links.classList.contains('open')?'✕':'☰';});
+      links.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){links.classList.remove('open');t.textContent='☰';});});
+    }
+  })();
+</script>
 
 <!-- HERO -->
 <section class="hero">
@@ -210,7 +228,7 @@
     <div>
       <div class="report-card">
         <div class="rc-top">
-          <span class="eyebrow">Feasibility snapshot</span>
+          <span class="eyebrow">Feasibility snapshot · Example</span>
           <h3>14 Elm Road — C3 → C2 change of use</h3>
         </div>
         <div class="rc-body">
@@ -334,7 +352,7 @@
       </div>
       <div class="tier feat">
         <h3>Feasibility Report</h3>
-        <div class="cost">£<span>from £149</span></div>
+        <div class="cost">From £149</div>
         <div class="who">"Show me what's really possible."</div>
         <ul>
           <li>Everything in Snapshot</li>
@@ -347,7 +365,7 @@
       </div>
       <div class="tier">
         <h3>Development Deep-Dive</h3>
-        <div class="cost">£<span>from £495</span></div>
+        <div class="cost">From £495</div>
         <div class="who">"I'm serious — build me the numbers."</div>
         <ul>
           <li>Everything in Feasibility Report</li>
@@ -359,7 +377,7 @@
         <a href="#start" class="btn ghost">Go deep</a>
       </div>
     </div>
-    <p style="text-align:center;margin-top:20px;font-size:.82rem;color:var(--ink-2);opacity:.6">Illustrative pricing — final tiers &amp; prices to be confirmed.</p>
+    <p style="text-align:center;margin-top:20px;font-size:.82rem;color:var(--ink-2);opacity:.6">Reports are one-off — no subscription required. Prices include VAT where applicable.</p>
   </div>
 </section>
 
@@ -369,7 +387,7 @@
     <div class="sec-head">
       <span class="eyebrow">Membership</span>
       <h2>Explore once — or unlock everything as a member.</h2>
-      <p>Buying a report? A membership includes it. You pay barely more than the report alone, and get ongoing value that keeps working long after your first project — planning alerts, discounted professional fees, priority matching and more.</p>
+      <p>Buying a report? Membership includes it — so instead of a single one-off report, from £29/mo you get the report plus ongoing value that keeps working long after your first project: planning alerts, discounted professional fees, priority matching and more.</p>
     </div>
 
     <div style="background:var(--ink);color:var(--paper);border-radius:16px;padding:24px 28px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:28px">
@@ -397,7 +415,7 @@
         <a href="#start" class="btn ghost">Become an Explorer</a>
       </div>
       <div class="tier feat">
-        <h3>Developer / Pro</h3>
+        <h3>Portfolio</h3>
         <div class="cost">£79<span>/month</span></div>
         <div class="who">For investors, landlords &amp; portfolio owners.</div>
         <ul>
@@ -408,7 +426,7 @@
           <li>Fastest turnaround &amp; dedicated support</li>
           <li>Best-rate access to top local professionals</li>
         </ul>
-        <a href="#start" class="btn">Go Pro</a>
+        <a href="#start" class="btn">Choose Portfolio</a>
       </div>
       <div class="tier">
         <h3>Pay as you go</h3>
@@ -425,7 +443,7 @@
         <a href="#start" class="btn ghost">Get a one-off report</a>
       </div>
     </div>
-    <p style="text-align:center;margin-top:20px;font-size:.82rem;color:var(--ink-2);opacity:.6">Illustrative membership tiers &amp; pricing — to be confirmed.</p>
+    <p style="text-align:center;margin-top:20px;font-size:.82rem;color:var(--ink-2);opacity:.6">Cancel your membership anytime. Prices include VAT where applicable.</p>
   </div>
 </section>
 
@@ -444,6 +462,34 @@
         <div class="fact"><div class="k">Watch-outs</div><div class="v">Parking, neighbour amenity, highways, fire &amp; care standards</div></div>
         <div class="fact"><div class="k">The numbers</div><div class="v">Indicative conversion cost &amp; projected operating value</div></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<style>
+  #faq .faq-list{max-width:770px;margin:0 auto}
+  #faq details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;padding:0 20px}
+  #faq summary{font-weight:650;cursor:pointer;padding:16px 0;list-style:none;font-size:1.05rem;display:flex;justify-content:space-between;align-items:center;gap:14px}
+  #faq summary::-webkit-details-marker{display:none}
+  #faq summary:after{content:"+";color:var(--gold);font-weight:800;font-size:1.4rem;line-height:1}
+  #faq details[open] summary:after{content:"–"}
+  #faq details p{padding:0 0 18px;color:var(--ink-2);margin:0;font-size:.98rem}
+</style>
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head" style="text-align:center;margin-left:auto;margin-right:auto">
+      <span class="eyebrow">Questions</span>
+      <h2>Common questions</h2>
+      <p>Everything you might be wondering before you start.</p>
+    </div>
+    <div class="faq-list">
+      <details><summary>Is the snapshot really free?</summary><p>Yes. The instant feasibility snapshot is completely free and comes with no obligation. You only pay if you want a deeper written report, or if you choose to become a member.</p></details>
+      <details><summary>How accurate is the snapshot and report?</summary><p>The snapshot is an indicative, expert read based on the information you provide — it's designed to tell you quickly whether an idea is worth exploring. The paid feasibility report goes much deeper into planning policy, options, costs and value. Neither is a formal planning decision, so we always recommend confirming the position with the local planning authority before you commit.</p></details>
+      <details><summary>Am I obliged to use your architect or builder?</summary><p>Never. Matching is optional and there's no obligation at any stage. If you'd like introductions we'll connect you with vetted local professionals to quote — you compare and choose who (if anyone) to work with.</p></details>
+      <details><summary>How long does the paid report take?</summary><p>Reports are prepared by our team and are usually ready within a few working days, depending on the complexity of the site and scheme.</p></details>
+      <details><summary>How do you vet the architects and builders?</summary><p>Professionals on the network are checked for relevant experience, and builders confirm insurance and accreditations. Client reviews then build over time, so you can see who others have rated well in your area.</p></details>
+      <details><summary>What happens to my details?</summary><p>Your information is kept private and only used to prepare your report and — if you ask — to connect you with professionals. We never sell your data. See our <a href="/privacy.html" style="color:var(--gold)">privacy policy</a> for the detail.</p></details>
     </div>
   </div>
 </section>
@@ -499,19 +545,20 @@
         <h4>Explore</h4>
         <a href="#how">How it works</a>
         <a href="#reports">Reports &amp; pricing</a>
-        <a href="/c2-change-of-use-guide.html">Knowledge hub</a>
-        <a href="#start">Get a report</a>
+        <a href="/guides.html">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
       </div>
       <div class="foot-col">
         <h4>For professionals</h4>
         <a href="/architects.html">Join as an architect</a>
         <a href="/builders.html">Join as a builder</a>
-        <a href="#start">Partner with us</a>
+        <a href="/architects.html">Partner with us</a>
       </div>
     </div>
     <div class="foot-bot">
       <span>© 2026 Plotworthy. All rights reserved.</span>
-      <span><a href="/c2-change-of-use-guide.html" style="color:var(--gold-soft)">Guides</a> · <a href="/privacy.html" style="color:var(--gold-soft)">Privacy</a> · <a href="/terms.html" style="color:var(--gold-soft)">Terms</a></span>
+      <span><a href="/guides.html" style="color:var(--gold-soft)">Guides</a> · <a href="/about.html" style="color:var(--gold-soft)">About</a> · <a href="/contact.html" style="color:var(--gold-soft)">Contact</a> · <a href="/privacy.html" style="color:var(--gold-soft)">Privacy</a> · <a href="/terms.html" style="color:var(--gold-soft)">Terms</a></span>
     </div>
   </div>
   <p class="disc">Plotworthy reports are guidance based on available information and professional judgement; they are not a formal planning decision, valuation or a guarantee of consent. Always confirm with the local planning authority and appointed professionals before committing to a project.</p>

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://plotworthy.co.uk/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://plotworthy.co.uk/guides.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://plotworthy.co.uk/c2-change-of-use-guide.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://plotworthy.co.uk/hmo-conversion-guide.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://plotworthy.co.uk/house-into-flats-guide.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://plotworthy.co.uk/architects.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://plotworthy.co.uk/builders.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://plotworthy.co.uk/about.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://plotworthy.co.uk/contact.html</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
 </urlset>

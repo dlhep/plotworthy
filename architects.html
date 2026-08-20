@@ -15,7 +15,7 @@
 <meta name="twitter:image" content="https://plotworthy.co.uk/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/cookies.js"></script>
 <style>
   :root{--ink:#132a26;--ink-2:#1d3a34;--paper:#f7f4ee;--paper-2:#efe9dd;--gold:#c8992b;--gold-soft:#e8d9ac;--line:rgba(19,42,38,.12);--shadow:0 18px 50px -20px rgba(19,42,38,.35);--r:18px}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -36,7 +36,14 @@
   .logo .mark:before{content:"";position:absolute;inset:7px;border:2px solid var(--gold);border-radius:3px}
   .nav-links{display:flex;gap:26px;align-items:center;font-size:.94rem;font-weight:550}
   .nav-links a:hover{color:var(--gold)}
-  @media(max-width:860px){.nav-links a:not(.btn){display:none}}
+  .nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;color:var(--ink);font-size:1.6rem;line-height:1}
+  @media(max-width:860px){
+    .nav-toggle{display:block}
+    .nav-links{position:absolute;top:70px;left:0;right:0;background:var(--paper);border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;gap:0;padding:6px 24px 18px;display:none;box-shadow:0 24px 40px -24px rgba(19,42,38,.45)}
+    .nav-links.open{display:flex}
+    .nav-links a{padding:13px 0;border-bottom:1px solid var(--line)}
+    .nav-links a.btn{margin-top:14px;text-align:center;border-bottom:none}
+  }
   section{padding:56px 0}
   .join-band{background:linear-gradient(160deg,#1d3a34,#132a26);color:var(--paper);border-radius:22px;padding:46px 44px;position:relative;overflow:hidden}
   .join-band:before{content:"";position:absolute;right:-60px;top:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(200,153,43,.3),transparent 65%)}
@@ -91,12 +98,14 @@
     <nav class="nav-links">
       <a href="/#how">How it works</a>
       <a href="/#reports">Reports</a>
-      <a href="/c2-change-of-use-guide.html">Guides</a>
+      <a href="/guides.html">Guides</a>
       <a href="/builders.html">For builders</a>
       <a href="/#start" class="btn">Get a report</a>
     </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu">☰</button>
   </div>
 </header>
+<script>(function(){var t=document.getElementById('navToggle'),l=document.querySelector('.nav-links');if(t&&l){t.addEventListener('click',function(){l.classList.toggle('open');t.textContent=l.classList.contains('open')?'✕':'☰';});l.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){l.classList.remove('open');t.textContent='☰';});});}})();</script>
 
 <section>
   <div class="wrap">
@@ -153,6 +162,19 @@
       </div>
     </div>
 
+    <div style="background:var(--ink);color:var(--paper);border-radius:22px;padding:34px 36px;margin-top:36px;display:flex;gap:26px;align-items:center;flex-wrap:wrap">
+      <div style="flex:1;min-width:280px">
+        <div class="eyebrow" style="color:var(--gold-soft)">The maths</div>
+        <h2 style="color:var(--paper);font-size:1.6rem;margin:8px 0 10px">One won project pays for a year.</h2>
+        <p style="opacity:.88;max-width:52ch">A single design commission is worth many times a year's subscription — so one job from Plotworthy more than covers your membership, and you keep 100% of what you win. Cancel anytime.</p>
+        <a href="mailto:hello@plotworthy.co.uk?subject=Joining%20Plotworthy%20as%20an%20architect" class="btn" style="margin-top:16px">Prefer to talk first? Book a call</a>
+      </div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:16px 20px;min-width:150px"><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-soft);font-weight:700">Membership</div><div style="font-size:1.5rem;font-weight:800;margin-top:4px">£99–£199<span style="font-size:.8rem;font-weight:500;opacity:.7">/mo</span></div></div>
+        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:16px 20px;min-width:150px"><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-soft);font-weight:700">Every lead is</div><div style="font-size:1.5rem;font-weight:800;margin-top:4px">Report-ready</div></div>
+      </div>
+    </div>
+
     <div class="cta" id="architect-signup">
       <div>
         <span class="eyebrow">Join the network</span>
@@ -177,7 +199,7 @@
     <div class="foot-links">
       <a href="/">Home</a>
       <a href="/builders.html">For builders</a>
-      <a href="/c2-change-of-use-guide.html">Guides</a>
+      <a href="/guides.html">Guides</a>
       <a href="/privacy.html">Privacy</a>
       <a href="/terms.html">Terms</a>
     </div>
