@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join Plotworthy — set up your professional profile</title>
+<meta name="description" content="Join Plotworthy as an architect or builder — choose your membership, set your coverage areas, add your insurance, profile and references, and start receiving report-ready local leads.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script defer src="/cookies.js"></script>
+<style>
+  :root{--ink:#132a26;--ink-2:#1d3a34;--paper:#f7f4ee;--paper-2:#efe9dd;--gold:#c8992b;--gold-soft:#e8d9ac;--line:rgba(19,42,38,.14);--mut:#5a6b66}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;color:#26332f;background:linear-gradient(160deg,var(--paper),var(--paper-2));min-height:100vh;line-height:1.55}
+  a{color:#1d3a34}
+  h1,h2,h3{color:var(--ink);letter-spacing:-.02em;line-height:1.2}
+  .topbar{max-width:820px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.1rem;text-decoration:none;color:var(--ink)}
+  .logo .mark{width:26px;height:26px;border-radius:7px;background:var(--ink);position:relative}
+  .logo .mark:before{content:"";position:absolute;inset:6px;border:2px solid var(--gold);border-radius:3px}
+  .topbar .back{font-size:.85rem;color:var(--mut);text-decoration:none}
+  .stage{max-width:720px;margin:0 auto;padding:8px 20px 70px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 24px 60px -30px rgba(19,42,38,.45);padding:32px 34px 28px}
+  @media(max-width:560px){.card{padding:24px 20px}}
+  .prog{display:flex;gap:6px;margin-bottom:8px}
+  .prog i{height:5px;flex:1;border-radius:999px;background:var(--paper-2);transition:.3s}
+  .prog i.on{background:var(--gold)}
+  .smeta{display:flex;justify-content:space-between;margin:14px 0 2px}
+  .smeta .n{font-size:.7rem;font-weight:800;letter-spacing:.14em;color:var(--gold);text-transform:uppercase}
+  .smeta .t{font-size:.76rem;opacity:.55}
+  .step{display:none;animation:fade .3s}
+  .step.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  h2.q{font-size:1.5rem;margin:6px 0 6px}
+  .sub{color:var(--ink-2);opacity:.85;margin-bottom:20px;font-size:.98rem}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .opt{background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:18px;cursor:pointer;transition:.18s;font-family:inherit;color:var(--ink);text-align:left}
+  .opt:hover{border-color:var(--gold);transform:translateY(-2px)}
+  .opt.sel{border-color:var(--gold);background:linear-gradient(160deg,#fff,var(--gold-soft));box-shadow:0 10px 22px -14px rgba(200,153,43,.7)}
+  .opt .ic{font-size:1.5rem}
+  .opt b{display:block;font-size:1.05rem;margin:6px 0 3px}
+  .opt span{font-size:.85rem;opacity:.75}
+  .plan{border:1.5px solid var(--line);border-radius:14px;padding:20px;cursor:pointer;transition:.18s;background:var(--paper)}
+  .plan+.plan{margin-top:12px}
+  .plan:hover{border-color:var(--gold)}
+  .plan.sel{border-color:var(--gold);background:linear-gradient(160deg,#fff,var(--gold-soft))}
+  .plan .ph{display:flex;justify-content:space-between;align-items:baseline}
+  .plan .ph b{font-size:1.15rem}
+  .plan .ph .price{font-size:1.4rem;font-weight:800;letter-spacing:-.02em}
+  .plan .ph .price span{font-size:.8rem;font-weight:500;opacity:.6}
+  .plan ul{list-style:none;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:6px 16px}
+  .plan li{font-size:.85rem;padding-left:18px;position:relative}
+  .plan li:before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:800}
+  label{display:block;font-size:.82rem;font-weight:650;margin:14px 0 5px}
+  input,textarea,select{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:11px;font-family:inherit;font-size:.96rem;background:#fff;color:var(--ink)}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--gold)}
+  textarea{min-height:96px;resize:vertical}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:520px){.two{grid-template-columns:1fr}}
+  .hint{font-size:.8rem;color:var(--mut);margin-top:6px}
+  .arearow{display:flex;gap:8px;align-items:center;margin-top:8px}
+  .arearow input{flex:1}
+  .arearow .tag{font-size:.7rem;font-weight:700;color:var(--gold);background:var(--gold-soft);padding:4px 9px;border-radius:999px;white-space:nowrap}
+  .arearow .rm{background:none;border:1px solid var(--line);border-radius:8px;width:34px;height:38px;cursor:pointer;color:var(--mut);flex:0 0 auto}
+  .addarea{margin-top:12px;background:var(--paper);border:1.5px dashed var(--line);border-radius:11px;padding:11px;width:100%;cursor:pointer;font-family:inherit;font-weight:600;color:var(--ink)}
+  .addarea:hover{border-color:var(--gold)}
+  .costbox{margin-top:16px;background:var(--ink);color:var(--paper);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+  .costbox .lbl{font-size:.8rem;opacity:.8}
+  .costbox .tot{font-size:1.3rem;font-weight:800}
+  .refblock{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:12px;background:var(--paper)}
+  .refblock .rl{font-size:.78rem;font-weight:700;color:var(--gold);margin-bottom:4px}
+  .review{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;font-size:.9rem}
+  .review div{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
+  .review div:last-child{border-bottom:none}
+  .review .k{color:var(--mut);flex:0 0 42%}
+  .review .v{font-weight:600;text-align:right}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px}
+  .btn{background:var(--gold);color:var(--ink);font-weight:700;padding:12px 26px;border:none;border-radius:999px;cursor:pointer;font-size:1rem;font-family:inherit;transition:.2s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(200,153,43,.8)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+  .back{background:none;border:none;color:var(--ink-2);cursor:pointer;font-size:.9rem;font-family:inherit;opacity:.7}
+  .back.hidden{visibility:hidden}
+  .done{text-align:center;padding:20px 0}
+  .done .tick{width:56px;height:56px;border-radius:50%;background:#1d6b52;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 14px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="/" class="logo"><span class="mark"></span>Plotworthy</a>
+  <a href="/architects.html" class="back">← Back to site</a>
+</div>
+<div class="stage">
+  <div class="card">
+    <div class="prog"><i class="on" data-p="1"></i><i data-p="2"></i><i data-p="3"></i><i data-p="4"></i><i data-p="5"></i><i data-p="6"></i><i data-p="7"></i></div>
+
+    <!-- 1 ROLE -->
+    <div class="step active" data-step="1">
+      <div class="smeta"><span class="n">Step 1 of 7</span><span class="t">About you</span></div>
+      <h2 class="q">Are you an architect or a builder?</h2>
+      <p class="sub">We'll tailor the sign-up to your profession.</p>
+      <div class="opts">
+        <button class="opt" data-group="role" data-val="Architect"><span class="ic">✏️</span><b>Architect</b><span>Design &amp; planning work</span></button>
+        <button class="opt" data-val="Builder" data-group="role"><span class="ic">🔨</span><b>Builder / contractor</b><span>Build &amp; construction work</span></button>
+      </div>
+      <div class="nav"><button class="back hidden">← Back</button><button class="btn" id="n1" disabled>Continue →</button></div>
+    </div>
+
+    <!-- 2 MEMBERSHIP -->
+    <div class="step" data-step="2">
+      <div class="smeta"><span class="n">Step 2 of 7</span><span class="t">Membership</span></div>
+      <h2 class="q">Choose your membership</h2>
+      <p class="sub">You can change this later. Cancel anytime.</p>
+      <div class="plan" data-group="tier" data-val="Starter" data-price="99">
+        <div class="ph"><b id="t1name">Starter</b><div class="price">£99<span>/mo</span></div></div>
+        <ul><li>1 coverage area</li><li>Standard profile</li><li>Up to 5 photos</li><li>Up to 2 references</li><li>Quote on matched projects</li></ul>
+      </div>
+      <div class="plan" data-group="tier" data-val="Growth" data-price="199">
+        <div class="ph"><b id="t2name">Growth</b><div class="price">£199<span>/mo</span></div></div>
+        <ul><li>Up to 3 coverage areas</li><li>Featured &amp; priority</li><li>Enhanced profile + case studies</li><li>Up to 15 photos</li><li>Up to 2 references</li></ul>
+      </div>
+      <p class="hint">Need more areas? You can add extra coverage areas for £25/mo each in the next step.</p>
+      <div class="nav"><button class="back">← Back</button><button class="btn" id="n2" disabled>Continue →</button></div>
+    </div>
+
+    <!-- 3 AREAS -->
+    <div class="step" data-step="3">
+      <div class="smeta"><span class="n">Step 3 of 7</span><span class="t">Coverage areas</span></div>
+      <h2 class="q">Where do you work?</h2>
+      <p class="sub" id="areaSub">Add the areas you'd like leads from.</p>
+      <div id="areaRows"></div>
+      <button class="addarea" id="addArea">+ Add another area (£25/mo)</button>
+      <div class="costbox"><div><div class="lbl">Estimated monthly membership</div><div style="font-size:.78rem;opacity:.6" id="costBreak"></div></div><div class="tot" id="costTotal">£99/mo</div></div>
+      <div class="nav"><button class="back">← Back</button><button class="btn" id="n3" disabled>Continue →</button></div>
+    </div>
+
+    <!-- 4 PRACTICE -->
+    <div class="step" data-step="4">
+      <div class="smeta"><span class="n">Step 4 of 7</span><span class="t">Your details</span></div>
+      <h2 class="q" id="q4">About your practice</h2>
+      <p class="sub">So clients — and we — know who you are.</p>
+      <label id="lPractice">Practice / company name</label>
+      <input id="fPractice" type="text" placeholder="e.g. Marsh &amp; Lowe Architects">
+      <div class="two">
+        <div><label>Your name</label><input id="fContact" type="text" placeholder="Full name"></div>
+        <div><label>Phone</label><input id="fPhone" type="tel" placeholder="Phone number"></div>
+      </div>
+      <label>Email</label>
+      <input id="fEmail" type="email" placeholder="you@practice.com">
+      <label>Website (optional)</label>
+      <input id="fWebsite" type="text" placeholder="https://…">
+      <div class="nav"><button class="back">← Back</button><button class="btn" id="n4" disabled>Continue →</button></div>
+    </div>
+
+    <!-- 5 INSURANCE -->
+    <div class="step" data-step="5">
+      <div class="smeta"><span class="n">Step 5 of 7</span><span class="t">Insurance</span></div>
+      <h2 class="q" id="q5">Insurance &amp; accreditations</h2>
+      <p class="sub" id="s5">This is a key part of being verified on Plotworthy.</p>
+      <div class="two">
+        <div><label id="lInsurer">Professional indemnity insurer</label><input id="fInsurer" type="text" placeholder="Insurer name"></div>
+        <div><label>Level of cover</label><input id="fCover" type="text" placeholder="e.g. £1m"></div>
+      </div>
+      <div class="two">
+        <div><label>Policy number</label><input id="fPolicy" type="text" placeholder="Policy number"></div>
+        <div><label>Expiry date</label><input id="fExpiry" type="text" placeholder="MM/YYYY"></div>
+      </div>
+      <label id="lAccred">Accreditations &amp; memberships</label>
+      <input id="fAccred" type="text" placeholder="e.g. RIBA, ARB">
+      <div class="nav"><button class="back">← Back</button><button class="btn" id="n5" disabled>Continue →</button></div>
+    </div>
+
+    <!-- 6 PROFILE + REFERENCES -->
+    <div class="step" data-step="6">
+      <div class="smeta"><span class="n">Step 6 of 7</span><span class="t">Profile</span></div>
+      <h2 class="q">Build your profile</h2>
+      <p class="sub">This is what clients see. You can refine it later.</p>
+      <label>Short bio</label>
+      <textarea id="fBio" placeholder="A couple of sentences on your practice, your approach and the work you love."></textarea>
+      <label>Specialisms</label>
+      <input id="fSpec" type="text" placeholder="e.g. C2 care conversions, extensions, new build">
+      <div class="two">
+        <div><label>Portfolio link (optional)</label><input id="fPortfolio" type="text" placeholder="Website or portfolio URL"></div>
+        <div><label>Photos link (optional)</label><input id="fPhotos" type="text" placeholder="Link to a folder of photos"></div>
+      </div>
+      <p class="hint">You'll be able to add photos to your profile once your account is approved — for now a link is fine.</p>
+      <label style="margin-top:20px">Starter references (optional, up to 2)</label>
+      <p class="hint" style="margin-top:0">Seed your profile with up to two of your own past-client references, until Plotworthy reviews build up.</p>
+      <div class="refblock">
+        <div class="rl">Reference 1</div>
+        <div class="two"><input id="r1name" type="text" placeholder="Client name"><input id="r1proj" type="text" placeholder="Project (e.g. loft conversion)"></div>
+        <input id="r1quote" type="text" placeholder="Their words (a short quote)" style="margin-top:8px">
+      </div>
+      <div class="refblock">
+        <div class="rl">Reference 2</div>
+        <div class="two"><input id="r2name" type="text" placeholder="Client name"><input id="r2proj" type="text" placeholder="Project"></div>
+        <input id="r2quote" type="text" placeholder="Their words (a short quote)" style="margin-top:8px">
+      </div>
+      <div class="nav"><button class="back">← Back</button><button class="btn" id="n6">Review →</button></div>
+    </div>
+
+    <!-- 7 REVIEW -->
+    <div class="step" data-step="7">
+      <div class="smeta"><span class="n">Step 7 of 7</span><span class="t">Review</span></div>
+      <h2 class="q">Review &amp; submit</h2>
+      <p class="sub">Check everything's right — then we'll set up your profile and be in touch.</p>
+      <div class="review" id="reviewBox"></div>
+      <div class="nav"><button class="back">← Back</button><button class="btn" id="submitBtn">Submit application</button></div>
+      <div id="doneMsg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var PLOT={LEAD_EMAIL:"hello@plotworthy.co.uk",WEB3FORMS_KEY:"4211609a-8ba0-4739-a5a4-8a2f9f228b21"};
+  var $=function(s){return document.querySelector(s);};
+  var $$=function(s){return document.querySelectorAll(s);};
+  var state={role:"",tier:"",price:0,areas:[],extra:0,practice:"",contact:"",phone:"",email:"",website:"",insurer:"",cover:"",policy:"",expiry:"",accred:"",bio:"",spec:"",portfolio:"",photos:""};
+  var cur=1, INCLUDED=1;
+  function show(step){
+    $$('.step').forEach(function(s){s.classList.toggle('active',+s.dataset.step===step);});
+    $$('.prog i').forEach(function(i){i.classList.toggle('on',+i.dataset.p<=step);});
+    cur=step; window.scrollTo(0,0);
+    if(step===7) buildReview();
+  }
+  // role
+  $$('[data-group="role"]').forEach(function(o){o.addEventListener('click',function(){
+    $$('[data-group="role"]').forEach(function(x){x.classList.remove('sel');});o.classList.add('sel');
+    state.role=o.dataset.val; $('#n1').disabled=false; applyRole();
+  });});
+  function applyRole(){
+    var arch=state.role==='Architect';
+    $('#t1name').textContent=arch?'Starter':'Verified';
+    $('#t2name').textContent=arch?'Growth':'Pro';
+    $('#q4').textContent=arch?'About your practice':'About your company';
+    $('#lPractice').textContent=arch?'Practice name':'Company name';
+    $('#lInsurer').textContent=arch?'Professional indemnity insurer':'Public liability insurer';
+    $('#lAccred').textContent='Accreditations & memberships';
+    $('#fAccred').placeholder=arch?'e.g. RIBA, ARB':'e.g. FMB, TrustMark, Gas Safe';
+    $('#fPractice').placeholder=arch?'e.g. Marsh & Lowe Architects':'e.g. Kentfield Construction Ltd';
+  }
+  // preselect role from ?type=
+  var qp=new URLSearchParams(location.search).get('type');
+  if(qp==='architect'||qp==='builder'){var v=qp==='architect'?'Architect':'Builder';var t=document.querySelector('[data-group="role"][data-val="'+v+'"]');if(t){t.click();show(2);}}
+  $('#n1').addEventListener('click',function(){show(2);});
+
+  // tier
+  $$('[data-group="tier"]').forEach(function(p){p.addEventListener('click',function(){
+    $$('[data-group="tier"]').forEach(function(x){x.classList.remove('sel');});p.classList.add('sel');
+    state.tier=p.dataset.val; state.price=+p.dataset.price; INCLUDED=state.tier==='Growth'?3:1;
+    $('#n2').disabled=false;
+  });});
+  $('#n2').addEventListener('click',function(){renderAreas();show(3);});
+
+  // areas
+  function renderAreas(){
+    var wrap=$('#areaRows'); wrap.innerHTML='';
+    $('#areaSub').textContent='Your '+(state.tier==='Growth'?'Growth':'Starter')+' plan includes '+INCLUDED+' area'+(INCLUDED>1?'s':'')+'. Add more for £25/mo each.';
+    for(var i=0;i<INCLUDED;i++) addRow(false);
+    // restore any extra
+    recalc();
+  }
+  function addRow(isExtra){
+    var wrap=$('#areaRows');
+    var row=document.createElement('div'); row.className='arearow';
+    var inp=document.createElement('input'); inp.type='text'; inp.placeholder='Postcode area or town (e.g. SE10 or Greenwich)';
+    inp.addEventListener('input',recalc);
+    row.appendChild(inp);
+    if(isExtra){
+      var tag=document.createElement('span'); tag.className='tag'; tag.textContent='+£25/mo'; row.appendChild(tag);
+      var rm=document.createElement('button'); rm.className='rm'; rm.textContent='✕'; rm.onclick=function(){row.remove();recalc();}; row.appendChild(rm);
+    }
+    wrap.appendChild(row);
+  }
+  $('#addArea').addEventListener('click',function(){addRow(true);recalc();});
+  function recalc(){
+    var rows=$('#areaRows').querySelectorAll('.arearow');
+    var vals=[],total=rows.length;
+    rows.forEach(function(r){var v=r.querySelector('input').value.trim(); if(v)vals.push(v);});
+    state.areas=vals;
+    var extra=Math.max(0,total-INCLUDED); state.extra=extra;
+    var monthly=state.price+extra*25;
+    $('#costTotal').textContent='£'+monthly+'/mo';
+    $('#costBreak').textContent='£'+state.price+' membership'+(extra>0?(' + '+extra+' × £25 extra area'+(extra>1?'s':'')):'');
+    $('#n3').disabled=vals.length<1;
+  }
+  $('#n3').addEventListener('click',function(){show(4);});
+
+  // practice
+  ['#fPractice','#fContact','#fEmail'].forEach(function(id){$(id).addEventListener('input',checkPractice);});
+  function checkPractice(){
+    state.practice=$('#fPractice').value.trim();state.contact=$('#fContact').value.trim();
+    state.email=$('#fEmail').value.trim();state.phone=$('#fPhone').value.trim();state.website=$('#fWebsite').value.trim();
+    var ok=state.practice&&state.contact&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(state.email);
+    $('#n4').disabled=!ok;
+  }
+  $('#n4').addEventListener('click',function(){show(5);});
+
+  // insurance
+  ['#fInsurer','#fCover','#fPolicy','#fExpiry','#fAccred'].forEach(function(id){$(id).addEventListener('input',checkIns);});
+  function checkIns(){
+    state.insurer=$('#fInsurer').value.trim();state.cover=$('#fCover').value.trim();
+    state.policy=$('#fPolicy').value.trim();state.expiry=$('#fExpiry').value.trim();state.accred=$('#fAccred').value.trim();
+    $('#n5').disabled=!(state.insurer&&state.cover);
+  }
+  $('#n5').addEventListener('click',function(){show(6);});
+
+  // profile+refs
+  $('#n6').addEventListener('click',function(){
+    state.bio=$('#fBio').value.trim();state.spec=$('#fSpec').value.trim();
+    state.portfolio=$('#fPortfolio').value.trim();state.photos=$('#fPhotos').value.trim();
+    show(7);
+  });
+
+  function rline(k,v){return v?('<div><span class="k">'+k+'</span><span class="v">'+v.replace(/</g,'&lt;')+'</span></div>'):'';}
+  function buildReview(){
+    var monthly=state.price+state.extra*25;
+    var ref1=[$('#r1name').value,$('#r1proj').value].filter(Boolean).join(' — ');
+    var ref2=[$('#r2name').value,$('#r2proj').value].filter(Boolean).join(' — ');
+    $('#reviewBox').innerHTML=
+      rline('Type',state.role)+
+      rline('Membership',state.tier+' (£'+state.price+'/mo)')+
+      rline('Coverage areas',state.areas.join(', '))+
+      (state.extra>0?rline('Extra areas',state.extra+' × £25/mo'):'')+
+      rline('Estimated monthly','£'+monthly+'/mo')+
+      rline(state.role==='Architect'?'Practice':'Company',state.practice)+
+      rline('Contact',state.contact)+
+      rline('Email',state.email)+
+      rline('Insurer',state.insurer)+
+      rline('Cover',state.cover)+
+      rline('Accreditations',state.accred)+
+      rline('Specialisms',state.spec)+
+      (ref1?rline('Reference 1',ref1):'')+
+      (ref2?rline('Reference 2',ref2):'');
+  }
+  $$('.back').forEach(function(b){b.addEventListener('click',function(){show(cur-1);});});
+
+  $('#submitBtn').addEventListener('click',function(){
+    var monthly=state.price+state.extra*25;
+    var data={
+      'Professional type':state.role,
+      Membership:state.tier+' (£'+state.price+'/mo)',
+      'Coverage areas':state.areas.join('; '),
+      'Extra areas (£25/mo)':state.extra,
+      'Estimated monthly':'£'+monthly+'/mo',
+      Practice:state.practice, Contact:state.contact, Email:state.email, Phone:state.phone||'—', Website:state.website||'—',
+      Insurer:state.insurer, 'Cover level':state.cover, 'Policy number':state.policy||'—', 'Insurance expiry':state.expiry||'—',
+      Accreditations:state.accred||'—', Bio:state.bio||'—', Specialisms:state.spec||'—',
+      'Portfolio link':state.portfolio||'—', 'Photos link':state.photos||'—',
+      'Reference 1':[$('#r1name').value,$('#r1proj').value,$('#r1quote').value].filter(Boolean).join(' | ')||'—',
+      'Reference 2':[$('#r2name').value,$('#r2proj').value,$('#r2quote').value].filter(Boolean).join(' | ')||'—'
+    };
+    var btn=$('#submitBtn'); btn.disabled=true; btn.textContent='Submitting…';
+    function done(){
+      $('#reviewBox').style.display='none';
+      $('.nav').style.display='none';
+      $('#doneMsg').innerHTML='<div class="done"><div class="tick">✓</div><h2 class="q">Application received</h2><p class="sub">Thanks, '+(state.contact.split(' ')[0]||'')+'. We\'ll review your details, get you verified, and set up your profile — then be in touch at '+state.email+'.</p></div>';
+    }
+    var key=PLOT.WEB3FORMS_KEY;
+    if(key){
+      fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
+        body:JSON.stringify(Object.assign({access_key:key,subject:"New Plotworthy "+state.role+" application",from_name:"Plotworthy website"},data))})
+        .then(done).catch(done);
+    } else { done(); }
+  });
+})();
+</script>
+</body>
+</html>
