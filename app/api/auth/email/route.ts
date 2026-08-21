@@ -3,7 +3,14 @@ import { z } from "zod";
 import { hasSupabaseConfig } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const emailSchema = z.object({ email: z.email("Enter a valid email address") });
+const emailSchema = z.object({
+  email: z.email("Enter a valid email address"),
+  next: z.string().trim().max(200).optional()
+});
+
+function safeNext(value?: string) {
+  return value?.startsWith("/") && !value.startsWith("//") ? value : "/onboarding?choose=1";
+}
 
 export async function POST(request: Request) {
   if (!hasSupabaseConfig()) {
@@ -11,7 +18,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { email } = emailSchema.parse(await request.json());
+    const { email, next } = emailSchema.parse(await request.json());
     const requestOrigin = new URL(request.url).origin;
     const origin = process.env.NODE_ENV === "development"
       ? requestOrigin
@@ -19,7 +26,7 @@ export async function POST(request: Request) {
     const supabase = await createSupabaseServerClient();
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${origin}/auth/callback?next=/dashboard` }
+      options: { emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(safeNext(next))}` }
     });
     if (error) throw error;
 

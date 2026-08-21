@@ -11,6 +11,7 @@ export type EvidenceItem = {
 
 export type FeasibilityResult = {
   requestId: string;
+  saved?: boolean;
   property: {
     address: string;
     postcode: string;

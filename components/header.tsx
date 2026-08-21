@@ -11,6 +11,8 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
+  if (pathname.startsWith("/professional")) return null;
+
   return (
     <header className="site-header">
       <div className="shell nav-row">

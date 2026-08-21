@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Check, LoaderCircle, LockKeyhole, MapPin, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookmarkCheck, Check, LoaderCircle, LockKeyhole, MapPin, ShieldCheck } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { EvidenceCard } from "@/components/evidence-card";
 import type { FeasibilityResult } from "@/lib/types";
@@ -87,10 +87,10 @@ export function CheckForm() {
             <ol>{result.nextSteps.map((item) => <li key={item}><Check size={17} />{item}</li>)}</ol>
           </div>
           <aside className="unlock-card">
-            <LockKeyhole />
-            <h3>Build the full property record</h3>
-            <p>Verify your email to save this address, keep source updates together and request a professional review.</p>
-            <a className="button" href="/login">Verify email and continue</a>
+            {result.saved ? <BookmarkCheck /> : <LockKeyhole />}
+            <h3>{result.saved ? "Saved to your dashboard" : "Build the full property record"}</h3>
+            <p>{result.saved ? "This snapshot is now part of your private PlotWorthy workspace." : "Verify your email to save this address, keep source updates together and request a professional review."}</p>
+            <a className="button" href={result.saved ? `/dashboard/reports/${result.requestId}` : "/login"}>{result.saved ? "Invite professionals to quote" : "Verify email and continue"}</a>
             <small>No invented scores. Unknown evidence stays clearly marked.</small>
           </aside>
         </div>
