@@ -3,7 +3,7 @@
 import { LoaderCircle, Mail, ShieldCheck } from "lucide-react";
 import { FormEvent, useState } from "react";
 
-export function LoginForm({ initialError = "", next = "/onboarding?choose=1" }: { initialError?: string; next?: string }) {
+export function LoginForm({ initialError = "", next = "/dashboard" }: { initialError?: string; next?: string }) {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState(initialError);
@@ -33,13 +33,14 @@ export function LoginForm({ initialError = "", next = "/onboarding?choose=1" }: 
   return (
     <form className="login-form" onSubmit={submit}>
       <span className="login-icon"><Mail /></span>
-      <h1>Sign in without a password</h1>
-      <p>We’ll email you a one-time secure link. After signing in, you’ll choose whether you’re a client or a professional.</p>
+      <p className="eyebrow">Returning to PlotWorthy</p>
+      <h1>Log in to your account</h1>
+      <p>Enter the email you registered with. We’ll send a secure one-time link and take you straight to your client or professional workspace.</p>
       <label>Email address<input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.co.uk" required /></label>
-      <button className="button button-wide" type="submit" disabled={loading}>{loading ? <><LoaderCircle className="spin" size={18} /> Sending…</> : "Email me a sign-in link"}</button>
+      <button className="button button-wide" type="submit" disabled={loading}>{loading ? <><LoaderCircle className="spin" size={18} /> Sending…</> : "Send my secure login link"}</button>
       {message ? <p className="form-success" role="status">{message}</p> : null}
       {error ? <p className="form-error" role="alert">{error}</p> : null}
-      <small><ShieldCheck size={15} /> Your email is not sold to professionals. You choose when to request contact.</small>
+      <small><ShieldCheck size={15} /> New here? The same secure link will help you choose a client or professional account after verification.</small>
     </form>
   );
 }

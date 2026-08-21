@@ -45,6 +45,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .main-nav > a:not(.button)::after { content: ""; height: 2px; position: absolute; left: 0; right: 100%; bottom: -8px; background: var(--gold); transition: right .2s ease; }
 .main-nav > a:hover::after, .main-nav > a.active::after { right: 0; }
 .main-nav .text-link { color: var(--muted); }
+.main-nav .login-button { white-space: nowrap; }
 .menu-button { display: none; padding: 8px; color: var(--ink); border: 0; background: transparent; }
 
 .button { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 12px 23px; border: 1px solid var(--ink); border-radius: 999px; color: var(--white); background: var(--ink); font-size: .92rem; font-weight: 780; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
@@ -192,6 +193,7 @@ input::placeholder, textarea::placeholder { color: #84968f; }
 .auth-page { min-height: 76vh; display: grid; place-items: center; }
 .login-form { max-width: 510px; margin: auto; padding: clamp(28px, 5vw, 48px); border: 1px solid var(--line); border-radius: 25px; background: var(--white); box-shadow: var(--shadow); }
 .login-icon { width: 52px; height: 52px; display: grid; place-items: center; margin-bottom: 22px; border-radius: 16px; background: var(--gold-light); }
+.login-form > .eyebrow { margin-bottom: 10px; color: var(--terra); }
 .login-form h1 { margin-bottom: 15px; font-size: clamp(2.1rem, 5vw, 3.3rem); }
 .login-form > p { color: var(--muted); }
 .login-form label { margin-top: 25px; }

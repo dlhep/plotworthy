@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { LogIn, Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "@/components/logo";
@@ -37,7 +37,7 @@ export function Header() {
               {item.label}
             </Link>
           ))}
-          <Link className="text-link" href="/login" onClick={() => setOpen(false)}>Sign in</Link>
+          <Link className="button button-ghost button-small login-button" href="/login" onClick={() => setOpen(false)}><LogIn size={17} /> Log in</Link>
           <Link className="button button-small" href="/check" onClick={() => setOpen(false)}>Start a check</Link>
         </nav>
       </div>
