@@ -14,7 +14,7 @@ This rebuild replaces the original static prototype with a Next.js App Router ap
 - Supabase-ready dashboard, professional network, guides and legal pages
 - Dynamic sitemap, robots and web manifest
 - Security headers and a Supabase session-refresh proxy
-- A reviewed-but-not-applied migration for geospatial HMO evidence, saved feasibility requests and professional applications
+- Versioned Supabase migrations for marketplace projects, professional approval, coverage controls and billing entitlements
 
 ## Local development
 
@@ -34,6 +34,34 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 Use a Supabase publishable key, not a service-role secret. Configure the production site URL and allowed redirect URLs in Supabase Auth before testing email links.
 
+## Stripe coverage billing
+
+Professional membership includes five postcode districts. The coverage screen offers three recurring add-ons:
+
+- one extra district for £5/month
+- ten extra districts for £40/month
+- twenty-five extra districts for £75/month
+
+Create three monthly GBP prices in Stripe, then add these server-only variables in Vercel:
+
+```text
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+STRIPE_COVERAGE_SINGLE_PRICE_ID=
+STRIPE_COVERAGE_LOCAL_PRICE_ID=
+STRIPE_COVERAGE_REGIONAL_PRICE_ID=
+SUPABASE_SERVICE_ROLE_KEY=
+```
+
+Register `https://www.plotworthy.co.uk/api/stripe/webhook` as a Stripe webhook endpoint for:
+
+- `checkout.session.completed`
+- `customer.subscription.created`
+- `customer.subscription.updated`
+- `customer.subscription.deleted`
+
+Enable subscription switching and cancellation in the Stripe Customer Portal. The webhook writes the effective add-on allowance to Supabase; the coverage RPC enforces that allowance independently of the browser.
+
 ## Checks
 
 ```bash
@@ -46,7 +74,7 @@ pnpm build
 
 The existing PlotWorthy Supabase project already contains profiles, properties, planning applications, HMO records, precedents, professional profiles, report runs, saved properties, alerts, leads and live-data cache tables.
 
-The migration in [`supabase/migrations/`](./supabase/migrations/) extends that model. It is intentionally not applied automatically. Review it against the live schema, take a backup and approve a production release before running it.
+The migrations in [`supabase/migrations/`](./supabase/migrations/) extend that model. Apply them in timestamp order to each environment after reviewing the target schema.
 
 Key safeguards in the migration:
 
@@ -64,5 +92,3 @@ Key safeguards in the migration:
 4. Connect council planning, Article 4, HMO register and constraints ingestion with source dates.
 5. Run an end-to-end check in a Vercel preview before promoting it.
 6. Review the commercial terms, privacy notice and professional verification wording before accepting payments or claiming profiles are vetted.
-
-No migration, commit, push or deployment is performed by this working copy.

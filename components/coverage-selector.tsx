@@ -1,9 +1,11 @@
 "use client";
 
 import Script from "next/script";
-import { Check, LocateFixed, MapPin, Plus, Save, Search, X } from "lucide-react";
+import { Check, CreditCard, LocateFixed, LockKeyhole, MapPin, Plus, Save, Search, Sparkles, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { updateCoverage } from "@/app/professional/coverage/actions";
+import { openCoverageBillingPortal, startCoverageCheckout } from "@/app/professional/coverage/billing-actions";
+import { coveragePlans, formatMonthlyPrice } from "@/lib/coverage-plans";
 
 type BoundaryGeometry = { type: "Polygon" | "MultiPolygon"; coordinates: number[][][] | number[][][][] };
 type BoundaryFeature = { type: "Feature"; properties: { code: string }; geometry: BoundaryGeometry };
@@ -32,9 +34,32 @@ function coordinatesFor(feature: BoundaryFeature) {
   return coordinates;
 }
 
-export function CoverageSelector({ initialCoverage, saved }: { initialCoverage: string[]; saved?: string }) {
+type CoverageSelectorProps = {
+  initialCoverage: string[];
+  allowance: number;
+  saved?: string;
+  billing?: string;
+  billingConfigured: boolean;
+  billingStatus: string;
+  coveragePackage: string | null;
+  cancelAtPeriodEnd: boolean;
+};
+
+const billingMessages: Record<string, string> = {
+  success: "Payment received. Your new district allowance will appear as soon as Stripe confirms the subscription.",
+  cancelled: "Checkout cancelled. Your current coverage has not changed.",
+  unavailable: "Stripe billing is not connected yet. Add the Stripe keys and price IDs to activate purchases.",
+  manage: "You already have a coverage subscription. Use Manage billing to change or cancel it.",
+  missing: "No Stripe billing account was found for this profile.",
+  invalid: "That coverage package was not recognised.",
+  error: "Stripe could not open billing. Please try again or contact support."
+};
+
+export function CoverageSelector({ initialCoverage, allowance, saved, billing, billingConfigured, billingStatus, coveragePackage, cancelAtPeriodEnd }: CoverageSelectorProps) {
   const [selected, setSelected] = useState(initialCoverage);
   const [input, setInput] = useState("");
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [limitNotice, setLimitNotice] = useState(false);
   const [coverage, setCoverage] = useState<GeoJSON>(emptyCoverage);
   const [scriptReady, setScriptReady] = useState(false);
   const [mapReady, setMapReady] = useState(false);
@@ -44,7 +69,12 @@ export function CoverageSelector({ initialCoverage, saved }: { initialCoverage: 
 
   function add(codeValue = input) {
     const code = codeValue.toUpperCase().replace(/\s/g, "");
-    if (!codePattern.test(code) || selected.includes(code) || selected.length >= 30) return;
+    if (!codePattern.test(code) || selected.includes(code)) return;
+    if (selected.length >= allowance) {
+      setLimitNotice(true);
+      setUpgradeOpen(true);
+      return;
+    }
     setSelected((current) => [...current, code]);
     setInput("");
   }
@@ -93,14 +123,28 @@ export function CoverageSelector({ initialCoverage, saved }: { initialCoverage: 
     <Script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js" strategy="afterInteractive" onLoad={() => setScriptReady(true)} onError={() => setMapError(true)} />
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" />
     {saved ? <div className="workspace-success"><Check /> Coverage saved. New project matching now uses these postcode districts.</div> : null}
+    {billing && billingMessages[billing] ? <div className={billing === "success" ? "workspace-success" : "workspace-preview-banner"}><CreditCard /> {billingMessages[billing]}</div> : null}
     <form className="coverage-workspace" action={updateCoverage}>
       <input type="hidden" name="postcodes" value={JSON.stringify(selected)} />
       <section className="coverage-control-panel">
-        <div className="coverage-panel-heading"><div><p className="workspace-kicker">Lead preferences</p><h2>Select postcode districts</h2></div><span>{selected.length}/30</span></div>
+        <div className="coverage-panel-heading"><div><p className="workspace-kicker">Lead preferences</p><h2>Select postcode districts</h2></div><span>{selected.length}/{allowance}</span></div>
         <p>Choose the districts where you want first access to new projects. You can change this at any time.</p>
         <div className="coverage-search"><Search /><input value={input} onChange={(event) => setInput(event.target.value.toUpperCase())} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); add(); } }} placeholder="For example B17" maxLength={4} /><button type="button" onClick={() => add()} disabled={!codePattern.test(input.replace(/\s/g, ""))}><Plus /> Add</button></div>
         <div className="coverage-selected"><div><strong>Included districts</strong><button type="button" onClick={() => setSelected([])}>Clear all</button></div>{selected.length ? <div className="coverage-chips">{selected.map((code) => <button type="button" key={code} onClick={() => setSelected((current) => current.filter((item) => item !== code))}>{code}<X /></button>)}</div> : <p>No districts selected yet.</p>}</div>
         <div className="coverage-suggestions"><strong>Nearby suggestions</strong><div>{suggestions.map((code) => <button className={selected.includes(code) ? "selected" : undefined} type="button" key={code} onClick={() => selected.includes(code) ? setSelected((current) => current.filter((item) => item !== code)) : add(code)}>{selected.includes(code) ? <Check /> : null}{code}</button>)}</div></div>
+        <div className="coverage-allowance-card">
+          <div><LockKeyhole /><div><strong>{allowance} districts available</strong><span>5 are included with professional membership{allowance > 5 ? ` and ${allowance - 5} are added by your coverage plan` : ""}.</span></div></div>
+          {coveragePackage && ["active", "trialing", "past_due"].includes(billingStatus) ? <>
+            <p className="coverage-current-plan"><Check /> {coveragePlans[coveragePackage as keyof typeof coveragePlans]?.name ?? "Coverage add-on"}{cancelAtPeriodEnd ? " · ends after the current billing period" : " · active"}</p>
+            <button className="coverage-manage-button" type="submit" formAction={openCoverageBillingPortal}><CreditCard /> Manage billing</button>
+          </> : <button className="coverage-upgrade-button" type="button" onClick={() => setUpgradeOpen((current) => !current)}><Sparkles /> Add more districts</button>}
+        </div>
+        {limitNotice ? <p className="coverage-limit-notice">You have used all {allowance} available districts. Choose an add-on to increase the limit.</p> : null}
+        {upgradeOpen && !coveragePackage ? <div className="coverage-upgrade-panel">
+          <div><p className="workspace-kicker">Flexible monthly add-ons</p><h3>Reach more local projects</h3><p>District slots are reusable. Change your chosen postcodes at any time.</p></div>
+          <div className="coverage-plan-grid">{Object.values(coveragePlans).map((plan) => <article className={plan.key === "local" ? "recommended" : undefined} key={plan.key}>{plan.key === "local" ? <span>Best value</span> : null}<strong>{plan.shortName}</strong><b>{formatMonthlyPrice(plan.monthlyPricePence)}<small>/month</small></b><p>{plan.key === "single" ? "Ideal for one adjoining area." : plan.key === "local" ? "Save £10 against single slots." : "Broad regional coverage for growing firms."}</p><button type="submit" name="package" value={plan.key} formAction={startCoverageCheckout} disabled={!billingConfigured}>Choose {plan.shortName}</button></article>)}</div>
+          {!billingConfigured ? <p className="coverage-stripe-note">Preview only — connect Stripe and add the three recurring price IDs to activate these buttons.</p> : <p className="coverage-stripe-note">Secure recurring billing by Stripe. Cancel or change your package through the billing portal.</p>}
+        </div> : null}
         <button className="button button-wide" type="submit" disabled={!selected.length}><Save /> Save coverage</button>
       </section>
       <section className="coverage-map-panel">
