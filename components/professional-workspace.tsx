@@ -22,7 +22,7 @@ const navigation = [
   { href: "/professional/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/professional/opportunities", label: "Opportunities", icon: BriefcaseBusiness },
   { href: "/professional/coverage", label: "Coverage map", icon: Map },
-  { href: "/professional/profile", label: "Public profile", icon: UserRound }
+  { href: "/professional/profile", label: "Profile", icon: UserRound }
 ] as const;
 
 export function ProfessionalWorkspace({
@@ -68,7 +68,7 @@ export function ProfessionalWorkspace({
             );
           })}
           <p>Account</p>
-          <Link href="/professional/profile" onClick={() => setMenuOpen(false)}><Settings /><span>Settings</span></Link>
+          <Link href="/professional/profile#practice-details" onClick={() => setMenuOpen(false)}><Settings /><span>Account settings</span></Link>
           <Link href="/contact" onClick={() => setMenuOpen(false)}><CircleHelp /><span>Help & support</span></Link>
         </nav>
         <div className="workspace-sidebar-footer">
