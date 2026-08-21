@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   try {
     const { email, next } = emailSchema.parse(await request.json());
     const requestOrigin = new URL(request.url).origin;
-    const origin = process.env.NODE_ENV === "development"
+    const origin = process.env.NODE_ENV === "development" || process.env.VERCEL_ENV === "preview"
       ? requestOrigin
       : process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.plotworthy.co.uk";
     const supabase = await createSupabaseServerClient();
