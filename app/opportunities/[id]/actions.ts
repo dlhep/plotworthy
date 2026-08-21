@@ -32,9 +32,9 @@ export async function submitQuote(
     });
     if (error) throw error;
 
-    revalidatePath("/opportunities");
-    revalidatePath(`/opportunities/${input.projectId}`);
-    revalidatePath("/dashboard");
+    revalidatePath("/professional/opportunities");
+    revalidatePath(`/professional/opportunities/${input.projectId}`);
+    revalidatePath("/professional/dashboard");
     return { success: "Quote submitted. The client can now review it in their private workspace." };
   } catch (error) {
     if (error instanceof ZodError) {
