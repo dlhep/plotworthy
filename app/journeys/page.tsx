@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { JOURNEYS, STAGE_TITLES } from "@/lib/journeys";
 import { ProjectIcon, StageIcon } from "@/components/Icons";
+import { Reveal } from "@/components/Reveal";
 
 export const metadata = {
   title: "Project journeys — PlotWorthy",
@@ -23,7 +24,7 @@ export default function JourneysPage() {
         </p>
       </div>
 
-      <div className="mx-auto mt-14 grid max-w-5xl gap-5 sm:grid-cols-2">
+      <Reveal stagger className="mx-auto mt-14 grid max-w-5xl gap-5 sm:grid-cols-2">
         {JOURNEYS.map((j) => (
           <Link
             key={j.slug}
@@ -47,7 +48,7 @@ export default function JourneysPage() {
             </span>
           </Link>
         ))}
-      </div>
+      </Reveal>
 
       <div className="mx-auto mt-12 max-w-5xl rounded-2xl border border-line bg-cream/50 px-6 py-7">
         <h3 className="font-serif text-lg text-ink">The seven universal stages</h3>

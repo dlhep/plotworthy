@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { JOURNEYS, getJourney, STAGE_TITLES } from "@/lib/journeys";
 import { JourneyStepper } from "@/components/JourneyStepper";
 import { ProjectIcon, StageIcon } from "@/components/Icons";
+import { Reveal } from "@/components/Reveal";
 
 export function generateStaticParams() {
   return JOURNEYS.map((j) => ({ slug: j.slug }));
@@ -65,7 +66,7 @@ export default function JourneyHubPage({
       </div>
 
       {/* Hub summary — the top-level view */}
-      <div className="mt-10 rounded-2xl border border-sage-200 bg-sage-50/40 p-6 sm:p-8">
+      <Reveal className="mt-10 rounded-2xl border border-sage-200 bg-sage-50/40 p-6 sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-start gap-4">
             <span className="tile h-12 w-12 shrink-0 bg-clay-50 text-clay-600 ring-clay-100">
@@ -121,10 +122,10 @@ export default function JourneyHubPage({
           <span className="font-medium text-ink">What happens afterwards: </span>
           {stage.afterwards}
         </p>
-      </div>
+      </Reveal>
 
       {/* The full journey */}
-      <div className="mt-14">
+      <Reveal className="mt-14">
         <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="font-serif text-2xl text-ink">Your full journey</h2>
           <p className="text-sm text-muted">
@@ -132,10 +133,10 @@ export default function JourneyHubPage({
           </p>
         </div>
         <JourneyStepper journey={journey} currentStage={current} />
-      </div>
+      </Reveal>
 
       {/* Cross-links */}
-      <div className="mt-14 rounded-2xl border border-line bg-cream/50 px-6 py-6">
+      <Reveal className="mt-14 rounded-2xl border border-line bg-cream/50 px-6 py-6">
         <h3 className="font-serif text-lg text-ink">Same seven stages, every project</h3>
         <p className="mt-2 text-sm text-muted">
           {STAGE_TITLES.join(" · ")}
@@ -152,7 +153,7 @@ export default function JourneyHubPage({
             </Link>
           ))}
         </div>
-      </div>
+      </Reveal>
     </div>
   );
 }

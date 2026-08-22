@@ -3,6 +3,7 @@ import { GOALS } from "@/lib/start";
 import { STAGE_TITLES } from "@/lib/journeys";
 import { IntroFlow } from "@/components/IntroFlow";
 import { ProjectIcon, StageIcon, HeroMotif } from "@/components/Icons";
+import { Reveal } from "@/components/Reveal";
 
 const STAGE_BLURBS = [
   "What are you trying to achieve?",
@@ -25,7 +26,7 @@ export default function HomePage() {
         </div>
 
         <div className="container-content pt-20 pb-8 sm:pt-28">
-          <div className="mx-auto max-w-3xl text-center">
+          <Reveal stagger className="mx-auto max-w-3xl text-center">
             <p className="eyebrow justify-center">
               <span className="h-px w-6 bg-clay-400/60" />
               Your property project adviser
@@ -54,14 +55,14 @@ export default function HomePage() {
                 </span>
               ))}
             </div>
-          </div>
+          </Reveal>
 
           {/* The one question */}
           <div className="mx-auto mt-8 max-w-3xl">
             <h2 className="text-center font-serif text-2xl text-ink">
               What are you hoping to do with a property?
             </h2>
-            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            <Reveal stagger className="mt-8 grid gap-3 sm:grid-cols-2">
               {GOALS.map((g) => (
                 <Link
                   key={g.id}
@@ -80,7 +81,7 @@ export default function HomePage() {
                   </span>
                 </Link>
               ))}
-            </div>
+            </Reveal>
             <p className="mt-6 text-center text-sm text-muted">
               Prefer to browse first?{" "}
               <Link href="/journeys" className="font-medium text-sage-700 underline-offset-4 hover:underline">
@@ -94,7 +95,7 @@ export default function HomePage() {
 
       {/* The journey overview */}
       <section className="container-content mt-28">
-        <div className="mx-auto max-w-2xl text-center">
+        <Reveal className="mx-auto max-w-2xl text-center">
           <p className="kicker justify-center">
             <span className="kicker-num">01</span> One clear path
           </p>
@@ -106,9 +107,13 @@ export default function HomePage() {
             Only your current stage opens in detail — future stages stay calm and
             collapsed until you reach them.
           </p>
-        </div>
+        </Reveal>
 
-        <ol className="mx-auto mt-14 grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Reveal
+          stagger
+          as="ol"
+          className="mx-auto mt-14 grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
           {STAGE_TITLES.map((title, i) => (
             <li key={title} className="card group px-5 py-6 transition-all hover:-translate-y-0.5 hover:shadow-lift">
               <div className="flex items-center justify-between">
@@ -128,12 +133,12 @@ export default function HomePage() {
               See a full journey →
             </Link>
           </li>
-        </ol>
+        </Reveal>
       </section>
 
       {/* How professionals appear */}
       <section className="container-content mt-28">
-        <div className="grid items-center gap-14 lg:grid-cols-2">
+        <Reveal stagger className="grid items-center gap-14 lg:grid-cols-2">
           <div>
             <p className="kicker">
               <span className="kicker-num">02</span> Support, when it’s useful
@@ -190,12 +195,12 @@ export default function HomePage() {
               />
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* CTA */}
       <section className="container-content mt-28">
-        <div className="relative overflow-hidden rounded-3xl bg-sage-700 px-8 py-16 text-center text-white">
+        <Reveal className="relative overflow-hidden rounded-3xl bg-sage-700 px-8 py-16 text-center text-white">
           <div className="pointer-events-none absolute inset-0 opacity-[0.12] text-white">
             <HeroMotif className="absolute -right-6 top-6 h-40 w-80" />
           </div>
@@ -210,7 +215,7 @@ export default function HomePage() {
           <Link href="/start" className="btn mt-8 bg-white text-sage-800 hover:bg-sage-50">
             Start your journey
           </Link>
-        </div>
+        </Reveal>
       </section>
     </div>
   );

@@ -4,7 +4,8 @@
 
 :root {
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
+  /* Modern display font (used wherever font-serif / .display is applied) */
+  --font-serif: "Bricolage Grotesque", "Inter", system-ui, sans-serif;
 }
 
 html {
@@ -42,9 +43,9 @@ body::before {
     @apply mx-auto w-full max-w-content px-5 sm:px-8;
   }
 
-  /* Editorial display headings */
+  /* Modern display headings */
   .display {
-    @apply font-serif font-normal tracking-[-0.02em] text-ink;
+    @apply font-serif font-medium tracking-[-0.025em] text-ink;
     font-optical-sizing: auto;
   }
 
@@ -83,5 +84,58 @@ body::before {
 
   .tile {
     @apply inline-flex items-center justify-center rounded-xl bg-sage-50 text-sage-700 ring-1 ring-sage-100;
+  }
+}
+
+/* ---- Entrance animations -------------------------------------------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Block reveal: fades the whole element up when scrolled into view */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.65s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.65s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Staggered reveal: direct children rise in sequence */
+.stagger > * {
+  opacity: 0;
+  transform: translateY(16px);
+}
+.stagger.is-visible > * {
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.stagger.is-visible > *:nth-child(1) { animation-delay: 0.04s; }
+.stagger.is-visible > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger.is-visible > *:nth-child(3) { animation-delay: 0.16s; }
+.stagger.is-visible > *:nth-child(4) { animation-delay: 0.22s; }
+.stagger.is-visible > *:nth-child(5) { animation-delay: 0.28s; }
+.stagger.is-visible > *:nth-child(6) { animation-delay: 0.34s; }
+.stagger.is-visible > *:nth-child(7) { animation-delay: 0.4s; }
+.stagger.is-visible > *:nth-child(n + 8) { animation-delay: 0.46s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
   }
 }

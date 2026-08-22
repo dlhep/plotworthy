@@ -8,34 +8,34 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Calm, warm, professional palette
+        // Warm, calm, professional palette — warmed neutrals + richer terracotta
         sage: {
-          50: "#f2f6f3",
-          100: "#e2ebe4",
-          200: "#c5d7ca",
-          300: "#9fbaa8",
-          400: "#739882",
-          500: "#547a64",
-          600: "#3f7561", // primary
-          700: "#345e4e",
-          800: "#2b4b40",
-          900: "#243e35",
+          50: "#f1f5ee",
+          100: "#e2ebdf",
+          200: "#c6d8c3",
+          300: "#a1bb9c",
+          400: "#769a72",
+          500: "#557b56",
+          600: "#436b4f", // primary (warmed green)
+          700: "#375741",
+          800: "#2d4636",
+          900: "#26392d",
         },
         clay: {
-          50: "#fbf5f0",
-          100: "#f6e7db",
-          200: "#ecccb4",
-          300: "#e0ac89",
-          400: "#d5926a", // warm accent
-          500: "#c67750",
-          600: "#b46145",
-          700: "#954d3a",
+          50: "#fcf3ea",
+          100: "#f8e5d3",
+          200: "#efc8a4",
+          300: "#e5a875",
+          400: "#dc8c52", // warm accent (terracotta)
+          500: "#cd6f3b",
+          600: "#b85a30",
+          700: "#97472a",
         },
-        ink: "#2a302c",
-        muted: "#6b7269",
-        line: "#e7e2d8",
-        canvas: "#faf8f3", // warm off-white background
-        cream: "#f4efe6",
+        ink: "#2a2822",
+        muted: "#786f62",
+        line: "#ece3d4",
+        canvas: "#faf5ec", // warm off-white background
+        cream: "#f4ebdd",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
