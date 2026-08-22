@@ -7,8 +7,10 @@ export default function JoinPage() {
     <div className="container-content py-14 sm:py-20">
       <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
         <div>
-          <p className="eyebrow">Join as a professional</p>
-          <h1 className="mt-3 font-serif text-4xl text-ink">
+          <p className="kicker">
+            <span className="kicker-num">01</span> Join as a professional
+          </p>
+          <h1 className="display mt-4 text-4xl sm:text-5xl">
             Better leads, better fit
           </h1>
           <p className="mt-4 leading-relaxed text-muted">

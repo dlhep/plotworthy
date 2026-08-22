@@ -22,23 +22,23 @@ export function Nav() {
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-0.5 lg:flex">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className="rounded-full px-3 py-2 text-sm text-ink/75 transition-colors hover:bg-cream hover:text-ink"
+              className="whitespace-nowrap rounded-full px-2.5 py-2 text-[13px] font-medium text-ink/70 transition-colors hover:bg-cream hover:text-ink"
             >
               {l.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
-          <Link href="/login" className="btn-ghost text-sm">
+        <div className="hidden items-center gap-1.5 lg:flex">
+          <Link href="/login" className="btn-ghost whitespace-nowrap px-4 py-2 text-[13px]">
             Log in
           </Link>
-          <Link href="/start" className="btn-primary text-sm">
+          <Link href="/start" className="btn-primary whitespace-nowrap px-4 py-2 text-[13px]">
             Start your journey
           </Link>
         </div>

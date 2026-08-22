@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { JOURNEYS, STAGE_TITLES } from "@/lib/journeys";
+import { ProjectIcon, StageIcon } from "@/components/Icons";
 
 export const metadata = {
   title: "Project journeys — PlotWorthy",
@@ -9,8 +10,10 @@ export default function JourneysPage() {
   return (
     <div className="container-content py-14 sm:py-20">
       <div className="mx-auto max-w-2xl text-center">
-        <p className="eyebrow">Project journeys</p>
-        <h1 className="mt-3 font-serif text-4xl text-ink">
+        <p className="kicker justify-center">
+          <span className="kicker-num">01</span> Project journeys
+        </p>
+        <h1 className="display mt-4 text-4xl sm:text-5xl">
           Choose the journey that fits your plan
         </h1>
         <p className="mt-4 text-muted">
@@ -20,38 +23,41 @@ export default function JourneysPage() {
         </p>
       </div>
 
-      <div className="mx-auto mt-12 grid max-w-5xl gap-5 sm:grid-cols-2">
+      <div className="mx-auto mt-14 grid max-w-5xl gap-5 sm:grid-cols-2">
         {JOURNEYS.map((j) => (
           <Link
             key={j.slug}
             href={`/journeys/${j.slug}`}
-            className="card group flex flex-col p-6 transition-all hover:border-sage-300 hover:shadow-lift"
+            className="card group flex flex-col p-6 transition-all hover:-translate-y-0.5 hover:border-sage-300 hover:shadow-lift"
           >
-            <div className="flex items-center gap-3">
-              <span className="text-3xl" aria-hidden="true">{j.emoji}</span>
+            <div className="flex items-center justify-between">
+              <span className="tile h-12 w-12">
+                <ProjectIcon type={j.slug} className="h-7 w-7" />
+              </span>
               {j.isReference && (
-                <span className="rounded-full bg-sage-50 px-2.5 py-0.5 text-xs font-semibold text-sage-700">
+                <span className="rounded-full bg-sage-50 px-2.5 py-0.5 text-xs font-semibold text-sage-700 ring-1 ring-sage-100">
                   Reference model
                 </span>
               )}
             </div>
-            <h2 className="mt-4 font-serif text-xl text-ink">{j.name}</h2>
+            <h2 className="mt-5 font-serif text-xl text-ink">{j.name}</h2>
             <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{j.tagline}</p>
-            <span className="mt-4 text-sm font-medium text-sage-700 group-hover:underline">
-              See the journey →
+            <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sage-700 transition-all group-hover:gap-2">
+              See the journey <span aria-hidden="true">→</span>
             </span>
           </Link>
         ))}
       </div>
 
-      <div className="mx-auto mt-12 max-w-5xl rounded-2xl border border-line bg-cream/50 px-6 py-6">
+      <div className="mx-auto mt-12 max-w-5xl rounded-2xl border border-line bg-cream/50 px-6 py-7">
         <h3 className="font-serif text-lg text-ink">The seven universal stages</h3>
-        <ol className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
+        <ol className="mt-5 grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
           {STAGE_TITLES.map((t, i) => (
-            <li key={t} className="flex items-center gap-2">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-semibold text-sage-700">
-                {i + 1}
+            <li key={t} className="flex items-center gap-2.5 text-sm text-ink/80">
+              <span className="tile h-8 w-8 shrink-0 bg-white ring-sage-100">
+                <StageIcon n={i + 1} className="h-[18px] w-[18px]" />
               </span>
+              <span className="font-serif text-sage-600/60">0{i + 1}</span>
               {t}
             </li>
           ))}

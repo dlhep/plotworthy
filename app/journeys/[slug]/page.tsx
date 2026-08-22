@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JOURNEYS, getJourney, STAGE_TITLES } from "@/lib/journeys";
 import { JourneyStepper } from "@/components/JourneyStepper";
+import { ProjectIcon, StageIcon } from "@/components/Icons";
 
 export function generateStaticParams() {
   return JOURNEYS.map((j) => ({ slug: j.slug }));
@@ -45,14 +46,16 @@ export default function JourneyHubPage({
       <div className="mt-5 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
           <div className="flex items-center gap-3">
-            <span className="text-4xl" aria-hidden="true">{journey.emoji}</span>
+            <span className="tile h-14 w-14">
+              <ProjectIcon type={journey.slug} className="h-8 w-8" />
+            </span>
             {journey.isReference && (
-              <span className="rounded-full bg-sage-50 px-2.5 py-0.5 text-xs font-semibold text-sage-700">
+              <span className="rounded-full bg-sage-50 px-2.5 py-0.5 text-xs font-semibold text-sage-700 ring-1 ring-sage-100">
                 Reference model
               </span>
             )}
           </div>
-          <h1 className="mt-4 font-serif text-4xl text-ink">{journey.name}</h1>
+          <h1 className="display mt-5 text-4xl sm:text-[2.75rem]">{journey.name}</h1>
           <p className="mt-3 leading-relaxed text-muted">{journey.intro}</p>
         </div>
 
@@ -64,12 +67,17 @@ export default function JourneyHubPage({
       {/* Hub summary — the top-level view */}
       <div className="mt-10 rounded-2xl border border-sage-200 bg-sage-50/40 p-6 sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-clay-600">
-              You are here · Stage {stage.n} of {journey.stages.length}
-            </p>
-            <h2 className="mt-1 font-serif text-2xl text-ink">{stage.title}</h2>
-            <p className="mt-1 text-muted">{stage.clientSees}</p>
+          <div className="flex items-start gap-4">
+            <span className="tile h-12 w-12 shrink-0 bg-clay-50 text-clay-600 ring-clay-100">
+              <StageIcon n={stage.n} className="h-6 w-6" />
+            </span>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-clay-600">
+                You are here · Stage {stage.n} of {journey.stages.length}
+              </p>
+              <h2 className="mt-1 font-serif text-2xl text-ink">{stage.title}</h2>
+              <p className="mt-1 text-muted">{stage.clientSees}</p>
+            </div>
           </div>
           <div className="min-w-[160px]">
             <div className="flex items-center justify-between text-xs text-muted">
@@ -137,9 +145,10 @@ export default function JourneyHubPage({
             <Link
               key={j.slug}
               href={`/journeys/${j.slug}`}
-              className="rounded-full border border-line bg-white px-3 py-1.5 text-sm text-ink/80 hover:border-sage-300"
+              className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1.5 text-sm text-ink/80 transition-colors hover:border-sage-300 hover:text-ink"
             >
-              {j.emoji} {j.shortName}
+              <ProjectIcon type={j.slug} className="h-4 w-4 text-sage-600" />
+              {j.shortName}
             </Link>
           ))}
         </div>

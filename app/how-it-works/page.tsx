@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { STAGE_TITLES, STAGE_SUPPORT } from "@/lib/journeys";
+import { StageIcon } from "@/components/Icons";
 
 export const metadata = { title: "How PlotWorthy helps — PlotWorthy" };
 
@@ -7,8 +8,10 @@ export default function HowItWorksPage() {
   return (
     <div className="container-content py-14 sm:py-20">
       <div className="mx-auto max-w-2xl text-center">
-        <p className="eyebrow">How PlotWorthy helps</p>
-        <h1 className="mt-3 font-serif text-4xl text-ink">
+        <p className="kicker justify-center">
+          <span className="kicker-num">01</span> How PlotWorthy helps
+        </p>
+        <h1 className="display mt-4 text-4xl sm:text-5xl">
           A calmer way to run a property project
         </h1>
         <p className="mt-4 text-muted">
@@ -62,11 +65,14 @@ export default function HowItWorksPage() {
               {STAGE_TITLES.map((title, i) => (
                 <tr key={title} className="border-t border-line align-top">
                   <td className="px-4 py-4">
-                    <span className="flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-sage-100 text-xs font-semibold text-sage-700">
-                        {i + 1}
+                    <span className="flex items-center gap-2.5">
+                      <span className="tile h-8 w-8 shrink-0">
+                        <StageIcon n={i + 1} className="h-[18px] w-[18px]" />
                       </span>
-                      <span className="font-medium text-ink">{title}</span>
+                      <span className="font-medium text-ink">
+                        <span className="mr-1.5 font-serif text-sage-600/60">0{i + 1}</span>
+                        {title}
+                      </span>
                     </span>
                   </td>
                   <td className="px-4 py-4 text-muted">

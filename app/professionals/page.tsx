@@ -17,8 +17,10 @@ export default function ProfessionalsPage() {
   return (
     <div className="container-content py-14 sm:py-20">
       <div className="mx-auto max-w-2xl text-center">
-        <p className="eyebrow">Find a professional</p>
-        <h1 className="mt-3 font-serif text-4xl text-ink">
+        <p className="kicker justify-center">
+          <span className="kicker-num">01</span> Find a professional
+        </p>
+        <h1 className="display mt-4 text-4xl sm:text-5xl">
           The right professional, at the right moment
         </h1>
         <p className="mt-4 text-muted">

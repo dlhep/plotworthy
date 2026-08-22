@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { GOALS, POSITIONS, type GoalOption, type PositionOption } from "@/lib/start";
+import { ProjectIcon } from "@/components/Icons";
 
 type Step = 0 | 1 | 2;
 
@@ -32,8 +33,10 @@ export function StartFlow({ initialGoalId }: { initialGoalId?: string }) {
                   setStep(1);
                 }}
               >
-                <span className="text-2xl" aria-hidden="true">{g.emoji}</span>
-                <span className="mt-2 block font-medium text-ink">{g.label}</span>
+                <span className="tile h-11 w-11">
+                  <ProjectIcon type={g.id} className="h-6 w-6" />
+                </span>
+                <span className="mt-3 block font-medium text-ink">{g.label}</span>
                 <span className="mt-1 block text-sm text-muted">{g.note}</span>
               </ChoiceCard>
             ))}
@@ -110,12 +113,12 @@ function Question({
   return (
     <div>
       {onBack && (
-        <button onClick={onBack} className="mb-4 text-sm text-muted hover:text-ink">
+        <button onClick={onBack} className="mb-4 block text-sm text-muted hover:text-ink">
           ← Back
         </button>
       )}
       <p className="eyebrow">{eyebrow}</p>
-      <h1 className="mt-2 font-serif text-3xl text-ink sm:text-4xl">{title}</h1>
+      <h1 className="mt-2 display text-3xl sm:text-4xl">{title}</h1>
       {help && <p className="mt-3 max-w-xl text-muted">{help}</p>}
       <div className="mt-8">{children}</div>
     </div>
@@ -160,11 +163,11 @@ function Summary({
   if (!goal.journeySlug) {
     return (
       <div>
-        <button onClick={onBack} className="mb-4 text-sm text-muted hover:text-ink">
+        <button onClick={onBack} className="mb-4 block text-sm text-muted hover:text-ink">
           ← Back
         </button>
         <p className="eyebrow">You’re all set</p>
-        <h1 className="mt-2 font-serif text-3xl text-ink sm:text-4xl">
+        <h1 className="mt-2 display text-3xl sm:text-4xl">
           Let’s work out the right route together
         </h1>
         <p className="mt-3 max-w-xl text-muted">
@@ -182,11 +185,11 @@ function Summary({
 
   return (
     <div>
-      <button onClick={onBack} className="mb-4 text-sm text-muted hover:text-ink">
+      <button onClick={onBack} className="mb-4 block text-sm text-muted hover:text-ink">
         ← Back
       </button>
       <p className="eyebrow">Your starting point</p>
-      <h1 className="mt-2 font-serif text-3xl text-ink sm:text-4xl">
+      <h1 className="mt-2 display text-3xl sm:text-4xl">
         Here’s where PlotWorthy places you
       </h1>
 
@@ -194,8 +197,11 @@ function Summary({
         <dl className="grid gap-4 sm:grid-cols-2">
           <div>
             <dt className="text-xs font-semibold uppercase tracking-wide text-muted">Your goal</dt>
-            <dd className="mt-1 flex items-center gap-2 text-lg text-ink">
-              <span aria-hidden="true">{goal.emoji}</span> {goal.label}
+            <dd className="mt-1 flex items-center gap-2.5 text-lg text-ink">
+              <span className="tile h-8 w-8 shrink-0">
+                <ProjectIcon type={goal.id} className="h-[18px] w-[18px]" />
+              </span>
+              {goal.label}
             </dd>
           </div>
           <div>
