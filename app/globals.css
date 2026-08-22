@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: theme("colors.canvas");
+  color: theme("colors.ink");
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@layer components {
+  .container-content {
+    @apply mx-auto w-full max-w-content px-5 sm:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-500 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas;
+  }
+  .btn-primary {
+    @apply btn bg-sage-600 text-white hover:bg-sage-700;
+  }
+  .btn-outline {
+    @apply btn border border-sage-600/40 bg-transparent text-sage-700 hover:border-sage-600 hover:bg-sage-50;
+  }
+  .btn-ghost {
+    @apply btn text-ink/70 hover:bg-cream hover:text-ink;
+  }
+
+  .card {
+    @apply rounded-2xl border border-line bg-white shadow-soft;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-clay-600;
+  }
+
+  .prose-plain p {
+    @apply leading-relaxed text-muted;
+  }
+}
