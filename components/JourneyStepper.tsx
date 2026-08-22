@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Journey, Stage } from "@/lib/journeys";
+import { IntroFlow } from "./IntroFlow";
 
 type Status = "done" | "current" | "upcoming";
 
@@ -38,6 +39,7 @@ export function JourneyStepper({
             status={status}
             isOpen={isOpen}
             isLast={i === journey.stages.length - 1}
+            projectName={journey.shortName}
             onToggle={() => setOpenIndex(isOpen ? -1 : i)}
           />
         );
@@ -51,12 +53,14 @@ function StageRow({
   status,
   isOpen,
   isLast,
+  projectName,
   onToggle,
 }: {
   stage: Stage;
   status: Status;
   isOpen: boolean;
   isLast: boolean;
+  projectName: string;
   onToggle: () => void;
 }) {
   return (
@@ -124,12 +128,20 @@ function StageRow({
         </svg>
       </button>
 
-      {isOpen && <StageDetail stage={stage} status={status} />}
+      {isOpen && <StageDetail stage={stage} status={status} projectName={projectName} />}
     </div>
   );
 }
 
-function StageDetail({ stage, status }: { stage: Stage; status: Status }) {
+function StageDetail({
+  stage,
+  status,
+  projectName,
+}: {
+  stage: Stage;
+  status: Status;
+  projectName: string;
+}) {
   return (
     <div className="border-t border-line bg-canvas/60 px-5 py-6 sm:px-6">
       {status === "upcoming" && (
@@ -179,7 +191,12 @@ function StageDetail({ stage, status }: { stage: Stage; status: Status }) {
               </span>
             ))}
           </div>
-          <ProfessionalCta />
+          <IntroFlow
+            projectName={projectName}
+            stageTitle={stage.title}
+            stageNumber={stage.n}
+            roles={stage.professionals}
+          />
         </Block>
       </div>
 
@@ -214,15 +231,3 @@ function Block({
   );
 }
 
-function ProfessionalCta() {
-  return (
-    <div className="mt-4 border-t border-line pt-3">
-      <p className="text-xs text-muted">Introduce me to someone:</p>
-      <div className="mt-2 flex flex-wrap gap-2">
-        <button className="btn-outline px-3 py-1.5 text-xs">Recommend someone</button>
-        <button className="btn-ghost px-3 py-1.5 text-xs">View vetted professionals</button>
-        <button className="btn-ghost px-3 py-1.5 text-xs">Request proposals</button>
-      </div>
-    </div>
-  );
-}

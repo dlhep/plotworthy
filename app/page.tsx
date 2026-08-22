@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { GOALS } from "@/lib/start";
 import { STAGE_TITLES } from "@/lib/journeys";
+import { IntroFlow } from "@/components/IntroFlow";
 
 export default function HomePage() {
   return (
@@ -128,10 +129,14 @@ export default function HomePage() {
               clear current stage, a structured brief and the relevant documents —
               so you get better proposals, faster.
             </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              <span className="btn-outline px-3 py-1.5 text-xs">Recommend someone</span>
-              <span className="btn-ghost px-3 py-1.5 text-xs">View vetted professionals</span>
-              <span className="btn-ghost px-3 py-1.5 text-xs">Request proposals</span>
+            <div className="mt-5">
+              <IntroFlow
+                compact
+                projectName="your"
+                stageTitle="Is it viable?"
+                stageNumber={3}
+                roles={["Architect"]}
+              />
             </div>
           </div>
         </div>
