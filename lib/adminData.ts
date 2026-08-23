@@ -16,6 +16,7 @@ export type Application = {
   phone: string | null;
   discipline: string;
   coverage: string | null;
+  districts: string[] | null;
   accreditations: string | null;
   insurance: string | null;
   website: string | null;

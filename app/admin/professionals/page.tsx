@@ -4,6 +4,7 @@ import { ADMIN_COOKIE, isAdmin } from "@/lib/adminAuth";
 import { listApplications } from "@/lib/adminData";
 import { AppCard } from "@/components/admin/AppCard";
 import { MembershipEditor } from "@/components/admin/MembershipEditor";
+import { CoverageAdmin } from "@/components/admin/CoverageAdmin";
 import { revenueBreakdown, gbp } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
@@ -66,6 +67,7 @@ export default async function NetworkPage() {
                   actions={[{ decision: "suspended", label: "Suspend", variant: "outline" }]}
                 />
                 <MembershipEditor app={a} next={NEXT} />
+                <CoverageAdmin app={a} next={NEXT} />
               </div>
             ))}
           </div>
