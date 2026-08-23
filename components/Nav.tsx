@@ -49,7 +49,7 @@ export function Nav() {
           {signedIn ? (
             <>
               <Link href="/brief" className="btn-ghost whitespace-nowrap px-4 py-2 text-[13px]">
-                My project
+                Dashboard
               </Link>
               <form action="/auth/signout" method="post">
                 <button type="submit" className="btn-outline whitespace-nowrap px-4 py-2 text-[13px]">
@@ -102,7 +102,7 @@ export function Nav() {
             {signedIn ? (
               <div className="mt-2 flex gap-2 px-1">
                 <Link href="/brief" onClick={() => setOpen(false)} className="btn-outline flex-1 text-sm">
-                  My project
+                  Dashboard
                 </Link>
                 <form action="/auth/signout" method="post" className="flex-1">
                   <button type="submit" className="btn-ghost w-full text-sm">Log out</button>

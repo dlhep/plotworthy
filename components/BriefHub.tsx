@@ -17,6 +17,7 @@ type State = {
   loading: boolean;
   signedIn: boolean;
   email: string | null;
+  name: string | null;
   userId: string | null;
   project: Project | null;
 };
@@ -26,6 +27,7 @@ export function BriefHub() {
     loading: true,
     signedIn: false,
     email: null,
+    name: null,
     userId: null,
     project: null,
   });
@@ -44,10 +46,17 @@ export function BriefHub() {
           project = draft;
         }
       }
-      setState({ loading: false, signedIn: true, email: user.email ?? null, userId: user.id, project });
+      setState({
+        loading: false,
+        signedIn: true,
+        email: user.email ?? null,
+        name: (user.user_metadata?.full_name as string) || null,
+        userId: user.id,
+        project,
+      });
     } else {
       const draft = readLocalDraft();
-      setState({ loading: false, signedIn: false, email: null, userId: null, project: draft });
+      setState({ loading: false, signedIn: false, email: null, name: null, userId: null, project: draft });
     }
   }
 
@@ -64,17 +73,17 @@ export function BriefHub() {
   if (!project || !project.goalId) {
     return (
       <div className="card p-8 text-center">
-        <p className="eyebrow justify-center">Your project home</p>
-        <h1 className="mt-2 display text-2xl">No project yet</h1>
+        <p className="eyebrow justify-center">Your dashboard</p>
+        <h1 className="mt-2 display text-2xl">
+          {state.name ? `Welcome, ${state.name.trim().split(" ")[0]}` : "No project yet"}
+        </h1>
         <p className="mx-auto mt-2 max-w-md text-muted">
           Your project brief is the first thing you make on PlotWorthy — it&apos;s
           what lets a professional quote a fee without a dozen questions.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <Link href="/start" className="btn-primary">Start your journey →</Link>
-          {!state.signedIn && (
-            <Link href="/login?next=/brief" className="btn-outline">Log in</Link>
-          )}
+          <Link href="/upgrade" className="btn-outline">See enhanced features</Link>
         </div>
       </div>
     );
@@ -98,6 +107,7 @@ export function BriefHub() {
 
   const slug = goalSlug(project.goalId);
   const r = readiness(project.goalId, project.data);
+  const firstName = state.name?.trim().split(" ")[0] || "";
 
   const copyBrief = async () => {
     const lines: string[] = [`PROJECT BRIEF — ${goalLabel(project.goalId)}`, ""];
@@ -119,44 +129,50 @@ export function BriefHub() {
 
   return (
     <div>
+      {/* Dashboard header */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow">Your project home</p>
-          <h1 className="mt-2 display text-3xl sm:text-4xl">{goalLabel(project.goalId)}</h1>
+          <p className="eyebrow">Your dashboard</p>
+          <h1 className="mt-2 display text-3xl sm:text-4xl">
+            {firstName ? `Welcome back, ${firstName}` : "Your dashboard"}
+          </h1>
+          {state.email && <p className="mt-1 text-sm text-muted">{state.email}</p>}
+        </div>
+        {state.signedIn && (
+          <form action="/auth/signout" method="post">
+            <button className="btn-outline text-sm" type="submit">Log out</button>
+          </form>
+        )}
+      </div>
+
+      {/* Plan strip — surfaces the optional extras */}
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-cream/50 px-4 py-3">
+        <p className="text-sm text-muted">
+          <span className="font-medium text-ink">Free plan.</span> Your brief, professionals and
+          their quotes are all included — nothing is shared until you choose to.
+        </p>
+        <Link href="/upgrade" className="whitespace-nowrap text-sm font-medium text-sage-700 hover:underline">
+          See enhanced features →
+        </Link>
+      </div>
+
+      {/* Your project */}
+      <div className="mt-10 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="eyebrow">Your project</p>
+          <h2 className="mt-1 display text-2xl">{goalLabel(project.goalId)}</h2>
           <p className="mt-1 text-sm text-muted">
             {r.label}
             {project.updatedAt ? ` · saved ${new Date(project.updatedAt).toLocaleDateString("en-GB")}` : ""}
-            {state.email ? ` · ${state.email}` : ""}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button onClick={() => setEditing(true)} className="btn-outline text-sm">Edit brief</button>
           <button onClick={copyBrief} className="btn-ghost text-sm">{copied ? "Copied ✓" : "Copy brief"}</button>
-          {state.signedIn && (
-            <form action="/auth/signout" method="post">
-              <button className="btn-ghost text-sm" type="submit">Log out</button>
-            </form>
-          )}
         </div>
       </div>
 
-      {!state.signedIn ? (
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-clay-200 bg-clay-50/70 px-4 py-3">
-          <p className="text-sm text-clay-700">
-            This project is only saved on this device. Create a free account to
-            keep it and use it on any device.
-          </p>
-          <Link href="/signup?next=/brief" className="btn-primary text-sm">Create a free account</Link>
-        </div>
-      ) : (
-        <p className="mt-5 max-w-2xl rounded-xl border border-line bg-cream/50 px-4 py-3 text-sm text-muted">
-          This is your project home — free to use for the whole journey. Your brief,
-          your stage, your professionals and their quotes all live here. Nothing is
-          shared until you choose to.
-        </p>
-      )}
-
-      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_20rem] lg:items-start">
+      <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_20rem] lg:items-start">
         <BriefPreview goalId={project.goalId} data={project.data} />
 
         <aside className="card p-5">
