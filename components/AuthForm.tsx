@@ -11,6 +11,7 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
   const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next") || "/brief";
+  const justVerified = params.get("verified") === "1";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -108,9 +109,15 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
         </h1>
         <p className="mt-1 text-center text-sm text-muted">
           {isSignup
-            ? "Save your project and pick it up any time, on any device."
+            ? "Free to start your property journey. We’ll verify your email, then it’s saved to you on any device."
             : "Log in to pick up your property project where you left off."}
         </p>
+
+        {!isSignup && justVerified && (
+          <p className="mt-4 rounded-lg bg-sage-50 px-3 py-2 text-center text-sm text-sage-700">
+            Your email is verified — log in to open your project.
+          </p>
+        )}
 
         <form onSubmit={submit} className="mt-7 space-y-4">
           {isSignup && (

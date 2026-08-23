@@ -6,6 +6,15 @@ const SUPABASE_KEY =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
+// Journey routes a client must be signed in (and email-verified) to use.
+// Because "Confirm email" is on in Supabase, a session only exists after the
+// address is verified — so a valid session here means a verified account.
+const PROTECTED = ["/start", "/brief"];
+
+function isProtected(path: string) {
+  return PROTECTED.some((p) => path === p || path.startsWith(p + "/"));
+}
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -27,7 +36,21 @@ export async function middleware(request: NextRequest) {
   });
 
   // Refresh the session so Server Components always see a valid token.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const path = request.nextUrl.pathname;
+  if (!user && isProtected(path)) {
+    // New journeys route to sign-up; returning to a saved project routes to log in.
+    const dest = path.startsWith("/brief") ? "/login" : "/signup";
+    const url = request.nextUrl.clone();
+    url.pathname = dest;
+    url.search = "";
+    url.searchParams.set("next", path + request.nextUrl.search);
+    return NextResponse.redirect(url);
+  }
+
   return response;
 }
 

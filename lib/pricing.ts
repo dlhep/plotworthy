@@ -77,3 +77,10 @@ export function revenueBreakdown(memberships: Membership[]): RevenueBreakdown {
 export function gbp(n: number): string {
   return `£${n.toLocaleString("en-GB")}`;
 }
+
+// Optional client extras (the core journey stays free). Placeholder prices —
+// adjust here and they update across the site.
+export const CLIENT_PRICING = {
+  expertReview: 49, // one-off, per brief
+  plusMonthly: 9, // PlotWorthy Plus subscription, per month
+};

@@ -194,6 +194,20 @@ export function BriefHub() {
           </p>
         </aside>
       </div>
+
+      {/* Optional paid extras — the core journey stays free */}
+      <div className="mt-10 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-sage-200 bg-sage-50/40 px-6 py-5">
+        <div>
+          <h2 className="display text-lg">Want more from your project?</h2>
+          <p className="mt-1 max-w-xl text-sm text-muted">
+            Optional extras — an expert review of your brief, or PlotWorthy Plus for running several
+            projects with a document &amp; quote vault. Everything you have now stays free.
+          </p>
+        </div>
+        <Link href="/upgrade" className="btn-outline whitespace-nowrap text-sm">
+          See enhanced features →
+        </Link>
+      </div>
     </div>
   );
 }
