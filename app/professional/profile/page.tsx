@@ -1,7 +1,6 @@
 import { ProjectIcon } from "@/components/Icons";
 
 export default function ProfilePage() {
-  const cov = ["B13", "B14", "B15", "B16", "B17"];
   const reviews = [
     ["Sarah & Tom, B14", "Guided our HMO through planning and fire compliance without fuss. Clear, calm and responsive."],
     ["Priya, B13", "Turned our tired semi into a brilliant house-to-flats scheme. Highly recommend."],
@@ -47,12 +46,15 @@ export default function ProfilePage() {
 
         <div className="mt-6 grid gap-6">
           <div>
-            <h3 className="display mb-2 text-lg">Coverage</h3>
-            <div className="flex flex-wrap gap-1.5">
-              {cov.map((c) => (
-                <span key={c} className="rounded-full border border-line bg-white px-3 py-1 text-xs text-ink/80">{c}</span>
-              ))}
-            </div>
+            <h3 className="display mb-2 text-lg">Coverage area</h3>
+            <p className="max-w-xl text-sm text-muted">
+              Serving Birmingham &amp; the West Midlands. Clients don’t see the exact districts a
+              professional covers — when you request an introduction, we simply confirm they work in
+              your postcode.
+            </p>
+            <p className="mt-2 text-xs text-muted">
+              Your specific coverage and any postcode packs are private to your account.
+            </p>
           </div>
           <div>
             <h3 className="display mb-2 text-lg">Selected work</h3>
