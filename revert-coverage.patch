@@ -1,0 +1,563 @@
+diff --git a/app/professional/coverage/page.tsx b/app/professional/coverage/page.tsx
+index 91ed9b1..2ed39e8 100644
+--- a/app/professional/coverage/page.tsx
++++ b/app/professional/coverage/page.tsx
+@@ -1,44 +1,179 @@
+-import { getProfessionalForUser } from "@/lib/professionalAuth";
+-import { CoverageEditor } from "@/components/CoverageEditor";
+-import { districtsFromCoverage, postcodeArea } from "@/lib/postcodes";
++"use client";
+ 
+-export const dynamic = "force-dynamic";
++import { useState } from "react";
++import { CoverageMap } from "@/components/CoverageMap";
+ 
+-export default async function CoveragePage() {
+-  const { pro } = await getProfessionalForUser();
+-  if (!pro) return null;
++const SUGGEST = ["B1","B2","B3","B4","B5","B13","B14","B15","B16","B17","B18","B23","B24","B29","B30","B31","B32","B42","B43","B44"];
++const INCLUDED = 5;
+ 
+-  const saved = Array.isArray((pro as any).districts) ? ((pro as any).districts as string[]) : [];
+-  const seed = saved.length ? saved : districtsFromCoverage(pro.coverage);
+-  const area = postcodeArea(seed[0] || pro.coverage) || "TS";
+-  const packs = pro.membership.postcodePacks || 0;
++export default function CoveragePage() {
++  const [selected, setSelected] = useState<Set<string>>(
++    new Set(["B13", "B14", "B15", "B16", "B17"])
++  );
++  const [draft, setDraft] = useState("");
++  const [enhanced, setEnhanced] = useState(false);
++
++  const toggle = (code: string) =>
++    setSelected((prev) => {
++      const next = new Set(prev);
++      if (next.has(code)) next.delete(code);
++      else next.add(code);
++      return next;
++    });
++
++  const list = Array.from(selected).sort();
++  const over = Math.max(0, selected.size - INCLUDED);
+ 
+   return (
+     <div>
+-      <div className="flex items-center justify-between border-b border-line bg-canvas px-4 py-3 sm:px-8 sm:py-3.5">
++      <div className="flex items-center justify-between border-b border-line bg-canvas/90 px-4 py-3 backdrop-blur sm:px-8 sm:py-3.5">
+         <div>
+           <p className="text-[0.72rem] font-medium uppercase tracking-[0.12em] text-muted">Professional workspace</p>
+-          <p className="font-serif text-lg font-medium text-ink">Coverage</p>
++          <p className="font-serif text-lg font-medium text-ink">Coverage map</p>
+         </div>
++        <span className="btn-outline btn text-sm">Account ▾</span>
+       </div>
+ 
+-      <div className="max-w-[80rem] p-4 sm:p-8">
+-        <CoverageEditor
+-          area={area}
+-          seed={seed}
+-          includedBase={5}
+-          packs={packs}
+-          coverageLabel={pro.coverage || ""}
+-        />
+-
+-        <div className="mt-6 rounded-2xl border border-line bg-cream/40 p-5">
+-          <p className="text-sm font-medium text-ink">Private to your account</p>
+-          <p className="mt-1 max-w-2xl text-sm text-muted">
+-            The exact districts and any packs you add are visible only to you. Clients never see which or
+-            how many areas you cover — only that PlotWorthy recommends you in theirs.
++      <div className="grid max-w-[80rem] gap-6 p-4 sm:p-8 lg:grid-cols-[minmax(0,410px)_1fr]">
++        <div className="card p-5">
++          <div className="flex items-center justify-between">
++            <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-clay-600">Lead preferences</span>
++            <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${over > 0 ? "bg-clay-50 text-clay-700" : "bg-sage-50 text-sage-700"}`}>
++              {selected.size}/{INCLUDED} included
++            </span>
++          </div>
++          <h2 className="mt-2 font-serif text-2xl font-medium text-ink">Select postcode districts</h2>
++          <p className="mt-1 text-sm text-muted">
++            Choose the districts where you want first access to new projects — or click them on the map. Change this any time.
+           </p>
++
++          <div className="mt-4 flex gap-2">
++            <input
++              value={draft}
++              onChange={(e) => setDraft(e.target.value.toUpperCase())}
++              onKeyDown={(e) => {
++                if (e.key === "Enter" && /^B\d{1,2}$/.test(draft.trim())) {
++                  toggle(draft.trim());
++                  setDraft("");
++                }
++              }}
++              placeholder="For example B17"
++              className="flex-1 rounded-lg border border-line bg-white px-3 py-2 text-sm uppercase"
++            />
++            <button
++              onClick={() => {
++                if (/^B\d{1,2}$/.test(draft.trim())) {
++                  toggle(draft.trim());
++                  setDraft("");
++                }
++              }}
++              className="btn-primary text-sm"
++            >
++              + Add
++            </button>
++          </div>
++
++          <div className="mt-4 flex items-center justify-between">
++            <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-clay-600">Included districts</span>
++            <button onClick={() => setSelected(new Set())} className="text-xs font-semibold text-sage-700">Clear all</button>
++          </div>
++          <div className="mt-2 flex flex-wrap gap-1.5">
++            {list.length ? (
++              list.map((d) => (
++                <span key={d} className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-canvas py-1 pl-2.5 pr-1.5 text-sm font-semibold text-ink">
++                  {d}
++                  <button onClick={() => toggle(d)} className="text-muted hover:text-clay-600">×</button>
++                </span>
++              ))
++            ) : (
++              <span className="text-sm text-muted">No districts selected yet.</span>
++            )}
++          </div>
++          {over > 0 && (
++            <p className="mt-2.5 text-sm text-clay-700">
++              You’re {over} over your included {INCLUDED}. Add a district package below to cover them.
++            </p>
++          )}
++
++          <p className="mt-4 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-clay-600">Nearby suggestions</p>
++          <div className="mt-2 flex flex-wrap gap-1.5">
++            {SUGGEST.map((d) => {
++              const on = selected.has(d);
++              return (
++                <button
++                  key={d}
++                  onClick={() => toggle(d)}
++                  className={`inline-flex h-10 w-10 items-center justify-center rounded-full border text-xs ${
++                    on ? "border-sage-600 bg-sage-600 text-white" : "border-line bg-white text-ink hover:border-sage-300"
++                  }`}
++                >
++                  {on ? "✓" : d}
++                </button>
++              );
++            })}
++          </div>
++
++          <div className="mt-4 rounded-xl border border-clay-200 bg-clay-50 p-4">
++            <div className="flex items-center gap-2 text-sm font-semibold text-clay-700">🔒 {INCLUDED} districts included with Professional membership</div>
++            <p className="mt-0.5 text-xs text-clay-700">Add reusable district slots any time.</p>
++            <div className="mt-3 grid grid-cols-3 gap-2">
++              <PriceCard t="+1 district" amt="£5" sub="One adjoining area." />
++              <PriceCard t="+10 districts" amt="£40" sub="Save £10 vs single slots." best />
++              <PriceCard t="+25 districts" amt="£75" sub="Broad regional coverage." />
++            </div>
++          </div>
++
++          <div className="mt-4 flex items-start gap-3 rounded-xl border border-sage-200 bg-sage-50 p-4">
++            <span className="tile h-10 w-10 shrink-0 bg-white" />
++            <div className="flex-1">
++              <div className="flex items-center justify-between">
++                <strong className="text-sm text-ink">Enhanced profile</strong>
++                <span className="font-serif text-ink">£19<span className="text-xs text-muted">/mo</span></span>
++              </div>
++              <p className="mt-0.5 text-xs text-muted">Featured placement, a bigger portfolio gallery and a verified badge.</p>
++              <button
++                onClick={() => setEnhanced((v) => !v)}
++                className={`mt-2 text-sm ${enhanced ? "btn-primary" : "btn-outline"} btn`}
++              >
++                {enhanced ? "✓ Enhanced active" : "Upgrade to Enhanced"}
++              </button>
++            </div>
++          </div>
++
++          <button className="btn-primary mt-4 w-full">Save coverage</button>
++          <p className="mt-2 text-center text-[0.7rem] text-muted">Preview — pricing buttons connect to Stripe in production.</p>
+         </div>
++
++        <div>
++          <div className="mb-2 flex items-center justify-between">
++            <h2 className="font-serif text-xl font-medium text-ink">Your coverage map</h2>
++            <span className="text-xs font-semibold text-sage-700">{selected.size} selected</span>
++          </div>
++          <CoverageMap selected={selected} onToggle={toggle} />
++          <p className="mt-2 text-xs text-muted">
++            Shaded shapes follow postcode-district boundaries (MapLibre · OpenFreeMap). Click a district on the map or a pill to add or remove it.
++          </p>
++        </div>
++      </div>
++    </div>
++  );
++}
++
++function PriceCard({ t, amt, sub, best }: { t: string; amt: string; sub: string; best?: boolean }) {
++  return (
++    <div className={`relative rounded-lg border bg-white px-2 py-3 text-center ${best ? "border-clay-300 ring-1 ring-clay-200" : "border-line"}`}>
++      {best && (
++        <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-clay-400 px-2 py-0.5 text-[0.55rem] font-bold uppercase tracking-wide text-sage-900">
++          Best value
++        </span>
++      )}
++      <div className="text-[0.72rem] font-semibold text-ink">{t}</div>
++      <div className="mt-0.5 font-serif text-xl text-ink">
++        {amt}
++        <span className="text-[0.65rem] text-muted">/mo</span>
+       </div>
++      <div className="mt-1 text-[0.62rem] text-muted">{sub}</div>
++      <button className="btn-outline btn mt-2 w-full py-1 text-[0.68rem]">Choose</button>
+     </div>
+   );
+ }
+diff --git a/components/CoverageEditor.tsx b/components/CoverageEditor.tsx
+deleted file mode 100644
+index 4d3ef16..0000000
+--- a/components/CoverageEditor.tsx
++++ /dev/null
+@@ -1,215 +0,0 @@
+-"use client";
+-
+-import { useMemo, useState } from "react";
+-import { CoverageMap } from "./CoverageMap";
+-import { toDistrict } from "@/lib/postcodes";
+-import { gbp, PRICING } from "@/lib/pricing";
+-
+-type SaveState = "idle" | "saving" | "saved" | "error";
+-
+-export function CoverageEditor({
+-  area,
+-  seed,
+-  includedBase,
+-  packs,
+-  coverageLabel,
+-}: {
+-  area: string;
+-  seed: string[];
+-  includedBase: number;
+-  packs: number;
+-  coverageLabel: string;
+-}) {
+-  const [selected, setSelected] = useState<Set<string>>(new Set(seed));
+-  const [available, setAvailable] = useState<string[]>([]);
+-  const [draft, setDraft] = useState("");
+-  const [state, setState] = useState<SaveState>("idle");
+-  const [error, setError] = useState("");
+-
+-  const allowance = includedBase + Math.max(0, packs) * 5;
+-  const list = useMemo(() => Array.from(selected).sort((a, b) => {
+-    const na = parseInt(a.replace(/\D/g, ""), 10);
+-    const nb = parseInt(b.replace(/\D/g, ""), 10);
+-    return na - nb || a.localeCompare(b);
+-  }), [selected]);
+-  const over = Math.max(0, selected.size - allowance);
+-  const packsNeeded = Math.ceil(over / 5);
+-
+-  const toggle = (code: string) => {
+-    const c = toDistrict(code);
+-    if (!c) return;
+-    setSelected((prev) => {
+-      const next = new Set(prev);
+-      if (next.has(c)) next.delete(c);
+-      else next.add(c);
+-      return next;
+-    });
+-    setState("idle");
+-  };
+-
+-  const add = () => {
+-    const c = toDistrict(draft);
+-    if (c) {
+-      setSelected((prev) => new Set(prev).add(c));
+-      setDraft("");
+-      setState("idle");
+-    }
+-  };
+-
+-  const suggestions = available.filter((c) => !selected.has(c)).slice(0, 12);
+-
+-  async function save() {
+-    setState("saving");
+-    setError("");
+-    try {
+-      const res = await fetch("/api/professional/coverage", {
+-        method: "POST",
+-        headers: { "Content-Type": "application/json" },
+-        body: JSON.stringify({ districts: Array.from(selected) }),
+-      });
+-      const json = await res.json();
+-      if (json.ok) setState("saved");
+-      else {
+-        setError(json.error || "Couldn’t save.");
+-        setState("error");
+-      }
+-    } catch {
+-      setError("Couldn’t reach the server.");
+-      setState("error");
+-    }
+-  }
+-
+-  return (
+-    <div className="grid gap-6 lg:grid-cols-[minmax(0,26rem)_1fr] lg:items-start">
+-      {/* Controls */}
+-      <div className="card p-5">
+-        <div className="flex items-center justify-between">
+-          <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-clay-600">Lead preferences</span>
+-          <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${over > 0 ? "bg-clay-50 text-clay-700" : "bg-sage-50 text-sage-700"}`}>
+-            {selected.size}/{allowance} covered
+-          </span>
+-        </div>
+-        <h2 className="mt-2 font-serif text-2xl font-medium text-ink">Choose your districts</h2>
+-        <p className="mt-1 text-sm text-muted">
+-          Pick the {area} districts where you want first access to new projects — type them in or click them on the map. Only you can see these.
+-        </p>
+-
+-        <div className="mt-4 flex gap-2">
+-          <input
+-            value={draft}
+-            onChange={(e) => setDraft(e.target.value.toUpperCase())}
+-            onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), add())}
+-            placeholder={`For example ${area}7`}
+-            className="flex-1 rounded-lg border border-line bg-white px-3 py-2 text-sm uppercase focus:border-sage-400 focus:outline-none focus:ring-2 focus:ring-sage-200"
+-          />
+-          <button onClick={add} className="btn-primary text-sm">+ Add</button>
+-        </div>
+-
+-        <div className="mt-4 flex items-center justify-between">
+-          <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-clay-600">Your districts</span>
+-          {selected.size > 0 && (
+-            <button onClick={() => { setSelected(new Set()); setState("idle"); }} className="text-xs font-semibold text-sage-700">Clear all</button>
+-          )}
+-        </div>
+-        <div className="mt-2 flex flex-wrap gap-1.5">
+-          {list.length ? (
+-            list.map((d) => (
+-              <span key={d} className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-canvas py-1 pl-2.5 pr-1.5 text-sm font-semibold text-ink">
+-                {d}
+-                <button onClick={() => toggle(d)} className="text-muted hover:text-clay-600" aria-label={`Remove ${d}`}>×</button>
+-              </span>
+-            ))
+-          ) : (
+-            <span className="text-sm text-muted">No districts selected yet.</span>
+-          )}
+-        </div>
+-
+-        {suggestions.length > 0 && (
+-          <>
+-            <p className="mt-4 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-clay-600">Nearby in {area}</p>
+-            <div className="mt-2 flex flex-wrap gap-1.5">
+-              {suggestions.map((d) => (
+-                <button
+-                  key={d}
+-                  onClick={() => toggle(d)}
+-                  className="inline-flex h-9 min-w-[2.75rem] items-center justify-center rounded-full border border-line bg-white px-2 text-xs text-ink hover:border-sage-300"
+-                >
+-                  {d}
+-                </button>
+-              ))}
+-            </div>
+-          </>
+-        )}
+-
+-        {over > 0 && (
+-          <p className="mt-3 rounded-lg bg-clay-50 px-3 py-2 text-xs text-clay-700">
+-            You’ve chosen {over} more than your plan covers. Add {packsNeeded} district pack{packsNeeded > 1 ? "s" : ""} below to make {over > 1 ? "them" : "it"} live.
+-          </p>
+-        )}
+-
+-        <button onClick={save} disabled={state === "saving"} className="btn-primary mt-4 w-full disabled:opacity-60">
+-          {state === "saving" ? "Saving…" : state === "saved" ? "✓ Saved" : "Save coverage"}
+-        </button>
+-        {state === "error" && <p className="mt-2 text-center text-xs text-clay-700">{error}</p>}
+-        {state === "saved" && <p className="mt-2 text-center text-xs text-sage-700">Your coverage is saved. Only you can see it.</p>}
+-      </div>
+-
+-      {/* Map + pricing */}
+-      <div className="grid gap-6">
+-        <div>
+-          <div className="mb-2 flex items-center justify-between">
+-            <h2 className="font-serif text-xl font-medium text-ink">Your coverage map</h2>
+-            <span className="text-xs font-semibold text-sage-700">{selected.size} selected</span>
+-          </div>
+-          <CoverageMap area={area} selected={selected} onToggle={toggle} onDistrictsLoaded={setAvailable} />
+-          <p className="mt-2 text-xs text-muted">
+-            Boundaries follow postcode districts (MapLibre · OpenFreeMap). Click a district on the map, or use the field and pills, to add or remove it.
+-          </p>
+-        </div>
+-
+-        {/* Pricing structure */}
+-        <div className="rounded-2xl border border-clay-200 bg-clay-50/60 p-5">
+-          <div className="flex items-center gap-2 text-sm font-semibold text-clay-700">
+-            🔒 {includedBase} districts included with Professional membership
+-          </div>
+-          <p className="mt-0.5 text-xs text-clay-700">
+-            Need more? Add district packs — {gbp(PRICING.postcodePack)}/mo for every 5 districts.
+-            You currently have {packs} pack{packs === 1 ? "" : "s"} ({allowance} districts total).
+-          </p>
+-          <div className="mt-3 grid grid-cols-3 gap-2">
+-            <PackCard label="+1 pack" districts="5 districts" amt={gbp(PRICING.postcodePack)} />
+-            <PackCard label="+2 packs" districts="10 districts" amt={gbp(PRICING.postcodePack * 2)} best />
+-            <PackCard label="+4 packs" districts="20 districts" amt={gbp(PRICING.postcodePack * 4)} />
+-          </div>
+-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-sage-200 bg-white/70 px-3.5 py-2.5">
+-            <div>
+-              <strong className="text-sm text-ink">Enhanced profile</strong>
+-              <p className="text-xs text-muted">Featured placement, bigger gallery, verified badge.</p>
+-            </div>
+-            <span className="font-serif text-ink">{gbp(PRICING.enhanced)}<span className="text-xs text-muted">/mo</span></span>
+-          </div>
+-          <p className="mt-3 text-[0.7rem] text-muted">
+-            To change your packs or add Enhanced,{" "}
+-            <a href="mailto:hello@plotworthy.co.uk?subject=Coverage%20packs" className="font-medium text-sage-700 hover:underline">email us</a>{" "}
+-            and we’ll update your plan. Prices exclude VAT.
+-          </p>
+-        </div>
+-      </div>
+-    </div>
+-  );
+-}
+-
+-function PackCard({ label, districts, amt, best }: { label: string; districts: string; amt: string; best?: boolean }) {
+-  return (
+-    <div className={`relative rounded-lg border bg-white px-2 py-3 text-center ${best ? "border-clay-300 ring-1 ring-clay-200" : "border-line"}`}>
+-      {best && (
+-        <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-clay-400 px-2 py-0.5 text-[0.55rem] font-bold uppercase tracking-wide text-sage-900">
+-          Popular
+-        </span>
+-      )}
+-      <div className="text-[0.72rem] font-semibold text-ink">{label}</div>
+-      <div className="mt-0.5 font-serif text-xl text-ink">{amt}<span className="text-[0.65rem] text-muted">/mo</span></div>
+-      <div className="mt-1 text-[0.62rem] text-muted">{districts}</div>
+-    </div>
+-  );
+-}
+diff --git a/components/CoverageMap.tsx b/components/CoverageMap.tsx
+index f9258b6..a5ce3cc 100644
+--- a/components/CoverageMap.tsx
++++ b/components/CoverageMap.tsx
+@@ -3,12 +3,10 @@
+ import { useEffect, useRef, useState } from "react";
+ import "maplibre-gl/dist/maplibre-gl.css";
+ 
++const GEOJSON_URL =
++  "https://raw.githubusercontent.com/missinglink/uk-postcode-polygons/master/geojson/B.geojson";
+ const STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
+ 
+-function geojsonUrl(area: string) {
+-  return `https://raw.githubusercontent.com/missinglink/uk-postcode-polygons/master/geojson/${area}.geojson`;
+-}
+-
+ function codeOf(props: Record<string, unknown>): string {
+   const raw =
+     props.name ??
+@@ -21,44 +19,19 @@ function codeOf(props: Record<string, unknown>): string {
+   return String(raw).toUpperCase().replace(/\s+/g, "");
+ }
+ 
+-// Walk a GeoJSON FeatureCollection and return [minLng, minLat, maxLng, maxLat].
+-function bboxOf(gj: any): [number, number, number, number] | null {
+-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+-  const visit = (c: any) => {
+-    if (typeof c[0] === "number" && typeof c[1] === "number") {
+-      const [x, y] = c;
+-      if (x < minX) minX = x;
+-      if (y < minY) minY = y;
+-      if (x > maxX) maxX = x;
+-      if (y > maxY) maxY = y;
+-    } else if (Array.isArray(c)) {
+-      c.forEach(visit);
+-    }
+-  };
+-  (gj.features || []).forEach((f: any) => f.geometry && visit(f.geometry.coordinates));
+-  if (!Number.isFinite(minX)) return null;
+-  return [minX, minY, maxX, maxY];
+-}
+-
+-/** Real map: OpenFreeMap tiles + postcode-district boundaries for one area, click to toggle. */
++/** Real map: OpenFreeMap tiles + postcode-district boundaries, click to toggle. */
+ export function CoverageMap({
+-  area,
+   selected,
+   onToggle,
+-  onDistrictsLoaded,
+ }: {
+-  area: string;
+   selected: Set<string>;
+   onToggle: (code: string) => void;
+-  onDistrictsLoaded?: (codes: string[]) => void;
+ }) {
+   const containerRef = useRef<HTMLDivElement | null>(null);
+   const mapRef = useRef<any>(null);
+   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+   const onToggleRef = useRef(onToggle);
+   onToggleRef.current = onToggle;
+-  const onLoadedRef = useRef(onDistrictsLoaded);
+-  onLoadedRef.current = onDistrictsLoaded;
+ 
+   useEffect(() => {
+     let cancelled = false;
+@@ -70,31 +43,20 @@ export function CoverageMap({
+         map = new maplibregl.Map({
+           container: containerRef.current,
+           style: STYLE_URL,
+-          center: [-1.5, 53.5], // UK-ish; we fitBounds once the area data loads
+-          zoom: 5,
++          center: [-1.9, 52.45],
++          zoom: 10.2,
+         });
+         mapRef.current = map;
+         map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+ 
+         map.on("load", async () => {
+           try {
+-            const res = await fetch(geojsonUrl(area));
+-            if (!res.ok) throw new Error("geojson");
++            const res = await fetch(GEOJSON_URL);
+             const gj = await res.json();
+-            const codes: string[] = [];
+             gj.features.forEach((f: any) => {
+               f.properties = f.properties || {};
+-              const c = codeOf(f.properties);
+-              f.properties.code = c;
+-              if (c && !codes.includes(c)) codes.push(c);
+-            });
+-            codes.sort((a, b) => {
+-              const na = parseInt(a.replace(/\D/g, ""), 10);
+-              const nb = parseInt(b.replace(/\D/g, ""), 10);
+-              return na - nb || a.localeCompare(b);
++              f.properties.code = codeOf(f.properties);
+             });
+-            onLoadedRef.current?.(codes);
+-
+             map.addSource("pd", { type: "geojson", data: gj });
+             map.addLayer({
+               id: "pd-fill",
+@@ -108,9 +70,6 @@ export function CoverageMap({
+               source: "pd",
+               paint: { "line-color": "#375741", "line-width": 0.8, "line-opacity": 0.5 },
+             });
+-            const bbox = bboxOf(gj);
+-            if (bbox) map.fitBounds(bbox, { padding: 24, duration: 0 });
+-
+             map.on("click", "pd-fill", (e: any) => {
+               const code = e.features?.[0]?.properties?.code;
+               if (code) onToggleRef.current(code);
+@@ -139,7 +98,7 @@ export function CoverageMap({
+       mapRef.current = null;
+     };
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+-  }, [area]);
++  }, []);
+ 
+   function applyPaint() {
+     const map = mapRef.current;
+@@ -168,8 +127,8 @@ export function CoverageMap({
+       )}
+       {status === "error" && (
+         <p className="px-4 py-2 text-xs text-clay-700">
+-          Couldn&apos;t load the map for {area} here. You can still add and remove districts using the
+-          field and pills on the left — they save to your account either way.
++          Map tiles couldn’t load in this environment. On your deployed site (with network access) the
++          full OpenFreeMap map renders here — click districts to select them.
+         </p>
+       )}
+     </div>

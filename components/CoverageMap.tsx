@@ -3,11 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 
+const GEOJSON_URL =
+  "https://raw.githubusercontent.com/missinglink/uk-postcode-polygons/master/geojson/B.geojson";
 const STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
-
-function geojsonUrl(area: string) {
-  return `https://raw.githubusercontent.com/missinglink/uk-postcode-polygons/master/geojson/${area}.geojson`;
-}
 
 function codeOf(props: Record<string, unknown>): string {
   const raw =
@@ -21,44 +19,19 @@ function codeOf(props: Record<string, unknown>): string {
   return String(raw).toUpperCase().replace(/\s+/g, "");
 }
 
-// Walk a GeoJSON FeatureCollection and return [minLng, minLat, maxLng, maxLat].
-function bboxOf(gj: any): [number, number, number, number] | null {
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-  const visit = (c: any) => {
-    if (typeof c[0] === "number" && typeof c[1] === "number") {
-      const [x, y] = c;
-      if (x < minX) minX = x;
-      if (y < minY) minY = y;
-      if (x > maxX) maxX = x;
-      if (y > maxY) maxY = y;
-    } else if (Array.isArray(c)) {
-      c.forEach(visit);
-    }
-  };
-  (gj.features || []).forEach((f: any) => f.geometry && visit(f.geometry.coordinates));
-  if (!Number.isFinite(minX)) return null;
-  return [minX, minY, maxX, maxY];
-}
-
-/** Real map: OpenFreeMap tiles + postcode-district boundaries for one area, click to toggle. */
+/** Real map: OpenFreeMap tiles + postcode-district boundaries, click to toggle. */
 export function CoverageMap({
-  area,
   selected,
   onToggle,
-  onDistrictsLoaded,
 }: {
-  area: string;
   selected: Set<string>;
   onToggle: (code: string) => void;
-  onDistrictsLoaded?: (codes: string[]) => void;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<any>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const onToggleRef = useRef(onToggle);
   onToggleRef.current = onToggle;
-  const onLoadedRef = useRef(onDistrictsLoaded);
-  onLoadedRef.current = onDistrictsLoaded;
 
   useEffect(() => {
     let cancelled = false;
@@ -70,31 +43,20 @@ export function CoverageMap({
         map = new maplibregl.Map({
           container: containerRef.current,
           style: STYLE_URL,
-          center: [-1.5, 53.5], // UK-ish; we fitBounds once the area data loads
-          zoom: 5,
+          center: [-1.9, 52.45],
+          zoom: 10.2,
         });
         mapRef.current = map;
         map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
         map.on("load", async () => {
           try {
-            const res = await fetch(geojsonUrl(area));
-            if (!res.ok) throw new Error("geojson");
+            const res = await fetch(GEOJSON_URL);
             const gj = await res.json();
-            const codes: string[] = [];
             gj.features.forEach((f: any) => {
               f.properties = f.properties || {};
-              const c = codeOf(f.properties);
-              f.properties.code = c;
-              if (c && !codes.includes(c)) codes.push(c);
+              f.properties.code = codeOf(f.properties);
             });
-            codes.sort((a, b) => {
-              const na = parseInt(a.replace(/\D/g, ""), 10);
-              const nb = parseInt(b.replace(/\D/g, ""), 10);
-              return na - nb || a.localeCompare(b);
-            });
-            onLoadedRef.current?.(codes);
-
             map.addSource("pd", { type: "geojson", data: gj });
             map.addLayer({
               id: "pd-fill",
@@ -108,9 +70,6 @@ export function CoverageMap({
               source: "pd",
               paint: { "line-color": "#375741", "line-width": 0.8, "line-opacity": 0.5 },
             });
-            const bbox = bboxOf(gj);
-            if (bbox) map.fitBounds(bbox, { padding: 24, duration: 0 });
-
             map.on("click", "pd-fill", (e: any) => {
               const code = e.features?.[0]?.properties?.code;
               if (code) onToggleRef.current(code);
@@ -139,7 +98,7 @@ export function CoverageMap({
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [area]);
+  }, []);
 
   function applyPaint() {
     const map = mapRef.current;
@@ -168,8 +127,8 @@ export function CoverageMap({
       )}
       {status === "error" && (
         <p className="px-4 py-2 text-xs text-clay-700">
-          Couldn&apos;t load the map for {area} here. You can still add and remove districts using the
-          field and pills on the left — they save to your account either way.
+          Map tiles couldn’t load in this environment. On your deployed site (with network access) the
+          full OpenFreeMap map renders here — click districts to select them.
         </p>
       )}
     </div>
