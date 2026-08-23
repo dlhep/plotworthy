@@ -4,14 +4,17 @@ import Link from "next/link";
 import { useState } from "react";
 import { GOALS, POSITIONS, type GoalOption, type PositionOption } from "@/lib/start";
 import { ProjectIcon } from "@/components/Icons";
+import { BriefBuilder } from "@/components/BriefBuilder";
 
-type Step = 0 | 1 | 2;
+type Step = 0 | 1 | 2 | 3;
 
 export function StartFlow({ initialGoalId }: { initialGoalId?: string }) {
   const preset = GOALS.find((g) => g.id === initialGoalId) ?? null;
   const [step, setStep] = useState<Step>(preset ? 1 : 0);
   const [goal, setGoal] = useState<GoalOption | null>(preset);
   const [position, setPosition] = useState<PositionOption | null>(null);
+  const [briefAddress, setBriefAddress] = useState("");
+  const [briefPc, setBriefPc] = useState("");
 
   return (
     <div>
@@ -76,7 +79,26 @@ export function StartFlow({ initialGoalId }: { initialGoalId?: string }) {
       )}
 
       {step === 2 && goal && position && (
-        <Summary goal={goal} position={position} onBack={() => setStep(1)} />
+        <Summary
+          goal={goal}
+          position={position}
+          onBack={() => setStep(1)}
+          onCreateBrief={(address, pc) => {
+            setBriefAddress(address);
+            setBriefPc(pc);
+            setStep(3);
+          }}
+        />
+      )}
+
+      {step === 3 && goal && position && (
+        <BriefBuilder
+          goalId={goal.id}
+          stage={position.stage}
+          positionLabel={position.label}
+          initial={{ address: briefAddress, postcode: briefPc }}
+          onBack={() => setStep(2)}
+        />
       )}
     </div>
   );
@@ -85,7 +107,7 @@ export function StartFlow({ initialGoalId }: { initialGoalId?: string }) {
 function ProgressDots({ step }: { step: number }) {
   return (
     <div className="mb-8 flex items-center gap-2">
-      {[0, 1, 2].map((i) => (
+      {[0, 1, 2, 3].map((i) => (
         <span
           key={i}
           className={`h-1.5 rounded-full transition-all ${
@@ -153,10 +175,12 @@ function Summary({
   goal,
   position,
   onBack,
+  onCreateBrief,
 }: {
   goal: GoalOption;
   position: PositionOption;
   onBack: () => void;
+  onCreateBrief: (address: string, pc: string) => void;
 }) {
   const targetStage = position.stage;
   const [pc, setPc] = useState("");
@@ -244,23 +268,33 @@ function Summary({
           </div>
         </div>
 
+        <div className="mt-6 border-t border-line pt-5">
+          <p className="text-sm font-semibold text-ink">The first step: your project brief</p>
+          <p className="mt-0.5 text-sm text-muted">
+            Next you’ll create a short brief — everything a professional needs to
+            give you a fee quote without a dozen questions. It becomes the home
+            base for your whole project.
+          </p>
+        </div>
+
         <div className="mt-5 flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={() => onCreateBrief(address.trim(), pc.trim())}
+            className="btn-primary"
+          >
+            Create your project brief →
+          </button>
           <Link
             href={`/journeys/${goal.journeySlug}?at=${targetStage}${
               pc.trim() ? `&pc=${encodeURIComponent(pc.trim())}` : ""
             }${address.trim() ? `&address=${encodeURIComponent(address.trim())}` : ""}`}
-            className="btn-primary"
+            className="btn-ghost"
           >
-            Open my project journey →
+            Skip — just show the journey
           </Link>
-          <Link href="/journeys" className="btn-ghost">See all journeys</Link>
         </div>
       </div>
-
-      <p className="mt-5 text-sm text-muted">
-        You’ll see the whole journey, with your current stage open in detail and
-        future stages ready for when you reach them.
-      </p>
     </div>
   );
 }
