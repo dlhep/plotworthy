@@ -151,9 +151,17 @@ function StageDetail({
   slug: string;
 }) {
   const [checked, setChecked] = useState<Record<number, boolean>>({});
+  const [docState, setDocState] = useState<
+    Record<number, { status: "sub" | "ok"; name: string }>
+  >({});
   const extra = getStageExtra(slug, stage.n);
   const doneCount = stage.actions.filter((_, i) => checked[i]).length;
+  const signedCount = stage.documents.filter((_, i) => docState[i]?.status === "ok").length;
   const toggle = (i: number) => setChecked((c) => ({ ...c, [i]: !c[i] }));
+  const onUpload = (i: number, name: string) =>
+    setDocState((s) => ({ ...s, [i]: { status: "sub", name } }));
+  const onSignoff = (i: number) =>
+    setDocState((s) => ({ ...s, [i]: { status: "ok", name: s[i]?.name ?? "" } }));
   // Future stages stay calm: a short glimpse only, not the full working detail.
   if (status === "upcoming") {
     return (
@@ -262,14 +270,65 @@ function StageDetail({
           </Block>
         )}
 
-        <Block title="Documents or information needed">
-          <ul className="space-y-2">
-            {stage.documents.map((d, i) => (
-              <li key={i} className="flex items-center gap-2.5 text-sm text-muted">
-                <span className="h-1.5 w-1.5 rounded-full bg-clay-400" />
-                {d}
-              </li>
-            ))}
+        <Block title="Required information — upload & sign-off">
+          <div className="mb-3 flex items-center gap-3">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-clay-100">
+              <div
+                className="h-full rounded-full bg-sage-500 transition-all"
+                style={{ width: `${(signedCount / stage.documents.length) * 100}%` }}
+              />
+            </div>
+            <span className="text-xs font-medium text-sage-700">
+              {signedCount}/{stage.documents.length} signed off
+            </span>
+          </div>
+          <ul>
+            {stage.documents.map((d, i) => {
+              const st = docState[i]?.status;
+              return (
+                <li
+                  key={i}
+                  className="flex items-center gap-2.5 border-b border-dashed border-line py-2 last:border-0"
+                >
+                  <div className="min-w-0 flex-1">
+                    <span className="text-sm text-ink/85">{d}</span>
+                    {docState[i]?.name && (
+                      <span className="block truncate text-xs text-muted">📄 {docState[i].name}</span>
+                    )}
+                  </div>
+                  <span
+                    className={`whitespace-nowrap rounded-full px-2 py-0.5 text-[0.68rem] font-semibold ${
+                      st === "ok"
+                        ? "bg-sage-50 text-sage-700"
+                        : st === "sub"
+                        ? "bg-clay-50 text-clay-700"
+                        : "bg-cream text-muted"
+                    }`}
+                  >
+                    {st === "ok" ? "Signed off ✓" : st === "sub" ? "Submitted" : "Required"}
+                  </span>
+                  {!st && (
+                    <label className="cursor-pointer whitespace-nowrap rounded-md px-2 py-1 text-xs font-semibold text-sage-700 hover:bg-sage-50">
+                      Upload
+                      <input
+                        type="file"
+                        className="hidden"
+                        onChange={(e) => onUpload(i, e.target.files?.[0]?.name ?? "document.pdf")}
+                      />
+                    </label>
+                  )}
+                  {st === "sub" && (
+                    <button
+                      type="button"
+                      onClick={() => onSignoff(i)}
+                      className="whitespace-nowrap rounded-md px-2 py-1 text-xs font-semibold text-sage-700 hover:bg-sage-50"
+                    >
+                      Sign off
+                    </button>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </Block>
 
