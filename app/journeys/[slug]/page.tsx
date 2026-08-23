@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { JOURNEYS, getJourney, STAGE_TITLES } from "@/lib/journeys";
+import { JOURNEYS, getJourney, getHubInfo, STAGE_TITLES } from "@/lib/journeys";
 import { JourneyStepper } from "@/components/JourneyStepper";
 import { ProjectIcon, StageIcon } from "@/components/Icons";
 import { Reveal } from "@/components/Reveal";
+import { ProsNearYou } from "@/components/ProsNearYou";
 
 export function generateStaticParams() {
   return JOURNEYS.map((j) => ({ slug: j.slug }));
@@ -34,6 +35,7 @@ export default function JourneyHubPage({
 
   const stage = journey.stages[current];
   const progress = Math.round(((current + 1) / journey.stages.length) * 100);
+  const hubInfo = getHubInfo(journey.slug);
 
   return (
     <div className="container-content py-12 sm:py-16">
@@ -124,6 +126,15 @@ export default function JourneyHubPage({
         </p>
       </Reveal>
 
+      {/* About this project type */}
+      {hubInfo && (
+        <Reveal className="mt-8 grid gap-4 md:grid-cols-3">
+          <HubFact label="End-to-end timescale" value={hubInfo.timescale} />
+          <HubFact label="Consents & regulations" value={hubInfo.consents} />
+          <HubFact label="Key thing to watch" value={hubInfo.watch} />
+        </Reveal>
+      )}
+
       {/* The full journey */}
       <Reveal className="mt-14">
         <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2">
@@ -135,8 +146,71 @@ export default function JourneyHubPage({
         <JourneyStepper journey={journey} currentStage={current} />
       </Reveal>
 
+      {/* Information you'll need */}
+      <Reveal className="mt-16">
+        <h2 className="display text-2xl">Information you’ll need</h2>
+        <p className="mt-2 text-sm text-muted">
+          Everything this project type typically requires, stage by stage. You upload and sign each
+          item off in its stage as you reach it.
+        </p>
+        <div className="mt-4 rounded-2xl border border-line bg-white px-6 py-2">
+          {journey.stages.map((s) => (
+            <div key={s.n} className="border-b border-dashed border-line py-3.5 last:border-0">
+              <p className="flex items-center gap-2 text-sm font-semibold text-ink">
+                <span className="font-serif text-sage-600/60">0{s.n}</span> {s.title}
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {s.documents.map((d, i) => (
+                  <span key={i} className="rounded-full border border-line bg-cream/50 px-3 py-1 text-xs text-ink/80">
+                    {d}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+
+      {/* Find vetted professionals near you */}
+      <Reveal className="mt-16">
+        <ProsNearYou journey={journey} />
+      </Reveal>
+
+      {/* Best-practice resources */}
+      {hubInfo && (
+        <Reveal className="mt-16">
+          <h2 className="display text-2xl">Best-practice resources</h2>
+          <p className="mt-2 text-sm text-muted">
+            Trusted official guidance for this project type. Opens the source in a new tab.
+          </p>
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            {hubInfo.resources.map((r) => (
+              <a
+                key={r.url}
+                href={r.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="card flex items-center gap-3 p-4 transition-colors hover:border-sage-300"
+              >
+                <span className="tile h-9 w-9">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                    <path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.5 1.5" strokeLinecap="round" />
+                    <path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1.5-1.5" strokeLinecap="round" />
+                  </svg>
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-medium text-ink">{r.label}</span>
+                  <span className="text-xs text-muted">{r.host}</span>
+                </span>
+                <span className="text-muted">↗</span>
+              </a>
+            ))}
+          </div>
+        </Reveal>
+      )}
+
       {/* Cross-links */}
-      <Reveal className="mt-14 rounded-2xl border border-line bg-cream/50 px-6 py-6">
+      <Reveal className="mt-16 rounded-2xl border border-line bg-cream/50 px-6 py-6">
         <h3 className="font-serif text-lg text-ink">Same seven stages, every project</h3>
         <p className="mt-2 text-sm text-muted">
           {STAGE_TITLES.join(" · ")}
@@ -154,6 +228,15 @@ export default function JourneyHubPage({
           ))}
         </div>
       </Reveal>
+    </div>
+  );
+}
+
+function HubFact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-line bg-white px-4 py-4">
+      <p className="text-xs font-semibold uppercase tracking-wide text-clay-600">{label}</p>
+      <p className="mt-1.5 text-sm leading-relaxed text-ink">{value}</p>
     </div>
   );
 }

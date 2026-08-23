@@ -730,3 +730,92 @@ export const STAGE_EXTRA: Record<string, Record<number, StageExtra>> = {
 export function getStageExtra(slug: string, n: number): StageExtra | undefined {
   return STAGE_EXTRA[slug]?.[n];
 }
+
+// ---------------------------------------------------------------------------
+// Hub-level information: about-the-project facts + best-practice resources.
+// ---------------------------------------------------------------------------
+export type Resource = { label: string; host: string; url: string };
+export type HubInfo = {
+  timescale: string;
+  consents: string;
+  watch: string;
+  resources: Resource[];
+};
+
+export const HUB_INFO: Record<string, HubInfo> = {
+  extension: {
+    timescale: "Typically 4–8 months, brief to completion.",
+    consents: "Permitted development or full planning · Building Regulations · Party Wall Act.",
+    watch: "Boundaries, party walls and conservation-area status shape what's possible.",
+    resources: [
+      { label: "Planning Portal — common householder projects", host: "planningportal.co.uk", url: "https://www.planningportal.co.uk/permission/common-projects" },
+      { label: "When you need planning permission", host: "gov.uk", url: "https://www.gov.uk/planning-permission-england-wales" },
+      { label: "Party Wall etc. Act 1996 — guidance", host: "gov.uk", url: "https://www.gov.uk/guidance/party-wall-etc-act-1996-guidance" },
+      { label: "Building Regulations approval", host: "gov.uk", url: "https://www.gov.uk/building-regulations-approval" },
+    ],
+  },
+  "house-to-flats": {
+    timescale: "Typically 6–12 months, brief to completion.",
+    consents: "Planning permission for change of use · space standards · fire & acoustic separation.",
+    watch: "Every flat must meet space standards and independent fire/sound separation.",
+    resources: [
+      { label: "Change of use — planning", host: "gov.uk", url: "https://www.gov.uk/government/publications/change-of-use" },
+      { label: "Nationally Described Space Standard", host: "gov.uk", url: "https://www.gov.uk/government/publications/technical-housing-standards-nationally-described-space-standard" },
+      { label: "Approved Document B — fire safety", host: "gov.uk", url: "https://www.gov.uk/government/publications/fire-safety-approved-document-b" },
+      { label: "Approved Document E — sound insulation", host: "gov.uk", url: "https://www.gov.uk/government/publications/resistance-to-sound-approved-document-e" },
+    ],
+  },
+  "office-to-residential": {
+    timescale: "Typically 8–14 months, brief to completion.",
+    consents: "Prior approval (Class MA) or full planning · daylight, fire & structural upgrades.",
+    watch: "Class MA prior approval has qualifying criteria; daylight and fire are decisive.",
+    resources: [
+      { label: "When is permission required (incl. Class MA)", host: "gov.uk", url: "https://www.gov.uk/guidance/when-is-permission-required" },
+      { label: "Planning Portal — change of use", host: "planningportal.co.uk", url: "https://www.planningportal.co.uk/permission/common-projects/change-of-use" },
+      { label: "BRE — daylight & sunlight", host: "bregroup.com", url: "https://www.bregroup.com/" },
+      { label: "Building Regulations approval", host: "gov.uk", url: "https://www.gov.uk/building-regulations-approval" },
+    ],
+  },
+  hmo: {
+    timescale: "Typically 4–9 months, brief to letting.",
+    consents: "Planning (often) · HMO licence · Article 4 · fire safety standards.",
+    watch: "Article 4 directions and licensing thresholds vary by council — check early.",
+    resources: [
+      { label: "House in multiple occupation licence", host: "gov.uk", url: "https://www.gov.uk/house-in-multiple-occupation-licence" },
+      { label: "Renting out a property — HMO rules", host: "gov.uk", url: "https://www.gov.uk/renting-out-a-property/houses-in-multiple-occupation" },
+      { label: "LGA / LACORS fire safety guidance", host: "local.gov.uk", url: "https://www.local.gov.uk/" },
+      { label: "Nationally Described Space Standard", host: "gov.uk", url: "https://www.gov.uk/government/publications/technical-housing-standards-nationally-described-space-standard" },
+    ],
+  },
+  care: {
+    timescale: "Typically 9–18 months, brief to opening.",
+    consents: "Use class (C2/C3) · planning · CQC / operator registration · accessibility.",
+    watch: "Registration standards and accessibility shape the building from the outset.",
+    resources: [
+      { label: "CQC — registering a service", host: "cqc.org.uk", url: "https://www.cqc.org.uk/guidance-providers/registration" },
+      { label: "Use classes (incl. C2)", host: "gov.uk", url: "https://www.gov.uk/guidance/use-classes" },
+      { label: "Approved Document M — access", host: "gov.uk", url: "https://www.gov.uk/government/publications/access-to-and-use-of-buildings-approved-document-m" },
+      { label: "CQC — supported living", host: "cqc.org.uk", url: "https://www.cqc.org.uk/" },
+    ],
+  },
+};
+
+export function getHubInfo(slug: string): HubInfo | undefined {
+  return HUB_INFO[slug];
+}
+
+export function journeyDisciplineRoles(journey: Journey): string[] {
+  // First professional role string seen for each distinct discipline area.
+  const seen = new Set<string>();
+  const out: string[] = [];
+  journey.stages.forEach((s) =>
+    s.professionals.forEach((p) => {
+      const key = p.toLowerCase();
+      if (!seen.has(key) && !key.includes("adviser")) {
+        seen.add(key);
+        out.push(p);
+      }
+    })
+  );
+  return out;
+}
