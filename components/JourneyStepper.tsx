@@ -142,15 +142,40 @@ function StageDetail({
   status: Status;
   projectName: string;
 }) {
+  // Future stages stay calm: a short glimpse only, not the full working detail.
+  if (status === "upcoming") {
+    return (
+      <div className="border-t border-line bg-canvas/60 px-5 py-6 sm:px-6">
+        <p className="text-sm leading-relaxed text-muted">
+          <span className="font-medium text-ink">Later in your journey. </span>
+          {stage.collapsedNote} This stage opens in full — with your actions,
+          decisions and documents — once you reach it.
+        </p>
+        <div className="mt-4 rounded-xl border border-line bg-white px-4 py-3.5">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+            Professionals likely involved
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {stage.professionals.map((p, i) => (
+              <span
+                key={i}
+                className="rounded-full border border-line bg-cream/60 px-3 py-1.5 text-xs font-medium text-muted"
+              >
+                {p}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="border-t border-line bg-canvas/60 px-5 py-6 sm:px-6">
-      {status === "upcoming" && (
-        <p className="mb-5 rounded-xl bg-cream px-4 py-3 text-sm text-muted">
-          This stage opens in full once you reach it. Here’s a preview so you can
-          see what’s coming.
-        </p>
-      )}
-
+      <p className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-clay-600">
+        <span className="h-1.5 w-1.5 rounded-full bg-clay-400" />
+        {status === "current" ? "Your current stage — everything you need now" : "Completed — here’s what this stage covered"}
+      </p>
       <div className="grid gap-6 lg:grid-cols-2">
         <Block title="Three immediate actions" accent>
           <ol className="space-y-2.5">
