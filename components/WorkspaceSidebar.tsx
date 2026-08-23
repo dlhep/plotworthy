@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV = [
-  { href: "/professional", label: "Dashboard", key: "dash" },
-  { href: "/professional/opportunities", label: "Opportunities", key: "opp" },
-  { href: "/professional/coverage", label: "Coverage map", key: "cov" },
-  { href: "/professional/profile", label: "Public profile", key: "prof" },
+  { href: "/professional", label: "Dashboard", short: "Dashboard", key: "dash" },
+  { href: "/professional/opportunities", label: "Opportunities", short: "Leads", key: "opp" },
+  { href: "/professional/coverage", label: "Coverage map", short: "Coverage", key: "cov" },
+  { href: "/professional/profile", label: "Public profile", short: "Profile", key: "prof" },
 ];
 
 const ICON: Record<string, JSX.Element> = {
@@ -68,7 +68,7 @@ export function WorkspaceSidebar() {
         </span>
       </div>
 
-      <nav className="mt-3 flex gap-1 overflow-x-auto pb-0.5 lg:mt-4 lg:flex-col lg:gap-0.5 lg:overflow-visible lg:pb-0">
+      <nav className="mt-3 grid grid-cols-4 gap-1 lg:mt-4 lg:flex lg:flex-col lg:gap-0.5">
         <span className="hidden px-2.5 pb-1.5 pt-2.5 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[#e9efe7]/45 lg:block">
           Workspace
         </span>
@@ -78,12 +78,13 @@ export function WorkspaceSidebar() {
             <Link
               key={n.href}
               href={n.href}
-              className={`flex shrink-0 items-center gap-2.5 whitespace-nowrap rounded-lg px-2.5 py-2 text-sm lg:py-2.5 ${
+              className={`flex flex-col items-center gap-1 rounded-lg px-1 py-2 text-center text-[11px] leading-tight lg:flex-row lg:gap-2.5 lg:px-2.5 lg:py-2.5 lg:text-left lg:text-sm ${
                 active ? "bg-clay-400 font-semibold text-sage-900" : "text-[#e9efe7]/85 hover:bg-white/[0.07] hover:text-white"
               }`}
             >
               {ICON[n.key]}
-              <span>{n.label}</span>
+              <span className="lg:hidden">{n.short}</span>
+              <span className="hidden lg:inline">{n.label}</span>
             </Link>
           );
         })}
