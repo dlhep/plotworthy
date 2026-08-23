@@ -19,6 +19,10 @@ export default function JoinPage() {
             the context you need to give a confident, well-priced proposal.
           </p>
 
+          <div className="mt-5">
+            <Link href="/professional" className="btn-primary">Open the professional workspace →</Link>
+          </div>
+
           <ul className="mt-8 space-y-4">
             {[
               ["A defined project", "You know the project type and scope before you reply."],

@@ -159,6 +159,8 @@ function Summary({
   onBack: () => void;
 }) {
   const targetStage = position.stage;
+  const [pc, setPc] = useState("");
+  const [address, setAddress] = useState("");
 
   if (!goal.journeySlug) {
     return (
@@ -218,9 +220,35 @@ function Summary({
           </p>
         )}
 
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className="mt-6 border-t border-line pt-5">
+          <p className="text-sm font-semibold text-ink">
+            Your property <span className="font-normal text-muted">— optional, but recommended</span>
+          </p>
+          <p className="mt-0.5 text-sm text-muted">
+            Add the address and postcode, or a postcode you’re considering, to unlock Article 4 status,
+            {goal.id === "hmo" ? " HMO saturation," : ""} nearby planning history and local professionals.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <input
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Address (optional)"
+              className="min-w-48 flex-1 rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm"
+            />
+            <input
+              value={pc}
+              onChange={(e) => setPc(e.target.value.toUpperCase())}
+              placeholder="Postcode e.g. B14"
+              className="w-36 rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm uppercase"
+            />
+          </div>
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-3">
           <Link
-            href={`/journeys/${goal.journeySlug}?at=${targetStage}`}
+            href={`/journeys/${goal.journeySlug}?at=${targetStage}${
+              pc.trim() ? `&pc=${encodeURIComponent(pc.trim())}` : ""
+            }${address.trim() ? `&address=${encodeURIComponent(address.trim())}` : ""}`}
             className="btn-primary"
           >
             Open my project journey →

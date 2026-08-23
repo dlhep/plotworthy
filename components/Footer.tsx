@@ -27,6 +27,7 @@ export function Footer() {
           <ul className="mt-4 space-y-2.5 text-sm text-muted">
             <li><Link href="/professionals" className="hover:text-ink">Find a professional</Link></li>
             <li><Link href="/join" className="hover:text-ink">Join as a professional</Link></li>
+            <li><Link href="/professional" className="hover:text-ink">Professional workspace</Link></li>
             <li><Link href="/login" className="hover:text-ink">Log in</Link></li>
           </ul>
         </div>

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Nav } from "@/components/Nav";
-import { Footer } from "@/components/Footer";
+import { SiteFrame } from "@/components/SiteFrame";
 
 export const metadata: Metadata = {
   title: "PlotWorthy — Your property project adviser",
@@ -25,9 +24,7 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-screen flex-col">
-        <Nav />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <SiteFrame>{children}</SiteFrame>
       </body>
     </html>
   );

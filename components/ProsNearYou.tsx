@@ -10,9 +10,15 @@ import {
 } from "@/lib/professionals";
 import { IntroFlow } from "./IntroFlow";
 
-export function ProsNearYou({ journey }: { journey: Journey }) {
-  const [pc, setPc] = useState("");
-  const [applied, setApplied] = useState("");
+export function ProsNearYou({
+  journey,
+  initialPostcode = "",
+}: {
+  journey: Journey;
+  initialPostcode?: string;
+}) {
+  const [pc, setPc] = useState(initialPostcode);
+  const [applied, setApplied] = useState(initialPostcode);
 
   const roles = journeyDisciplineRoles(journey);
   const discs = Array.from(new Set(roles.map(disciplineFromRole))).slice(0, 4);

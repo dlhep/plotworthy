@@ -5,6 +5,7 @@ import { JourneyStepper } from "@/components/JourneyStepper";
 import { ProjectIcon, StageIcon } from "@/components/Icons";
 import { Reveal } from "@/components/Reveal";
 import { ProsNearYou } from "@/components/ProsNearYou";
+import { PropertyIntel } from "@/components/PropertyIntel";
 
 export function generateStaticParams() {
   return JOURNEYS.map((j) => ({ slug: j.slug }));
@@ -22,7 +23,7 @@ export default function JourneyHubPage({
   searchParams,
 }: {
   params: { slug: string };
-  searchParams: { at?: string };
+  searchParams: { at?: string; pc?: string; address?: string };
 }) {
   const journey = getJourney(params.slug);
   if (!journey) notFound();
@@ -126,6 +127,16 @@ export default function JourneyHubPage({
         </p>
       </Reveal>
 
+      {/* Property intelligence */}
+      <Reveal className="mt-8">
+        <PropertyIntel
+          slug={journey.slug}
+          shortName={journey.shortName}
+          initialPc={searchParams.pc ?? ""}
+          initialAddress={searchParams.address ?? ""}
+        />
+      </Reveal>
+
       {/* About this project type */}
       {hubInfo && (
         <Reveal className="mt-8 grid gap-4 md:grid-cols-3">
@@ -173,7 +184,7 @@ export default function JourneyHubPage({
 
       {/* Find vetted professionals near you */}
       <Reveal className="mt-16">
-        <ProsNearYou journey={journey} />
+        <ProsNearYou journey={journey} initialPostcode={searchParams.pc ?? ""} />
       </Reveal>
 
       {/* Best-practice resources */}
