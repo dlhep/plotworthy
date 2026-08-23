@@ -78,7 +78,9 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
     return (
       <div className="mx-auto max-w-md text-center">
         <div className="flex justify-center">
-          <Logo />
+          <Link href="/" aria-label="PlotWorthy home">
+            <Logo />
+          </Link>
         </div>
         <div className="card mt-8 p-8">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-sage-50 text-sage-700">
@@ -101,7 +103,9 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
   return (
     <div className="mx-auto max-w-md">
       <div className="flex justify-center">
-        <Logo />
+        <Link href="/" aria-label="PlotWorthy home">
+          <Logo />
+        </Link>
       </div>
       <div className="card mt-8 p-8">
         <h1 className="text-center font-serif text-2xl text-ink">

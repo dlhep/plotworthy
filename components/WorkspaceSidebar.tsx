@@ -45,7 +45,9 @@ export function WorkspaceSidebar() {
   return (
     <aside className="w-full shrink-0 bg-sage-900 px-3.5 py-3 text-[#e9efe7] lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-[250px] lg:flex-col lg:py-4">
       <div className="flex items-center justify-between gap-3 px-1 lg:px-2 lg:pb-3.5">
-        <Logo tone="dark" />
+        <Link href="/" aria-label="PlotWorthy home">
+          <Logo tone="dark" />
+        </Link>
         <Link href="/" className="text-xs text-[#e9efe7]/70 hover:text-white lg:hidden">
           Exit preview
         </Link>

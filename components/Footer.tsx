@@ -6,7 +6,9 @@ export function Footer() {
     <footer className="mt-24 border-t border-line bg-cream/60">
       <div className="container-content grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="max-w-xs">
-          <Logo />
+          <Link href="/" aria-label="PlotWorthy home">
+            <Logo />
+          </Link>
           <p className="mt-4 text-sm leading-relaxed text-muted">
             Your property project adviser — showing you what happens next and
             introducing the right vetted professional when you need them.
