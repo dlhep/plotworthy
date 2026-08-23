@@ -6,6 +6,7 @@ import { ProjectIcon, StageIcon } from "@/components/Icons";
 import { Reveal } from "@/components/Reveal";
 import { ProsNearYou } from "@/components/ProsNearYou";
 import { PropertyIntel } from "@/components/PropertyIntel";
+import { HubChecklist } from "@/components/HubChecklist";
 
 export function generateStaticParams() {
   return JOURNEYS.map((j) => ({ slug: j.slug }));
@@ -157,29 +158,10 @@ export default function JourneyHubPage({
         <JourneyStepper journey={journey} currentStage={current} />
       </Reveal>
 
-      {/* Information you'll need */}
+      {/* Interactive progress checklist — the actions and information for every
+          stage, tickable and saved to the client's project. */}
       <Reveal className="mt-16">
-        <h2 className="display text-2xl">Information you’ll need</h2>
-        <p className="mt-2 text-sm text-muted">
-          Everything this project type typically requires, stage by stage. You upload and sign each
-          item off in its stage as you reach it.
-        </p>
-        <div className="mt-4 rounded-2xl border border-line bg-white px-6 py-2">
-          {journey.stages.map((s) => (
-            <div key={s.n} className="border-b border-dashed border-line py-3.5 last:border-0">
-              <p className="flex items-center gap-2 text-sm font-semibold text-ink">
-                <span className="font-serif text-sage-600/60">0{s.n}</span> {s.title}
-              </p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {s.documents.map((d, i) => (
-                  <span key={i} className="rounded-full border border-line bg-cream/50 px-3 py-1 text-xs text-ink/80">
-                    {d}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        <HubChecklist slug={journey.slug} currentStage={current} />
       </Reveal>
 
       {/* Find vetted professionals near you */}

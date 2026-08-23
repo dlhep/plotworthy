@@ -19,7 +19,7 @@ export default function AdminLogin() {
       body: JSON.stringify({ password }),
     });
     const json = await res.json();
-    if (json.ok) router.push("/admin/applications");
+    if (json.ok) router.push("/admin");
     else {
       setError(json.error || "Login failed.");
       setBusy(false);
@@ -30,7 +30,7 @@ export default function AdminLogin() {
     <div className="container-content flex min-h-screen items-center justify-center py-20">
       <form onSubmit={submit} className="card w-full max-w-sm p-8">
         <h1 className="display text-2xl">PlotWorthy admin</h1>
-        <p className="mt-1 text-sm text-muted">Enter the admin password to review applications.</p>
+        <p className="mt-1 text-sm text-muted">Enter the admin password to open the control centre.</p>
         <input
           type="password"
           value={password}
