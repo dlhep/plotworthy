@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { JoinForm } from "@/components/JoinForm";
 
 export const metadata = { title: "Join as a professional — PlotWorthy" };
 
@@ -46,45 +47,7 @@ export default function JoinPage() {
           </ul>
         </div>
 
-        <div className="card p-6 sm:p-8">
-          <h2 className="font-serif text-2xl text-ink">Register your interest</h2>
-          <p className="mt-1 text-sm text-muted">
-            Tell us a little about your practice and we’ll be in touch about
-            joining the vetted network.
-          </p>
-
-          <form className="mt-6 space-y-4" action="/join?submitted=1">
-            <Field label="Your name" name="name" placeholder="Jordan Fletcher" />
-            <Field label="Practice / company" name="company" placeholder="Fletcher Design Ltd" />
-            <Field label="Email" name="email" type="email" placeholder="you@example.com" />
-            <div>
-              <label htmlFor="discipline" className="block text-sm font-medium text-ink">
-                Discipline
-              </label>
-              <select
-                id="discipline"
-                name="discipline"
-                className="mt-1.5 w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm text-ink focus:border-sage-400 focus:outline-none focus:ring-2 focus:ring-sage-200"
-              >
-                <option>Architect</option>
-                <option>Planning consultant</option>
-                <option>Structural engineer</option>
-                <option>Fire consultant</option>
-                <option>Surveyor / valuer</option>
-                <option>Builder / contractor</option>
-                <option>Letting / lease adviser</option>
-                <option>Licensing / care specialist</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <button type="submit" className="btn-primary w-full">
-              Register interest
-            </button>
-            <p className="text-center text-xs text-muted">
-              This is a demonstration form. No data is stored yet.
-            </p>
-          </form>
-        </div>
+        <JoinForm />
       </div>
 
       <p className="mt-12 text-center text-sm text-muted">
@@ -98,29 +61,3 @@ export default function JoinPage() {
   );
 }
 
-function Field({
-  label,
-  name,
-  type = "text",
-  placeholder,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  placeholder?: string;
-}) {
-  return (
-    <div>
-      <label htmlFor={name} className="block text-sm font-medium text-ink">
-        {label}
-      </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        className="mt-1.5 w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-muted/60 focus:border-sage-400 focus:outline-none focus:ring-2 focus:ring-sage-200"
-      />
-    </div>
-  );
-}
