@@ -28,11 +28,14 @@ export function ProsNearYou({
   return (
     <div>
       <div className="mb-1.5 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-clay-600">
-        <span className="kicker-num">03</span> Find vetted professionals near you
+        <span className="kicker-num">03</span> Professionals who cover your area
       </div>
       <h2 className="display text-2xl">Vetted professionals for your postcode</h2>
       <p className="mt-2 text-sm text-muted">
-        Enter the property postcode to see vetted professionals who cover that area for this project type.
+        Enter the property postcode to see professionals who cover that area for this project type.
+      </p>
+      <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-clay-50 px-3 py-1 text-xs font-semibold text-clay-700">
+        Example professional profiles — for demonstration
       </p>
 
       <div className="mt-4 flex max-w-sm gap-2">

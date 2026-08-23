@@ -59,11 +59,12 @@ export function PropertyIntel({
   if (!pc) {
     return (
       <div className="card p-6 text-center">
-        <h3 className="display text-xl">Add your property to unlock local intelligence</h3>
+        <h3 className="display text-xl">See an example local report</h3>
         <p className="mx-auto mt-1.5 max-w-xl text-sm text-muted">
-          Enter the property address and postcode — or a postcode you’re considering. PlotWorthy
-          checks Article 4 status, {slug === "hmo" ? "HMO saturation within 100m, " : ""}nearby
-          planning history and matches vetted professionals in that area.
+          Enter a postcode to see an <span className="font-medium text-ink">example</span> of the local
+          report PlotWorthy will provide — Article 4 status, {slug === "hmo" ? "HMO saturation within 100m, " : ""}nearby
+          planning history and vetted professionals in that area. The figures shown are demonstration
+          data only, not real property information.
         </p>
         <div className="mt-4 flex flex-wrap justify-center gap-2">
           <input
@@ -97,6 +98,21 @@ export function PropertyIntel({
 
   return (
     <div className="card p-6">
+      {/* Unmissable, BEFORE any figures: this is illustrative sample data. */}
+      <div className="mb-5 flex items-start gap-3 rounded-xl border border-clay-300 bg-clay-50 px-4 py-3">
+        <span className="mt-0.5 text-lg leading-none">⚠️</span>
+        <div>
+          <p className="text-sm font-bold uppercase tracking-wide text-clay-700">
+            Example report — demonstration data only
+          </p>
+          <p className="mt-0.5 text-xs leading-relaxed text-clay-700/90">
+            Every figure below is illustrative and must not be relied on. In the live service this will
+            draw on the council&apos;s Article 4 map, the public HMO licensing register and official
+            planning records. Always confirm with the local authority before making decisions.
+          </p>
+        </div>
+      </div>
+
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="font-serif text-xl font-medium text-ink">{address || `Property in ${intel.area}`}</p>

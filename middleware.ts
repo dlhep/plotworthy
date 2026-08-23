@@ -6,10 +6,12 @@ const SUPABASE_KEY =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-// Journey routes a client must be signed in (and email-verified) to use.
-// Because "Confirm email" is on in Supabase, a session only exists after the
-// address is verified — so a valid session here means a verified account.
-const PROTECTED = ["/start", "/brief", "/professional"];
+// Routes a signed-in (email-verified) account is required for. The journey
+// itself (/start, /journeys) is deliberately open so people get value before
+// committing — sign-in is only required to SAVE a project (/brief) or to use
+// the professional workspace. Because "Confirm email" is on in Supabase, a
+// session only exists after the address is verified.
+const PROTECTED = ["/brief", "/professional"];
 
 function isProtected(path: string) {
   return PROTECTED.some((p) => path === p || path.startsWith(p + "/"));

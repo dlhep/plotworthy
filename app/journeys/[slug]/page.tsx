@@ -6,7 +6,7 @@ import { ProjectIcon, StageIcon } from "@/components/Icons";
 import { Reveal } from "@/components/Reveal";
 import { ProsNearYou } from "@/components/ProsNearYou";
 import { PropertyIntel } from "@/components/PropertyIntel";
-import { HubChecklist } from "@/components/HubChecklist";
+import { SaveProjectBanner } from "@/components/SaveProjectBanner";
 
 export function generateStaticParams() {
   return JOURNEYS.map((j) => ({ slug: j.slug }));
@@ -40,37 +40,32 @@ export default function JourneyHubPage({
   const hubInfo = getHubInfo(journey.slug);
 
   return (
-    <div className="container-content py-12 sm:py-16">
-      {/* Header */}
-      <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
-        <Link href="/journeys" className="hover:text-ink">Project journeys</Link>
-        <span>/</span>
-        <span className="text-ink">{journey.shortName}</span>
-      </div>
-
-      <div className="mt-5 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-2xl">
-          <div className="flex items-center gap-3">
-            <span className="tile h-14 w-14">
-              <ProjectIcon type={journey.slug} className="h-8 w-8" />
+    <div className="container-content py-6 sm:py-8">
+      {/* Header — kept compact so the current stage is visible immediately */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
+          <Link href="/journeys" className="hover:text-ink">Project journeys</Link>
+          <span>/</span>
+          <span className="flex items-center gap-1.5 text-ink">
+            <ProjectIcon type={journey.slug} className="h-4 w-4 text-sage-600" />
+            {journey.shortName}
+          </span>
+          {journey.isReference && (
+            <span className="rounded-full bg-sage-50 px-2 py-0.5 text-[0.68rem] font-semibold text-sage-700 ring-1 ring-sage-100">
+              Reference model
             </span>
-            {journey.isReference && (
-              <span className="rounded-full bg-sage-50 px-2.5 py-0.5 text-xs font-semibold text-sage-700 ring-1 ring-sage-100">
-                Reference model
-              </span>
-            )}
-          </div>
-          <h1 className="display mt-5 text-4xl sm:text-[2.75rem]">{journey.name}</h1>
-          <p className="mt-3 leading-relaxed text-muted">{journey.intro}</p>
+          )}
         </div>
-
-        <div className="shrink-0">
-          <Link href="/start" className="btn-outline text-sm">Not your project? Start again</Link>
-        </div>
+        <Link href="/start" className="text-sm text-muted hover:text-ink">Not your project? Start again</Link>
       </div>
 
-      {/* Hub summary — the top-level view */}
-      <Reveal className="mt-10 rounded-2xl border border-sage-200 bg-sage-50/40 p-6 sm:p-8">
+      <div className="mt-3 max-w-2xl">
+        <h1 className="display text-2xl sm:text-3xl">{journey.name}</h1>
+        <p className="mt-1.5 text-sm leading-relaxed text-muted">{journey.intro}</p>
+      </div>
+
+      {/* Hub summary — the top-level view, in the opening viewport */}
+      <Reveal className="mt-5 rounded-2xl border border-sage-200 bg-sage-50/40 p-6 sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-start gap-4">
             <span className="tile h-12 w-12 shrink-0 bg-clay-50 text-clay-600 ring-clay-100">
@@ -128,6 +123,9 @@ export default function JourneyHubPage({
         </p>
       </Reveal>
 
+      {/* Save your project — free (signed-out visitors only) */}
+      <SaveProjectBanner />
+
       {/* Property intelligence */}
       <Reveal className="mt-8">
         <PropertyIntel
@@ -158,11 +156,8 @@ export default function JourneyHubPage({
         <JourneyStepper journey={journey} currentStage={current} />
       </Reveal>
 
-      {/* Interactive progress checklist — the actions and information for every
-          stage, tickable and saved to the client's project. */}
-      <Reveal className="mt-16">
-        <HubChecklist slug={journey.slug} currentStage={current} />
-      </Reveal>
+      {/* The full 42-item progress tracker lives in the signed-in workspace
+          (/brief), not here — this page stays a clean overview. */}
 
       {/* Find vetted professionals near you */}
       <Reveal className="mt-16">

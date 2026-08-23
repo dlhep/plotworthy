@@ -12,6 +12,7 @@ import {
 } from "@/lib/project";
 import { BriefPreview } from "./BriefPreview";
 import { BriefBuilder } from "./BriefBuilder";
+import { HubChecklist } from "./HubChecklist";
 
 type State = {
   loading: boolean;
@@ -210,6 +211,13 @@ export function BriefHub() {
           </p>
         </aside>
       </div>
+
+      {/* Full progress tracker — lives in the signed-in workspace */}
+      {slug && (
+        <div className="mt-12">
+          <HubChecklist slug={slug} currentStage={project.stage ?? 0} />
+        </div>
+      )}
 
       {/* Optional paid extras — the core journey stays free */}
       <div className="mt-10 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-sage-200 bg-sage-50/40 px-6 py-5">

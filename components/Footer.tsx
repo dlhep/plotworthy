@@ -4,7 +4,7 @@ import { Logo } from "./Logo";
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-line bg-cream/60">
-      <div className="container-content grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="container-content grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div className="max-w-xs">
           <Link href="/" aria-label="PlotWorthy home">
             <Logo />
@@ -44,6 +44,17 @@ export function Footer() {
             <li><Link href="/journeys/office-to-residential" className="hover:text-ink">Office to homes</Link></li>
             <li><Link href="/journeys/care" className="hover:text-ink">Care / supported</Link></li>
             <li><Link href="/journeys/new-build" className="hover:text-ink">New build</Link></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="text-sm font-semibold text-ink">Company &amp; legal</h4>
+          <ul className="mt-4 space-y-2.5 text-sm text-muted">
+            <li><Link href="/trust" className="hover:text-ink">Trust &amp; how we work</Link></li>
+            <li><a href="mailto:hello@plotworthy.co.uk" className="hover:text-ink">Contact us</a></li>
+            <li><Link href="/privacy" className="hover:text-ink">Privacy policy</Link></li>
+            <li><Link href="/terms" className="hover:text-ink">Terms of use</Link></li>
+            <li><Link href="/cookies" className="hover:text-ink">Cookie policy</Link></li>
           </ul>
         </div>
       </div>

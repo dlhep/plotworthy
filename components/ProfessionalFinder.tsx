@@ -118,8 +118,21 @@ export function ProfessionalFinder() {
         </div>
       </div>
 
+      {/* Demonstration notice — before any profiles */}
+      <div className="mt-6 flex items-start gap-3 rounded-xl border border-clay-300 bg-clay-50 px-4 py-3">
+        <span className="mt-0.5 text-lg leading-none">⚠️</span>
+        <div>
+          <p className="text-sm font-bold uppercase tracking-wide text-clay-700">Example professional profiles</p>
+          <p className="mt-0.5 text-xs leading-relaxed text-clay-700/90">
+            The profiles below are illustrative placeholders to show how the directory works. Names,
+            ratings and coverage are not real. Before launch, every listed professional is genuine and
+            verified — see <Link href="/trust" className="underline">what &ldquo;vetted&rdquo; means</Link>.
+          </p>
+        </div>
+      </div>
+
       {/* Results */}
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {results.map((p) => {
           const initials = p.name
             .split(" ")

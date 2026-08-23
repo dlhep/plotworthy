@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { briefSpec, readiness, type BriefData, type BriefField } from "@/lib/brief";
 import { getCurrentUser, saveProject, writeLocalDraft } from "@/lib/project";
+import { GOALS } from "@/lib/start";
 import { BriefPreview } from "./BriefPreview";
 
 export function BriefBuilder({
@@ -58,9 +59,20 @@ export function BriefBuilder({
       if (onSaved) onSaved();
       else router.push("/brief");
     } else {
-      // Not signed in yet — create an account to keep the project; the draft
-      // we just stored locally is moved onto the account after sign-up.
-      router.push("/signup?next=/brief");
+      // Not signed in — show value first. Send them to their project journey
+      // hub (their stage, local intelligence, the full path and professionals).
+      // The draft is kept locally; they can create a free account from the hub
+      // to save it and request introductions.
+      const slug = GOALS.find((g) => g.id === (goalId ?? ""))?.journeySlug;
+      if (slug) {
+        const params = new URLSearchParams();
+        if (typeof stage === "number") params.set("at", String(stage));
+        if (initial?.postcode) params.set("pc", initial.postcode);
+        if (initial?.address) params.set("address", initial.address);
+        router.push(`/journeys/${slug}?${params.toString()}`);
+      } else {
+        router.push("/signup?next=/brief");
+      }
     }
     setSaving(false);
   };
@@ -127,7 +139,7 @@ export function BriefBuilder({
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <button onClick={save} disabled={saving} className="btn-primary disabled:opacity-60">
-          {saving ? "Saving…" : "Save brief & continue →"}
+          {saving ? "Loading…" : "See your project result →"}
         </button>
         <button
           onClick={() => setShowPreview((s) => !s)}
@@ -138,8 +150,9 @@ export function BriefBuilder({
         </button>
       </div>
       <p className="mt-3 text-sm text-muted">
-        Next you&apos;ll create a free account so your project is saved to you and
-        ready to share with professionals — on any device.
+        No account needed yet — you&apos;ll see your project stage, local checks and the
+        professionals who cover your area first. Create a free account when you want to
+        save it or request introductions.
       </p>
     </div>
   );
