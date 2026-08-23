@@ -26,7 +26,7 @@ export default function CoveragePage() {
 
   return (
     <div>
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-canvas/90 px-8 py-3.5 backdrop-blur">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-canvas/90 px-4 py-3 backdrop-blur sm:px-8 sm:py-3.5">
         <div>
           <p className="text-[0.72rem] font-medium uppercase tracking-[0.12em] text-muted">Professional workspace</p>
           <p className="font-serif text-lg font-medium text-ink">Coverage map</p>
@@ -34,7 +34,7 @@ export default function CoveragePage() {
         <span className="btn-outline btn text-sm">Account ▾</span>
       </div>
 
-      <div className="grid max-w-[80rem] gap-6 p-8 lg:grid-cols-[minmax(0,410px)_1fr]">
+      <div className="grid max-w-[80rem] gap-6 p-4 sm:p-8 lg:grid-cols-[minmax(0,410px)_1fr]">
         <div className="card p-5">
           <div className="flex items-center justify-between">
             <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-clay-600">Lead preferences</span>

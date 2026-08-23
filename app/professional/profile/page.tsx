@@ -8,19 +8,19 @@ export default function ProfilePage() {
   ];
   return (
     <div>
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-canvas/90 px-8 py-3.5 backdrop-blur">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-canvas/90 px-4 py-3 backdrop-blur sm:px-8 sm:py-3.5">
         <div>
           <p className="text-[0.72rem] font-medium uppercase tracking-[0.12em] text-muted">Professional workspace</p>
           <p className="font-serif text-lg font-medium text-ink">Public profile</p>
         </div>
       </div>
-      <div className="max-w-[70rem] p-8">
+      <div className="max-w-[70rem] p-4 sm:p-8">
         <p className="mb-4 text-sm text-muted">This is how clients see you when PlotWorthy introduces you or they browse professionals.</p>
         <div className="card flex flex-wrap items-start gap-5 p-6">
-          <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-sage-100 font-serif text-2xl font-semibold text-sage-700">HE</span>
+          <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-sage-100 font-serif text-2xl font-semibold text-sage-700">SS</span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="display text-2xl">Hepburn Architects</h1>
+              <h1 className="display text-2xl">Sample Studio</h1>
               <span className="inline-flex items-center gap-1 rounded-full bg-sage-50 px-2.5 py-1 text-xs font-bold text-sage-700">✓ Vetted &amp; approved</span>
             </div>
             <p className="mt-1 text-sm text-muted">Architect · Birmingham &amp; West Midlands</p>

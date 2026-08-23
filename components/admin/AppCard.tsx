@@ -1,4 +1,5 @@
 import type { Application } from "@/lib/adminData";
+import { DeleteAppButton } from "./DeleteAppButton";
 
 const BADGE: Record<string, string> = {
   approved: "bg-sage-50 text-sage-700 ring-sage-100",
@@ -14,10 +15,12 @@ export function AppCard({
   a,
   actions = [],
   next,
+  deletable,
 }: {
   a: Application;
   actions?: Action[];
   next: string;
+  deletable?: boolean;
 }) {
   return (
     <div className="card p-5">
@@ -49,8 +52,8 @@ export function AppCard({
       </dl>
       {a.about && <p className="mt-3 text-sm text-ink/85">{a.about}</p>}
 
-      {actions.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-2">
+      {(actions.length > 0 || deletable) && (
+        <div className="mt-4 flex flex-wrap items-center gap-2">
           {actions.map((act) => (
             <form key={act.decision} action="/api/admin/decision" method="post">
               <input type="hidden" name="id" value={a.id} />
@@ -69,6 +72,11 @@ export function AppCard({
               </button>
             </form>
           ))}
+          {deletable && (
+            <span className="ml-auto">
+              <DeleteAppButton id={a.id} name={a.name || a.company || "this record"} next={next} />
+            </span>
+          )}
         </div>
       )}
     </div>

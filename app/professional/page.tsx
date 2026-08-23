@@ -25,7 +25,7 @@ function Status({ o }: { o: (typeof OPPS)[number] }) {
 export default function DashboardPage() {
   return (
     <div>
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-canvas/90 px-8 py-3.5 backdrop-blur">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-canvas/90 px-4 py-3 backdrop-blur sm:px-8 sm:py-3.5">
         <div>
           <p className="text-[0.72rem] font-medium uppercase tracking-[0.12em] text-muted">Professional workspace</p>
           <p className="font-serif text-lg font-medium text-ink">Dashboard</p>
@@ -33,8 +33,8 @@ export default function DashboardPage() {
         <Link href="/professional/coverage" className="btn-outline btn text-sm">Coverage: B13–B17</Link>
       </div>
 
-      <div className="max-w-[80rem] p-8">
-        <p className="mb-5 text-sm text-muted">Welcome back, Hepburn Architects. Here’s what’s happening in your area.</p>
+      <div className="max-w-[80rem] p-4 sm:p-8">
+        <p className="mb-5 text-sm text-muted">Welcome back, Sample Studio. Here’s what’s happening in your area.</p>
         <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
           {[["4","Active opportunities"],["3","Quotes sent"],["2","Introductions this month"],["42%","Quote win rate"]].map(([v, l]) => (
             <div key={l} className="card px-5 py-4">

@@ -42,19 +42,24 @@ const ICON: Record<string, JSX.Element> = {
 export function WorkspaceSidebar() {
   const pathname = usePathname();
   return (
-    <aside className="sticky top-0 flex h-screen w-[250px] shrink-0 flex-col bg-sage-900 px-3.5 py-4 text-[#e9efe7]">
-      <div className="px-2 pb-3.5">
+    <aside className="w-full shrink-0 bg-sage-900 px-3.5 py-3 text-[#e9efe7] lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-[250px] lg:flex-col lg:py-4">
+      <div className="flex items-center justify-between gap-3 px-1 lg:px-2 lg:pb-3.5">
         <span className="font-serif text-lg font-semibold text-white">
           Plot<span className="text-clay-300">Worthy</span>
         </span>
+        <Link href="/" className="text-xs text-[#e9efe7]/70 hover:text-white lg:hidden">
+          Exit preview
+        </Link>
       </div>
-      <div className="rounded-xl bg-white/[0.07] p-3.5">
+
+      {/* Profile card — full on desktop, hidden on the compact mobile bar */}
+      <div className="mt-3 hidden rounded-xl bg-white/[0.07] p-3.5 lg:mt-0 lg:block">
         <div className="flex items-center gap-2.5">
           <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-clay-300 text-sm font-bold text-sage-900">
-            HE
+            SS
           </span>
           <div>
-            <div className="text-sm font-semibold text-white">Hepburn Architects</div>
+            <div className="text-sm font-semibold text-white">Sample Studio</div>
             <div className="text-xs text-[#e9efe7]/70">Architect</div>
           </div>
         </div>
@@ -62,8 +67,9 @@ export function WorkspaceSidebar() {
           ✓ APPROVED
         </span>
       </div>
-      <nav className="mt-4 flex flex-col gap-0.5">
-        <span className="px-2.5 pb-1.5 pt-2.5 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[#e9efe7]/45">
+
+      <nav className="mt-3 flex gap-1 overflow-x-auto pb-0.5 lg:mt-4 lg:flex-col lg:gap-0.5 lg:overflow-visible lg:pb-0">
+        <span className="hidden px-2.5 pb-1.5 pt-2.5 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[#e9efe7]/45 lg:block">
           Workspace
         </span>
         {NAV.map((n) => {
@@ -72,7 +78,7 @@ export function WorkspaceSidebar() {
             <Link
               key={n.href}
               href={n.href}
-              className={`flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-sm ${
+              className={`flex shrink-0 items-center gap-2.5 whitespace-nowrap rounded-lg px-2.5 py-2 text-sm lg:py-2.5 ${
                 active ? "bg-clay-400 font-semibold text-sage-900" : "text-[#e9efe7]/85 hover:bg-white/[0.07] hover:text-white"
               }`}
             >
@@ -82,7 +88,8 @@ export function WorkspaceSidebar() {
           );
         })}
       </nav>
-      <div className="mt-auto flex flex-col gap-1.5 pt-4 text-sm text-[#e9efe7]/70">
+
+      <div className="mt-auto hidden flex-col gap-1.5 pt-4 text-sm text-[#e9efe7]/70 lg:flex">
         <Link href="/" className="hover:text-white">← View public website</Link>
         <Link href="/" className="hover:text-white">Sign out</Link>
       </div>

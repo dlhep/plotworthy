@@ -62,6 +62,7 @@ export default async function ApplicationsPage() {
                 key={a.id}
                 a={a}
                 next={NEXT}
+                deletable
                 actions={
                   a.status === "rejected"
                     ? [{ decision: "approved", label: "Approve after all", variant: "outline" }]

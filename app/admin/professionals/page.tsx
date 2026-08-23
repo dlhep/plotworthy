@@ -62,6 +62,7 @@ export default async function NetworkPage() {
                 <AppCard
                   a={a}
                   next={NEXT}
+                  deletable
                   actions={[{ decision: "suspended", label: "Suspend", variant: "outline" }]}
                 />
                 <MembershipEditor app={a} next={NEXT} />
@@ -80,6 +81,7 @@ export default async function NetworkPage() {
                 key={a.id}
                 a={a}
                 next={NEXT}
+                deletable
                 actions={[
                   { decision: "approved", label: "Reinstate", variant: "primary" },
                   { decision: "rejected", label: "Remove", variant: "ghost" },
