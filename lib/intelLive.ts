@@ -28,6 +28,8 @@ export type PlanningApp = {
   url: string | null;
 };
 
+export type AppCounts = { approved: number; refused: number; pending: number; decided: number; total: number };
+
 export type IntelResult = {
   ok: boolean;
   geo: GeoResult;
@@ -36,7 +38,7 @@ export type IntelResult = {
   conservation: Designation[];
   listed: Designation[];
   flood: { checked: boolean; zones: Designation[] };
-  apps: { ok: boolean; items: PlanningApp[] };
+  apps: { ok: boolean; items: PlanningApp[]; counts: AppCounts };
   sources: string[];
   fetchedAt: string;
 };
@@ -135,11 +137,13 @@ function classifyDecision(state: string): PlanningApp["decision"] {
   return "Other";
 }
 
-export async function nearbyApplications(lat: number, lng: number, slug: string, radiusKm = 0.8): Promise<{ ok: boolean; items: PlanningApp[] }> {
-  const url = `https://www.planit.org.uk/api/applics/json?lat=${lat}&lng=${lng}&krad=${radiusKm}&pg_sz=40&sort=-start_date`;
+const emptyCounts: AppCounts = { approved: 0, refused: 0, pending: 0, decided: 0, total: 0 };
+
+export async function nearbyApplications(lat: number, lng: number, slug: string, radiusKm = 0.8): Promise<{ ok: boolean; items: PlanningApp[]; counts: AppCounts }> {
+  const url = `https://www.planit.org.uk/api/applics/json?lat=${lat}&lng=${lng}&krad=${radiusKm}&pg_sz=60&sort=-start_date`;
   const j = await jget(url, 60 * 60 * 12);
   const recs = j?.records;
-  if (!Array.isArray(recs)) return { ok: false, items: [] };
+  if (!Array.isArray(recs)) return { ok: false, items: [], counts: emptyCounts };
 
   const kws = APP_KEYWORDS[slug] || [];
   const scored = recs.map((r: any) => {
@@ -149,10 +153,20 @@ export async function nearbyApplications(lat: number, lng: number, slug: string,
     const match = kws.some((k) => hay.includes(k));
     return { r, match };
   });
-  const chosen = scored.filter((s) => s.match);
-  const use = (chosen.length ? chosen : scored).slice(0, 6);
+  const matched = scored.filter((s) => s.match).map((s) => s.r);
+  const basis = matched.length ? matched : scored.map((s) => s.r);
 
-  const items: PlanningApp[] = use.map(({ r }) => ({
+  // Approval signal across the (type-matched) set — the report uses this.
+  const counts: AppCounts = { ...emptyCounts, total: basis.length };
+  for (const r of basis) {
+    const d = classifyDecision(r.app_state || r.decision || "");
+    if (d === "Approved") counts.approved++;
+    else if (d === "Refused") counts.refused++;
+    else if (d === "Pending") counts.pending++;
+  }
+  counts.decided = counts.approved + counts.refused;
+
+  const items: PlanningApp[] = basis.slice(0, 6).map((r: any) => ({
     ref: (r.name || r.reference || r.uid || "—").toString(),
     desc: (r.description || "Planning application").toString().slice(0, 180),
     address: (r.address || "").toString(),
@@ -160,7 +174,7 @@ export async function nearbyApplications(lat: number, lng: number, slug: string,
     date: (r.decided_date || r.start_date || r.date_received || "").toString().slice(0, 10),
     url: r.url || r.link || null,
   }));
-  return { ok: true, items };
+  return { ok: true, items, counts };
 }
 
 export async function getLiveIntel(postcode: string, slug: string): Promise<IntelResult> {
@@ -171,7 +185,7 @@ export async function getLiveIntel(postcode: string, slug: string): Promise<Inte
   if (!geo.ok || geo.lat == null || geo.lng == null) {
     return {
       ok: false, geo, article4: [], hmoArticle4: false, conservation: [], listed: [],
-      flood: { checked: false, zones: [] }, apps: { ok: false, items: [] }, sources, fetchedAt,
+      flood: { checked: false, zones: [] }, apps: { ok: false, items: [], counts: emptyCounts }, sources, fetchedAt,
     };
   }
 

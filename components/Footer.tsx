@@ -19,7 +19,8 @@ export function Footer() {
           <h4 className="text-sm font-semibold text-ink">Get started</h4>
           <ul className="mt-4 space-y-2.5 text-sm text-muted">
             <li><Link href="/start" className="hover:text-ink">Start your journey</Link></li>
-            <li><Link href="/journeys" className="hover:text-ink">Project journeys</Link></li>
+            <li><Link href="/report" className="hover:text-ink">Feasibility report</Link></li>
+            <li><Link href="/appraisal" className="hover:text-ink">Investment appraisal</Link></li>
             <li><Link href="/how-it-works" className="hover:text-ink">How PlotWorthy helps</Link></li>
             <li><Link href="/faq" className="hover:text-ink">FAQ</Link></li>
           </ul>

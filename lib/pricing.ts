@@ -84,4 +84,8 @@ export const CLIENT_PRICING = {
   expertReview: 49, // one-off, per brief
   costCheck: 99, // one-off, independent review of a builder's costings
   plusMonthly: 19, // PlotWorthy Plus subscription (incl. guided adviser), per month
+  feasibilityFull: 59, // expert-reviewed full feasibility report
+  planningLikelihood: 79, // planning likelihood / precedent report
+  pdCheck: 39, // permitted-development check
+  investmentReview: 99, // expert-reviewed investment appraisal
 };

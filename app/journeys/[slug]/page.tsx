@@ -136,6 +136,20 @@ export default function JourneyHubPage({
         />
       </Reveal>
 
+      {/* Free feasibility report CTA */}
+      <Reveal className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sage-200 bg-sage-50/40 px-5 py-4">
+        <p className="text-sm text-ink/85">
+          <span className="font-medium text-ink">Want the verdict in one place?</span> Get a free feasibility
+          report — what&apos;s in your favour and what to watch, from official data.
+        </p>
+        <Link
+          href={`/report?slug=${journey.slug}${searchParams.pc ? `&pc=${encodeURIComponent(searchParams.pc)}` : ""}`}
+          className="btn-primary whitespace-nowrap text-sm"
+        >
+          Get feasibility report →
+        </Link>
+      </Reveal>
+
       {/* About this project type */}
       {hubInfo && (
         <Reveal className="mt-8 grid gap-4 md:grid-cols-3">
