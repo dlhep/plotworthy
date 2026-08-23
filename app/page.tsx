@@ -25,7 +25,7 @@ export default function HomePage() {
           <div className="absolute -left-32 top-56 h-80 w-80 rounded-full bg-clay-100/40 blur-3xl" />
         </div>
 
-        <div className="container-content pt-20 pb-8 sm:pt-28">
+        <div className="container-content pt-10 pb-8 sm:pt-14">
           <Reveal stagger className="mx-auto max-w-3xl text-center">
             <p className="eyebrow justify-center">
               <span className="h-px w-6 bg-clay-400/60" />
