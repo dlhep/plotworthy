@@ -3,15 +3,21 @@
 import { useState } from "react";
 import type { Application } from "@/lib/adminData";
 import { toDistrict, districtsFromCoverage } from "@/lib/postcodes";
-import { CITY_DISTRICTS, CITY_NAMES } from "@/lib/cities";
+import { POSTCODE_AREAS, areaGeojsonUrl } from "@/lib/cities";
 
 type SaveState = "idle" | "saving" | "saved" | "error";
+
+function codeOf(props: Record<string, unknown>): string {
+  const raw = props.name ?? (props as any).Name ?? (props as any).pc_district ?? (props as any).postdist ?? (props as any).district ?? "";
+  return String(raw).toUpperCase().replace(/\s+/g, "");
+}
 
 export function CoverageAdmin({ app, next }: { app: Application; next: string }) {
   const seed = app.districts && app.districts.length ? app.districts : districtsFromCoverage(app.coverage);
   const [selected, setSelected] = useState<Set<string>>(new Set(seed));
   const [draft, setDraft] = useState("");
   const [city, setCity] = useState("");
+  const [loadingCity, setLoadingCity] = useState(false);
   const [state, setState] = useState<SaveState>("idle");
 
   const list = Array.from(selected).sort((a, b) => {
@@ -29,16 +35,36 @@ export function CoverageAdmin({ app, next }: { app: Application; next: string })
     }
   };
 
-  const addCity = (name: string) => {
-    const ds = CITY_DISTRICTS[name];
-    if (!ds) return;
+  const addCity = async (areaCode: string) => {
+    if (!areaCode) return;
+    setLoadingCity(true);
+    setState("idle");
+    let districts: string[] = [];
+    try {
+      const res = await fetch(areaGeojsonUrl(areaCode));
+      if (res.ok) {
+        const gj = await res.json();
+        const set = new Set<string>();
+        (gj.features || []).forEach((f: any) => {
+          const c = codeOf(f.properties || {});
+          if (c) set.add(c);
+        });
+        districts = Array.from(set);
+      }
+    } catch {
+      /* fall through to range fallback */
+    }
+    if (districts.length === 0) {
+      // Fallback: a sensible numeric range if the district data can't load.
+      for (let i = 1; i <= 25; i++) districts.push(`${areaCode}${i}`);
+    }
     setSelected((p) => {
       const n = new Set(p);
-      ds.forEach((d) => n.add(d));
+      districts.forEach((d) => n.add(d));
       return n;
     });
     setCity("");
-    setState("idle");
+    setLoadingCity(false);
   };
 
   const remove = (d: string) =>
@@ -84,12 +110,13 @@ export function CoverageAdmin({ app, next }: { app: Application; next: string })
 
         <select
           value={city}
+          disabled={loadingCity}
           onChange={(e) => { setCity(e.target.value); if (e.target.value) addCity(e.target.value); }}
-          className="rounded-lg border border-line bg-white px-2 py-1 text-sm text-ink"
+          className="rounded-lg border border-line bg-white px-2 py-1 text-sm text-ink disabled:opacity-60"
         >
-          <option value="">+ Add a whole city…</option>
-          {CITY_NAMES.map((n) => (
-            <option key={n} value={n}>{n}</option>
+          <option value="">{loadingCity ? "Adding…" : "+ Add a whole city…"}</option>
+          {POSTCODE_AREAS.map((a) => (
+            <option key={a.code} value={a.code}>{a.name} ({a.code})</option>
           ))}
         </select>
 
