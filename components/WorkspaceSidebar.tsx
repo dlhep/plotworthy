@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Logo } from "./Logo";
 
 const NAV = [
   { href: "/professional", label: "Dashboard", short: "Dashboard", key: "dash" },
@@ -43,18 +42,13 @@ const ICON: Record<string, JSX.Element> = {
 export function WorkspaceSidebar() {
   const pathname = usePathname();
   return (
-    <aside className="w-full shrink-0 bg-sage-900 px-3.5 py-3 text-[#e9efe7] lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-[250px] lg:flex-col lg:py-4">
-      <div className="flex items-center justify-between gap-3 px-1 lg:px-2 lg:pb-3.5">
-        <Link href="/" aria-label="PlotWorthy home">
-          <Logo tone="dark" />
-        </Link>
-        <Link href="/" className="text-xs text-[#e9efe7]/70 hover:text-white lg:hidden">
-          Exit preview
-        </Link>
-      </div>
+    <aside className="w-full shrink-0 bg-sage-900 px-3.5 py-3 text-[#e9efe7] lg:sticky lg:top-16 lg:flex lg:h-[calc(100vh-4rem)] lg:w-[250px] lg:flex-col lg:py-4">
+      <p className="hidden px-2 pb-3 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[#e9efe7]/45 lg:block">
+        Professional workspace
+      </p>
 
       {/* Profile card — full on desktop, hidden on the compact mobile bar */}
-      <div className="mt-3 hidden rounded-xl bg-white/[0.07] p-3.5 lg:mt-0 lg:block">
+      <div className="hidden rounded-xl bg-white/[0.07] p-3.5 lg:block">
         <div className="flex items-center gap-2.5">
           <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-clay-300 text-sm font-bold text-sage-900">
             SS

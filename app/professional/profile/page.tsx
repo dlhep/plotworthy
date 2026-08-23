@@ -7,7 +7,7 @@ export default function ProfilePage() {
   ];
   return (
     <div>
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-canvas/90 px-4 py-3 backdrop-blur sm:px-8 sm:py-3.5">
+      <div className="flex items-center justify-between border-b border-line bg-canvas/90 px-4 py-3 backdrop-blur sm:px-8 sm:py-3.5">
         <div>
           <p className="text-[0.72rem] font-medium uppercase tracking-[0.12em] text-muted">Professional workspace</p>
           <p className="font-serif text-lg font-medium text-ink">Public profile</p>

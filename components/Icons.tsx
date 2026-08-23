@@ -81,12 +81,23 @@ export function IconCompass(p: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function IconNewBuild(p: SVGProps<SVGSVGElement>) {
+  return (
+    <Svg {...p}>
+      <path d="M4 11 12 4.5l8 6.5" />
+      <path d="M6 10.5V19.5h12V10.5" />
+      <path d="M12 13.5v4M10 15.5h4" />
+    </Svg>
+  );
+}
+
 const PROJECT_ICONS: Record<string, (p: SVGProps<SVGSVGElement>) => JSX.Element> = {
   extension: IconExtension,
   "house-to-flats": IconHouseToFlats,
   "office-to-residential": IconOfficeToResidential,
   hmo: IconHmo,
   care: IconCare,
+  "new-build": IconNewBuild,
   unsure: IconCompass,
 };
 

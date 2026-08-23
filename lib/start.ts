@@ -45,6 +45,13 @@ export const GOALS: GoalOption[] = [
     note: "Care, supported living and C2 projects.",
   },
   {
+    id: "new-build",
+    label: "Build a new home",
+    emoji: "🧱",
+    journeySlug: "new-build",
+    note: "A new home or self-build on a plot of land.",
+  },
+  {
     id: "unsure",
     label: "I’m not sure yet",
     emoji: "🧭",

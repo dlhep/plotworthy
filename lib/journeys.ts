@@ -661,8 +661,137 @@ const care: Journey = {
   ],
 };
 
-// "Not sure yet" and "New build" are surfaced but route to guidance / adviser.
-export const JOURNEYS: Journey[] = [extension, houseToFlats, officeToResi, hmo, care];
+// ---------------------------------------------------------------------------
+// New build — a new home / self-build on a plot
+// ---------------------------------------------------------------------------
+const newBuild: Journey = {
+  slug: "new-build",
+  name: "Build a new home",
+  shortName: "New build",
+  emoji: "🧱",
+  tagline: "Take a plot of land through to a finished, warranted new home.",
+  intro:
+    "A new build gives you the most control of any project — but it lives or dies on the plot, its planning position and the numbers. PlotWorthy walks you from land to finished home one decision at a time, and brings in the right professional exactly when you need them.",
+  defaultStage: 0,
+  stages: [
+    {
+      n: 1,
+      title: "Your goal",
+      clientSees: "Decide what you want to build and why.",
+      collapsedNote: "Where the journey begins — your brief.",
+      actions: [
+        "Describe the home you want to build — size, style and number of bedrooms.",
+        "Decide whether it's to live in, to sell, or to rent out.",
+        "Set a rough budget and how hands-on you want to be (self-manage, contractor or turnkey).",
+      ],
+      decision: "What are you building, for whom, and to what budget?",
+      documents: ["Rough budget", "Accommodation you want", "Your goals for the finished home"],
+      professionals: ["PlotWorthy adviser (brief definition)"],
+      afterwards: "We confirm the plot you'll build on, or help you work out what to look for.",
+    },
+    {
+      n: 2,
+      title: "The property",
+      clientSees: "Confirm the plot — one you own, one you're considering, or one to find.",
+      collapsedNote: "You'll confirm the plot before viability.",
+      actions: [
+        "Tell us whether you own the plot, are considering one, or need help finding land.",
+        "Gather the plot's boundaries, access, tenure and any existing planning history.",
+        "Check what services (water, drainage, power) reach the plot.",
+      ],
+      decision: "Is this the right plot, and does it have — or could it get — planning?",
+      documents: ["Plot address and boundaries", "Tenure and access rights", "Any existing planning permission"],
+      professionals: ["Land agent / sourcing", "Surveyor", "Valuer"],
+      afterwards: "With the plot confirmed, we test whether a new home there actually stacks up.",
+    },
+    {
+      n: 3,
+      title: "Is it viable?",
+      clientSees: "Establish whether a new home can be built here — and whether the numbers work.",
+      collapsedNote: "The go / no-go stage before you commit money.",
+      actions: [
+        "Check the planning potential and any local policy or constraints for the plot.",
+        "Assess ground conditions, access and services, and the likely build cost.",
+        "Compare total cost (land + build + fees) against the finished value.",
+      ],
+      decision: "Does this stack up — on planning, ground conditions and the numbers — before you spend on design?",
+      documents: [
+        "Planning potential / pre-application view",
+        "Ground and services information",
+        "Cost vs end-value appraisal",
+      ],
+      professionals: ["Architect (feasibility)", "Planning consultant", "Commercial / finance adviser"],
+      afterwards: "If it's viable, you move to securing planning permission for your home.",
+    },
+    {
+      n: 4,
+      title: "Get permission",
+      clientSees: "Design your home and secure planning permission.",
+      collapsedNote: "You'll deal with this once viability is confirmed.",
+      actions: [
+        "Decide between outline and full planning permission.",
+        "Develop a design that fits the plot and local planning policy.",
+        "Prepare and submit the planning application, with any supporting reports.",
+      ],
+      decision: "What design will win permission, and by which route?",
+      documents: ["Site and proposed drawings", "Design & access / planning statement", "Any specialist reports (ecology, flood, access)"],
+      professionals: ["Architect", "Planning consultant", "Specialist consultants"],
+      afterwards: "With permission in place, the design is worked up into a buildable, warranted package.",
+    },
+    {
+      n: 5,
+      title: "Make it buildable",
+      clientSees: "Turn the approved design into a compliant, warrantable technical package.",
+      collapsedNote: "The detailed structural, energy and building-control stage.",
+      actions: [
+        "Develop Building Regulations drawings, foundation and structural design.",
+        "Complete the energy (SAP) assessment and specify insulation and services.",
+        "Appoint building control and a structural warranty provider.",
+      ],
+      decision: "Is the design fully compliant, warrantable and ready to price and build?",
+      documents: [
+        "Building Regulations & structural drawings",
+        "SAP / energy assessment",
+        "Foundation design for the ground conditions",
+      ],
+      professionals: ["Architect", "Structural engineer", "SAP / energy assessor", "Building control & warranty"],
+      afterwards: "With a buildable package, you appoint who will build it.",
+    },
+    {
+      n: 6,
+      title: "Deliver the project",
+      clientSees: "Choose how to build it, agree a contract, and construct your home.",
+      collapsedNote: "Tendering, contracts and construction.",
+      actions: [
+        "Decide how to build — self-manage, a main contractor, or a turnkey package.",
+        "Compare quotes on a like-for-like basis and agree a proper contract.",
+        "Manage the build with staged payments tied to inspections.",
+      ],
+      decision: "Who builds it, under what contract, and how are cost and quality controlled?",
+      documents: ["Tender package", "Building contract", "Construction programme and payment schedule"],
+      professionals: ["Main contractor / builder", "Contract administrator", "Structural warranty inspector"],
+      afterwards: "As the build completes, you close it out and move in — or sell.",
+    },
+    {
+      n: 7,
+      title: "Complete and operate",
+      clientSees: "Sign the home off, get your warranty, and move in or sell.",
+      collapsedNote: "Completion, warranty and handover.",
+      actions: [
+        "Get building-control completion sign-off and your structural warranty.",
+        "Resolve snags before releasing the final payment.",
+        "Reclaim self-build VAT where eligible, then occupy or sell.",
+      ],
+      decision: "Is everything signed off, warranted and documented for living in or selling?",
+      documents: ["Completion certificate", "Structural warranty", "Certificates, warranties and VAT reclaim paperwork"],
+      professionals: ["Building control & warranty", "Builder", "Sales agent (if selling)"],
+      afterwards: "Your new home is complete — keep the certificates and warranties safe.",
+    },
+  ],
+};
+
+// "Not sure yet" is surfaced but routes to guidance / adviser.
+export const JOURNEYS: Journey[] = [extension, houseToFlats, officeToResi, hmo, care, newBuild];
 
 export function getJourney(slug: string): Journey | undefined {
   return JOURNEYS.find((j) => j.slug === slug);
@@ -724,6 +853,15 @@ export const STAGE_EXTRA: Record<string, Record<number, StageExtra>> = {
     5: { overview: "Design the fire strategy, accessibility, structure and care-standard fit-out — hoists, accessible bathrooms, nurse call and services.", considerations: ["Fire strategy must suit residents who may need help to evacuate.", "Accessible bathrooms, hoists and nurse-call systems need designing in.", "The build must satisfy both Building Regs and operator standards."], timescale: "5–8 weeks.", leads: "Architect, fire consultant, structural/M&E engineers and building control." },
     6: { overview: "Appoint a contractor experienced in care fit-out and complete the works to both building and care standards.", considerations: ["Care fit-out is specialist — experience matters.", "Inspect against care standards as well as Building Regs.", "Coordinate with the operator's mobilisation timeline."], timescale: "Build varies by scale; allow a generous programme.", leads: "Main contractor and a contract administrator." },
     7: { overview: "Complete the build, achieve registration, and open the service — directly or via a registered operator.", considerations: ["Registration approval is required before you can operate.", "Operational policies and staffing must be in place to open.", "Leasing to a registered operator can de-risk running it."], timescale: "Registration can take weeks to months.", leads: "A care/registration specialist, lease adviser and the operator." },
+  },
+  "new-build": {
+    1: { overview: "This stage turns the idea of building your own home into a clear, costed brief.", considerations: ["Design to a realistic budget, including land, build and fees.", "Be honest about how hands-on you can be — it drives the build route.", "A replacement dwelling and a bare plot follow different planning paths."], timescale: "1–2 weeks to shape the brief.", leads: "You, with a PlotWorthy adviser." },
+    2: { overview: "Confirm the plot and gather the facts that decide whether a home can be built on it.", considerations: ["A plot with planning already granted removes a lot of risk.", "Access, boundaries and services can make or break a plot.", "Check for covenants, rights of way and ransom strips."], timescale: "1–4 weeks, longer if you're still searching.", leads: "You, with a surveyor and valuer." },
+    3: { overview: "The go/no-go stage — planning potential, ground conditions and whether the numbers work before you spend on design.", considerations: ["Poor ground or awkward services can add serious cost.", "Local policy and any designations shape what you can build.", "Land plus build plus fees must leave room in the end value."], timescale: "3–6 weeks for a feasibility view.", leads: "An architect, a planning consultant and a finance/commercial adviser." },
+    4: { overview: "Design a home that suits the plot and local policy, then secure planning permission.", considerations: ["Outline permission tests the principle; full permission approves the detail.", "Pre-application advice from the council de-risks the submission.", "Design quality and neighbour impact drive planning decisions."], timescale: "8–14 weeks including preparation.", leads: "Your architect and planning consultant." },
+    5: { overview: "Turn the approved design into a compliant, warrantable package — structure, foundations, energy and services.", considerations: ["Foundation design depends heavily on the ground conditions.", "A structural warranty is usually needed for mortgages and resale.", "Energy (SAP) and airtightness standards must be designed in early."], timescale: "5–8 weeks.", leads: "Architect, structural engineer, SAP assessor and building control/warranty." },
+    6: { overview: "Choose how to build — self-manage, main contractor or turnkey — agree a contract and construct the home.", considerations: ["Each build route trades cost against time and your involvement.", "A fixed-price contract transfers more risk to the builder.", "Keep a healthy contingency — new builds uncover surprises too."], timescale: "Build typically 9–18 months by scale and route.", leads: "Main contractor or package company, with a contract administrator." },
+    7: { overview: "Complete the home, get sign-off and warranty, then move in or sell — and reclaim self-build VAT where eligible.", considerations: ["Don't release final payment until snags are resolved.", "Keep the completion certificate and structural warranty safe.", "Self-builders can often reclaim VAT on eligible costs."], timescale: "2–4 weeks to close out.", leads: "You, with building control, your builder and the warranty provider." },
   },
 };
 
@@ -796,6 +934,17 @@ export const HUB_INFO: Record<string, HubInfo> = {
       { label: "Use classes (incl. C2)", host: "gov.uk", url: "https://www.gov.uk/guidance/use-classes" },
       { label: "Approved Document M — access", host: "gov.uk", url: "https://www.gov.uk/government/publications/access-to-and-use-of-buildings-approved-document-m" },
       { label: "CQC — supported living", host: "cqc.org.uk", url: "https://www.cqc.org.uk/" },
+    ],
+  },
+  "new-build": {
+    timescale: "Typically 12–24 months, plot to completion.",
+    consents: "Outline / full planning permission · Building Regulations · structural warranty · CIL.",
+    watch: "The plot's planning position, ground conditions and services access make or break the numbers.",
+    resources: [
+      { label: "Planning permission — new homes", host: "gov.uk", url: "https://www.gov.uk/planning-permission-england-wales" },
+      { label: "Self build and custom housebuilding", host: "gov.uk", url: "https://www.gov.uk/guidance/self-build-and-custom-housebuilding" },
+      { label: "Building Regulations approval", host: "gov.uk", url: "https://www.gov.uk/building-regulations-approval" },
+      { label: "Community Infrastructure Levy", host: "gov.uk", url: "https://www.gov.uk/guidance/community-infrastructure-levy" },
     ],
   },
 };

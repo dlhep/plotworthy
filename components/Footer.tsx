@@ -43,6 +43,7 @@ export function Footer() {
             <li><Link href="/journeys/house-to-flats" className="hover:text-ink">House to flats</Link></li>
             <li><Link href="/journeys/office-to-residential" className="hover:text-ink">Office to homes</Link></li>
             <li><Link href="/journeys/care" className="hover:text-ink">Care / supported</Link></li>
+            <li><Link href="/journeys/new-build" className="hover:text-ink">New build</Link></li>
           </ul>
         </div>
       </div>

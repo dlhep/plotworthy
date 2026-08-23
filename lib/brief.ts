@@ -191,6 +191,16 @@ function projectSection(goalId?: string): BriefSection {
         { id: "ambition", label: "Model and any adaptations needed", type: "textarea", placeholder: "e.g. 4-bed supported living with wet rooms and a staff sleep-in room" },
       ],
     },
+    "new-build": {
+      title: "The project — build a new home",
+      fields: [
+        { id: "homeType", label: "What you're building", type: "select", options: ["Single new home", "Replacement dwelling", "Two or more homes", "Not sure"], critical: true },
+        { id: "bedrooms", label: "Number of bedrooms", type: "number", placeholder: "e.g. 4", critical: true },
+        { id: "plotStatus", label: "The plot", type: "select", options: ["I own it", "Under offer / considering", "Still looking", "With planning permission"], critical: true },
+        { id: "buildRoute", label: "How you'd like to build", type: "select", options: ["Self-manage", "Main contractor", "Turnkey / package company", "Not sure"], critical: true },
+        { id: "ambition", label: "What you're aiming for", type: "textarea", placeholder: "e.g. a 4-bed low-energy family home to live in long term" },
+      ],
+    },
   };
 
   return (
