@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Journey, Stage } from "@/lib/journeys";
+import { getStageExtra } from "@/lib/journeys";
 import { IntroFlow } from "./IntroFlow";
 
 type Status = "done" | "current" | "upcoming";
@@ -40,6 +41,7 @@ export function JourneyStepper({
             isOpen={isOpen}
             isLast={i === journey.stages.length - 1}
             projectName={journey.shortName}
+            slug={journey.slug}
             onToggle={() => setOpenIndex(isOpen ? -1 : i)}
           />
         );
@@ -54,6 +56,7 @@ function StageRow({
   isOpen,
   isLast,
   projectName,
+  slug,
   onToggle,
 }: {
   stage: Stage;
@@ -61,6 +64,7 @@ function StageRow({
   isOpen: boolean;
   isLast: boolean;
   projectName: string;
+  slug: string;
   onToggle: () => void;
 }) {
   return (
@@ -128,7 +132,9 @@ function StageRow({
         </svg>
       </button>
 
-      {isOpen && <StageDetail stage={stage} status={status} projectName={projectName} />}
+      {isOpen && (
+        <StageDetail stage={stage} status={status} projectName={projectName} slug={slug} />
+      )}
     </div>
   );
 }
@@ -137,11 +143,17 @@ function StageDetail({
   stage,
   status,
   projectName,
+  slug,
 }: {
   stage: Stage;
   status: Status;
   projectName: string;
+  slug: string;
 }) {
+  const [checked, setChecked] = useState<Record<number, boolean>>({});
+  const extra = getStageExtra(slug, stage.n);
+  const doneCount = stage.actions.filter((_, i) => checked[i]).length;
+  const toggle = (i: number) => setChecked((c) => ({ ...c, [i]: !c[i] }));
   // Future stages stay calm: a short glimpse only, not the full working detail.
   if (status === "upcoming") {
     return (
@@ -172,27 +184,83 @@ function StageDetail({
 
   return (
     <div className="border-t border-line bg-canvas/60 px-5 py-6 sm:px-6">
-      <p className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-clay-600">
+      <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-clay-600">
         <span className="h-1.5 w-1.5 rounded-full bg-clay-400" />
         {status === "current" ? "Your current stage — everything you need now" : "Completed — here’s what this stage covered"}
       </p>
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Block title="Three immediate actions" accent>
-          <ol className="space-y-2.5">
+
+      {/* Overview + facts */}
+      {extra && (
+        <>
+          <p className="mt-4 max-w-3xl text-[15px] leading-relaxed text-ink/85">{extra.overview}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1.5 text-xs text-muted">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="8.5" /><path d="M12 8v4l2.5 1.5" strokeLinecap="round" /></svg>
+              <span className="font-medium text-ink">Typical timescale:</span> {extra.timescale}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1.5 text-xs text-muted">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="8" r="3.2" /><path d="M5.5 19a6.5 6.5 0 0 1 13 0" strokeLinecap="round" /></svg>
+              <span className="font-medium text-ink">Who leads:</span> {extra.leads}
+            </span>
+          </div>
+        </>
+      )}
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        {/* Interactive action checklist */}
+        <Block title="Your action checklist" accent>
+          <div className="mb-3 flex items-center gap-3">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-sage-100">
+              <div
+                className="h-full rounded-full bg-sage-500 transition-all"
+                style={{ width: `${(doneCount / stage.actions.length) * 100}%` }}
+              />
+            </div>
+            <span className="text-xs font-medium text-sage-700">
+              {doneCount}/{stage.actions.length} done
+            </span>
+          </div>
+          <ul className="space-y-1">
             {stage.actions.map((a, i) => (
-              <li key={i} className="flex gap-3 text-sm text-ink/85">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sage-100 text-xs font-semibold text-sage-700">
-                  {i + 1}
-                </span>
-                {a}
+              <li key={i}>
+                <button
+                  type="button"
+                  onClick={() => toggle(i)}
+                  className="flex w-full items-start gap-3 rounded-lg px-2 py-1.5 text-left text-sm transition-colors hover:bg-white/70"
+                >
+                  <span
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors ${
+                      checked[i] ? "border-sage-600 bg-sage-600 text-white" : "border-sage-300 bg-white"
+                    }`}
+                  >
+                    {checked[i] && (
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    )}
+                  </span>
+                  <span className={checked[i] ? "text-muted line-through" : "text-ink/85"}>{a}</span>
+                </button>
               </li>
             ))}
-          </ol>
+          </ul>
         </Block>
 
         <Block title="Important decision to make">
           <p className="text-sm leading-relaxed text-ink/85">{stage.decision}</p>
         </Block>
+
+        {/* Key considerations */}
+        {extra && (
+          <Block title="Key considerations at this stage">
+            <ul className="space-y-2.5">
+              {extra.considerations.map((c, i) => (
+                <li key={i} className="flex gap-2.5 text-sm text-ink/85">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="mt-0.5 shrink-0 text-clay-500"><path d="M12 3l9 16H3z" strokeLinejoin="round" /><path d="M12 10v3.5M12 16.2v.2" strokeLinecap="round" /></svg>
+                  {c}
+                </li>
+              ))}
+            </ul>
+          </Block>
+        )}
 
         <Block title="Documents or information needed">
           <ul className="space-y-2">
