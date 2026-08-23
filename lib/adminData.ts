@@ -1,4 +1,10 @@
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
+import {
+  normalizeMembership,
+  revenueBreakdown,
+  type Membership,
+  type RevenueBreakdown,
+} from "@/lib/pricing";
 
 export type AppStatus = "pending" | "approved" | "rejected" | "suspended";
 
@@ -15,6 +21,7 @@ export type Application = {
   website: string | null;
   about: string | null;
   status: AppStatus;
+  membership: Membership;
   decided_at: string | null;
   created_at: string;
 };
@@ -60,7 +67,18 @@ export async function listApplications(): Promise<{ apps: Application[]; note: s
     .select("*")
     .order("created_at", { ascending: false });
   if (error) return { apps: [], note: `Couldn’t load applications: ${error.message}` };
-  return { apps: (data as Application[]) || [], note: "" };
+  const apps = ((data as any[]) || []).map((a) => ({
+    ...a,
+    membership: normalizeMembership(a.membership),
+  })) as Application[];
+  return { apps, note: "" };
+}
+
+/** MRR/ARR across all active (approved) members. */
+export async function getRevenue(): Promise<RevenueBreakdown> {
+  const { apps } = await listApplications();
+  const active = apps.filter((a) => a.status === "approved");
+  return revenueBreakdown(active.map((a) => a.membership));
 }
 
 /** Signed-up clients joined to their saved project. */

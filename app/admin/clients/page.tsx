@@ -4,6 +4,7 @@ import { ADMIN_COOKIE, isAdmin } from "@/lib/adminAuth";
 import { listClients } from "@/lib/adminData";
 import { goalLabel } from "@/lib/brief";
 import { STAGE_TITLES } from "@/lib/journeys";
+import { DeleteClientButton } from "@/components/admin/DeleteClientButton";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Clients — PlotWorthy admin" };
@@ -50,6 +51,7 @@ export default async function ClientsPage() {
                 <th className="px-5 py-3 font-semibold">Stage</th>
                 <th className="px-5 py-3 font-semibold">Joined</th>
                 <th className="px-5 py-3 font-semibold">Status</th>
+                <th className="px-5 py-3 text-right font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -90,6 +92,9 @@ export default async function ClientsPage() {
                           Unconfirmed
                         </span>
                       )}
+                    </td>
+                    <td className="px-5 py-3.5 text-right">
+                      <DeleteClientButton userId={c.userId} email={c.email || "this account"} />
                     </td>
                   </tr>
                 );

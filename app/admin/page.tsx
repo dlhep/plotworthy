@@ -2,8 +2,9 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ADMIN_COOKIE, isAdmin } from "@/lib/adminAuth";
-import { getStats, listApplications, listClients } from "@/lib/adminData";
+import { getStats, getRevenue, listApplications, listClients } from "@/lib/adminData";
 import { goalLabel } from "@/lib/brief";
+import { gbp } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard — PlotWorthy admin" };
@@ -11,8 +12,9 @@ export const metadata = { title: "Dashboard — PlotWorthy admin" };
 export default async function AdminDashboard() {
   if (!isAdmin(cookies().get(ADMIN_COOKIE)?.value)) redirect("/admin/login");
 
-  const [stats, { apps }, { clients }] = await Promise.all([
+  const [stats, rev, { apps }, { clients }] = await Promise.all([
     getStats(),
+    getRevenue(),
     listApplications(),
     listClients(),
   ]);
@@ -49,10 +51,29 @@ export default async function AdminDashboard() {
         <Stat label="Live projects" value={stats.projects} href="/admin/clients" />
       </div>
 
+      {/* Revenue */}
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <MiniStat label="Suspended pros" value={stats.suspended} />
-        <MiniStat label="Rejected applications" value={stats.rejected} />
-        <MiniStat label="Network size (ever admitted)" value={stats.network} />
+        <Link
+          href="/admin/professionals"
+          className="rounded-2xl border border-sage-300 bg-sage-50/60 p-5 transition-colors hover:border-sage-400 sm:col-span-1"
+        >
+          <p className="text-3xl font-semibold text-sage-800">{gbp(rev.mrr)}</p>
+          <p className="mt-1 text-sm text-muted">Monthly recurring revenue</p>
+          <p className="mt-0.5 text-xs text-muted">
+            {gbp(rev.arr)} / year · {rev.members} paying member{rev.members === 1 ? "" : "s"}
+          </p>
+        </Link>
+        <div className="rounded-2xl border border-line bg-white p-5">
+          <p className="text-sm text-muted">Base membership</p>
+          <p className="mt-1 text-lg font-semibold text-ink">{gbp(rev.base)}<span className="text-sm font-normal text-muted">/mo</span></p>
+          <p className="mt-1 text-sm text-muted">
+            Add-ons {gbp(rev.postcodePacks + rev.enhanced + rev.website)}/mo
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-3">
+          <MiniStat label="Suspended pros" value={stats.suspended} />
+          <MiniStat label="Rejected applications" value={stats.rejected} />
+        </div>
       </div>
 
       {/* Two columns of recent activity */}
