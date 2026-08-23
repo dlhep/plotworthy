@@ -6,7 +6,6 @@ import { Logo } from "./Logo";
 
 const links = [
   { href: "/start", label: "Start your journey" },
-  { href: "/journeys", label: "Project journeys" },
   { href: "/professionals", label: "Find a professional" },
   { href: "/how-it-works", label: "How PlotWorthy helps" },
   { href: "/join", label: "Join as a professional" },
