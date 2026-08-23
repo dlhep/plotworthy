@@ -2,13 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  briefSpec,
-  readiness,
-  BRIEF_STORAGE_KEY,
-  type BriefData,
-  type BriefField,
-} from "@/lib/brief";
+import { briefSpec, readiness, type BriefData, type BriefField } from "@/lib/brief";
+import { getCurrentUser, saveProject, writeLocalDraft } from "@/lib/project";
 import { BriefPreview } from "./BriefPreview";
 
 export function BriefBuilder({
@@ -45,23 +40,29 @@ export function BriefBuilder({
     });
   };
 
-  const save = () => {
-    try {
-      localStorage.setItem(
-        BRIEF_STORAGE_KEY,
-        JSON.stringify({
-          goalId: goalId ?? "",
-          data,
-          stage: typeof stage === "number" ? stage : null,
-          positionLabel: positionLabel ?? null,
-          savedAt: new Date().toISOString(),
-        })
-      );
-    } catch {
-      /* storage unavailable — the brief still shows on this screen */
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    setSaving(true);
+    const payload = {
+      goalId: goalId ?? "",
+      data,
+      stage: typeof stage === "number" ? stage : null,
+      positionLabel: positionLabel ?? null,
+    };
+    writeLocalDraft(payload);
+
+    const user = await getCurrentUser();
+    if (user) {
+      await saveProject(user.id, payload);
+      if (onSaved) onSaved();
+      else router.push("/brief");
+    } else {
+      // Not signed in yet — create an account to keep the project; the draft
+      // we just stored locally is moved onto the account after sign-up.
+      router.push("/signup?next=/brief");
     }
-    if (onSaved) onSaved();
-    else router.push("/brief");
+    setSaving(false);
   };
 
   return (
@@ -125,8 +126,8 @@ export function BriefBuilder({
       )}
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
-        <button onClick={save} className="btn-primary">
-          Save brief &amp; continue →
+        <button onClick={save} disabled={saving} className="btn-primary disabled:opacity-60">
+          {saving ? "Saving…" : "Save brief & continue →"}
         </button>
         <button
           onClick={() => setShowPreview((s) => !s)}
@@ -137,8 +138,8 @@ export function BriefBuilder({
         </button>
       </div>
       <p className="mt-3 text-sm text-muted">
-        Your brief is saved to this device. Creating an account to share it with
-        professionals is free.
+        Next you&apos;ll create a free account so your project is saved to you and
+        ready to share with professionals — on any device.
       </p>
     </div>
   );

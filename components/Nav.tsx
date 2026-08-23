@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
+import { authConfigured, createClient } from "@/lib/supabase/client";
 
 const links = [
   { href: "/start", label: "Start your journey" },
-  { href: "/journeys", label: "Project types" },
   { href: "/professionals", label: "Find a professional" },
   { href: "/how-it-works", label: "How PlotWorthy helps" },
   { href: "/join", label: "Join as a professional" },
@@ -14,6 +14,17 @@ const links = [
 
 export function Nav() {
   const [open, setOpen] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => {
+    if (!authConfigured) return;
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) =>
+      setSignedIn(Boolean(session?.user))
+    );
+    return () => sub.subscription.unsubscribe();
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 border-b border-line/80 bg-canvas/85 backdrop-blur">
@@ -35,12 +46,27 @@ export function Nav() {
         </nav>
 
         <div className="hidden items-center gap-1.5 lg:flex">
-          <Link href="/login" className="btn-ghost whitespace-nowrap px-4 py-2 text-[13px]">
-            Log in
-          </Link>
-          <Link href="/start" className="btn-primary whitespace-nowrap px-4 py-2 text-[13px]">
-            Start your journey
-          </Link>
+          {signedIn ? (
+            <>
+              <Link href="/brief" className="btn-ghost whitespace-nowrap px-4 py-2 text-[13px]">
+                My project
+              </Link>
+              <form action="/auth/signout" method="post">
+                <button type="submit" className="btn-outline whitespace-nowrap px-4 py-2 text-[13px]">
+                  Log out
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Link href="/login" className="btn-ghost whitespace-nowrap px-4 py-2 text-[13px]">
+                Log in
+              </Link>
+              <Link href="/start" className="btn-primary whitespace-nowrap px-4 py-2 text-[13px]">
+                Start your journey
+              </Link>
+            </>
+          )}
         </div>
 
         <button
@@ -73,14 +99,25 @@ export function Nav() {
                 {l.label}
               </Link>
             ))}
-            <div className="mt-2 flex gap-2 px-1">
-              <Link href="/login" onClick={() => setOpen(false)} className="btn-outline flex-1 text-sm">
-                Log in
-              </Link>
-              <Link href="/start" onClick={() => setOpen(false)} className="btn-primary flex-1 text-sm">
-                Start
-              </Link>
-            </div>
+            {signedIn ? (
+              <div className="mt-2 flex gap-2 px-1">
+                <Link href="/brief" onClick={() => setOpen(false)} className="btn-outline flex-1 text-sm">
+                  My project
+                </Link>
+                <form action="/auth/signout" method="post" className="flex-1">
+                  <button type="submit" className="btn-ghost w-full text-sm">Log out</button>
+                </form>
+              </div>
+            ) : (
+              <div className="mt-2 flex gap-2 px-1">
+                <Link href="/login" onClick={() => setOpen(false)} className="btn-outline flex-1 text-sm">
+                  Log in
+                </Link>
+                <Link href="/start" onClick={() => setOpen(false)} className="btn-primary flex-1 text-sm">
+                  Start
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}
