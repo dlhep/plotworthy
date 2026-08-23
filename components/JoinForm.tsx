@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { authConfigured, createClient } from "@/lib/supabase/client";
 
 const DISCIPLINES = [
   "Architect",
@@ -19,21 +20,77 @@ type State = "idle" | "sending" | "done" | "error";
 export function JoinForm() {
   const [state, setState] = useState<State>("idle");
   const [error, setError] = useState("");
+  const [existing, setExisting] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setState("sending");
     setError("");
     const fd = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(fd.entries());
+    const payload = Object.fromEntries(fd.entries()) as Record<string, string>;
+
+    const email = (payload.email || "").trim();
+    const password = payload.password || "";
+    const confirm = payload.confirm || "";
+
+    if (password.length < 8) {
+      setError("Please choose a password of at least 8 characters.");
+      setState("error");
+      return;
+    }
+    if (password !== confirm) {
+      setError("The two passwords don’t match.");
+      setState("error");
+      return;
+    }
+    if (!authConfigured) {
+      setError("Sign-up isn’t available right now. Please email hello@plotworthy.co.uk.");
+      setState("error");
+      return;
+    }
+
+    setState("sending");
+
+    // 1) Create the professional's login and send the email-confirmation link.
+    //    They'll land in their workspace once we approve them.
+    let existingAccount = false;
+    try {
+      const supabase = createClient();
+      const { error: signErr } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/professional`,
+          data: { role: "professional" },
+        },
+      });
+      if (signErr) {
+        const msg = signErr.message.toLowerCase();
+        if (msg.includes("already") || msg.includes("registered") || msg.includes("exists")) {
+          existingAccount = true; // fine — they'll use their existing password
+        } else {
+          setError(signErr.message || "Couldn’t create your login. Please try again.");
+          setState("error");
+          return;
+        }
+      }
+    } catch {
+      setError("Couldn’t create your login. Please try again.");
+      setState("error");
+      return;
+    }
+
+    // 2) Record the application for admin review.
+    // Strip the password fields — they never leave the auth system.
+    const { password: _p, confirm: _c, ...application } = payload;
     try {
       const res = await fetch("/api/professional-apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(application),
       });
       const json = await res.json();
       if (json.ok) {
+        setExisting(existingAccount);
         setState("done");
       } else {
         setError(json.error || "Something went wrong. Please try again.");
@@ -54,10 +111,18 @@ export function JoinForm() {
           </svg>
         </span>
         <h2 className="display mt-4 text-2xl">Application received</h2>
-        <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
-          Thanks — the PlotWorthy team will review your details and be in touch about joining the vetted
-          network. We’ll email you at the address you provided.
-        </p>
+        {existing ? (
+          <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
+            Thanks — we’ll review your details and be in touch. You already have a PlotWorthy account, so once
+            you’re approved just log in with your existing password and you’ll go straight to your workspace.
+          </p>
+        ) : (
+          <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
+            Thanks — <span className="font-medium text-ink">check your inbox to confirm your email</span> and
+            activate your login. We’ll review your details, and once you’re approved you can log in and you’ll
+            go straight to your professional workspace.
+          </p>
+        )}
       </div>
     );
   }
@@ -76,6 +141,19 @@ export function JoinForm() {
           <Field name="email" label="Email" type="email" placeholder="you@example.com" required />
           <Field name="phone" label="Phone" placeholder="07…" />
         </div>
+
+        <div className="rounded-xl border border-line bg-cream/40 p-4">
+          <p className="text-sm font-medium text-ink">Create your login</p>
+          <p className="mt-0.5 text-xs text-muted">
+            Set a password now. You’ll confirm your email to activate it, and use it to sign into your
+            workspace once you’re approved.
+          </p>
+          <div className="mt-3 grid gap-4 sm:grid-cols-2">
+            <Field name="password" label="Password" type="password" placeholder="At least 8 characters" required />
+            <Field name="confirm" label="Confirm password" type="password" placeholder="Re-enter password" required />
+          </div>
+        </div>
+
         <div>
           <label htmlFor="discipline" className="block text-sm font-medium text-ink">Discipline</label>
           <select

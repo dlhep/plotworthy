@@ -15,16 +15,36 @@ const links = [
 export function Nav() {
   const [open, setOpen] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
+  const [isPro, setIsPro] = useState(false);
 
   useEffect(() => {
     if (!authConfigured) return;
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
+
+    const refresh = async (hasUser: boolean) => {
+      setSignedIn(hasUser);
+      if (!hasUser) {
+        setIsPro(false);
+        return;
+      }
+      try {
+        const res = await fetch("/api/me/pro", { cache: "no-store" });
+        const json = await res.json();
+        setIsPro(Boolean(json.pro));
+      } catch {
+        setIsPro(false);
+      }
+    };
+
+    supabase.auth.getUser().then(({ data }) => refresh(Boolean(data.user)));
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) =>
-      setSignedIn(Boolean(session?.user))
+      refresh(Boolean(session?.user))
     );
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  const dashHref = isPro ? "/professional" : "/brief";
+  const dashLabel = isPro ? "My workspace" : "Dashboard";
 
   return (
     <header className="sticky top-0 z-40 border-b border-line/80 bg-canvas/85 backdrop-blur">
@@ -48,8 +68,8 @@ export function Nav() {
         <div className="hidden items-center gap-1.5 lg:flex">
           {signedIn ? (
             <>
-              <Link href="/brief" className="btn-ghost whitespace-nowrap px-4 py-2 text-[13px]">
-                Dashboard
+              <Link href={dashHref} className="btn-ghost whitespace-nowrap px-4 py-2 text-[13px]">
+                {dashLabel}
               </Link>
               <form action="/auth/signout" method="post">
                 <button type="submit" className="btn-outline whitespace-nowrap px-4 py-2 text-[13px]">
@@ -101,8 +121,8 @@ export function Nav() {
             ))}
             {signedIn ? (
               <div className="mt-2 flex gap-2 px-1">
-                <Link href="/brief" onClick={() => setOpen(false)} className="btn-outline flex-1 text-sm">
-                  Dashboard
+                <Link href={dashHref} onClick={() => setOpen(false)} className="btn-outline flex-1 text-sm">
+                  {dashLabel}
                 </Link>
                 <form action="/auth/signout" method="post" className="flex-1">
                   <button type="submit" className="btn-ghost w-full text-sm">Log out</button>

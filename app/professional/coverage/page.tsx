@@ -1,179 +1,77 @@
-"use client";
+import Link from "next/link";
+import { getProfessionalForUser } from "@/lib/professionalAuth";
 
-import { useState } from "react";
-import { CoverageMap } from "@/components/CoverageMap";
+export const dynamic = "force-dynamic";
 
-const SUGGEST = ["B1","B2","B3","B4","B5","B13","B14","B15","B16","B17","B18","B23","B24","B29","B30","B31","B32","B42","B43","B44"];
-const INCLUDED = 5;
+export default async function CoveragePage() {
+  const { pro } = await getProfessionalForUser();
+  if (!pro) return null;
 
-export default function CoveragePage() {
-  const [selected, setSelected] = useState<Set<string>>(
-    new Set(["B13", "B14", "B15", "B16", "B17"])
-  );
-  const [draft, setDraft] = useState("");
-  const [enhanced, setEnhanced] = useState(false);
-
-  const toggle = (code: string) =>
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(code)) next.delete(code);
-      else next.add(code);
-      return next;
-    });
-
-  const list = Array.from(selected).sort();
-  const over = Math.max(0, selected.size - INCLUDED);
+  const packs = pro.membership.postcodePacks || 0;
+  const included = 5;
+  const districts = included + packs * 5;
 
   return (
     <div>
-      <div className="flex items-center justify-between border-b border-line bg-canvas/90 px-4 py-3 backdrop-blur sm:px-8 sm:py-3.5">
+      <div className="flex items-center justify-between border-b border-line bg-canvas px-4 py-3 sm:px-8 sm:py-3.5">
         <div>
           <p className="text-[0.72rem] font-medium uppercase tracking-[0.12em] text-muted">Professional workspace</p>
-          <p className="font-serif text-lg font-medium text-ink">Coverage map</p>
+          <p className="font-serif text-lg font-medium text-ink">Coverage</p>
         </div>
-        <span className="btn-outline btn text-sm">Account ▾</span>
       </div>
 
-      <div className="grid max-w-[80rem] gap-6 p-4 sm:p-8 lg:grid-cols-[minmax(0,410px)_1fr]">
-        <div className="card p-5">
-          <div className="flex items-center justify-between">
-            <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-clay-600">Lead preferences</span>
-            <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${over > 0 ? "bg-clay-50 text-clay-700" : "bg-sage-50 text-sage-700"}`}>
-              {selected.size}/{INCLUDED} included
+      <div className="max-w-[70rem] p-4 sm:p-8">
+        <div className="card border-sage-200 bg-sage-50/40 p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-clay-600">Your coverage area</p>
+              <h2 className="mt-1 font-serif text-2xl font-medium text-ink">
+                {pro.coverage || "Not set yet"}
+              </h2>
+            </div>
+            <span className="rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-sage-700">
+              {districts} districts
             </span>
           </div>
-          <h2 className="mt-2 font-serif text-2xl font-medium text-ink">Select postcode districts</h2>
-          <p className="mt-1 text-sm text-muted">
-            Choose the districts where you want first access to new projects — or click them on the map. Change this any time.
-          </p>
-
-          <div className="mt-4 flex gap-2">
-            <input
-              value={draft}
-              onChange={(e) => setDraft(e.target.value.toUpperCase())}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && /^B\d{1,2}$/.test(draft.trim())) {
-                  toggle(draft.trim());
-                  setDraft("");
-                }
-              }}
-              placeholder="For example B17"
-              className="flex-1 rounded-lg border border-line bg-white px-3 py-2 text-sm uppercase"
-            />
-            <button
-              onClick={() => {
-                if (/^B\d{1,2}$/.test(draft.trim())) {
-                  toggle(draft.trim());
-                  setDraft("");
-                }
-              }}
-              className="btn-primary text-sm"
-            >
-              + Add
-            </button>
-          </div>
-
-          <div className="mt-4 flex items-center justify-between">
-            <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-clay-600">Included districts</span>
-            <button onClick={() => setSelected(new Set())} className="text-xs font-semibold text-sage-700">Clear all</button>
-          </div>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {list.length ? (
-              list.map((d) => (
-                <span key={d} className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-canvas py-1 pl-2.5 pr-1.5 text-sm font-semibold text-ink">
-                  {d}
-                  <button onClick={() => toggle(d)} className="text-muted hover:text-clay-600">×</button>
-                </span>
-              ))
-            ) : (
-              <span className="text-sm text-muted">No districts selected yet.</span>
-            )}
-          </div>
-          {over > 0 && (
-            <p className="mt-2.5 text-sm text-clay-700">
-              You’re {over} over your included {INCLUDED}. Add a district package below to cover them.
-            </p>
-          )}
-
-          <p className="mt-4 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-clay-600">Nearby suggestions</p>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {SUGGEST.map((d) => {
-              const on = selected.has(d);
-              return (
-                <button
-                  key={d}
-                  onClick={() => toggle(d)}
-                  className={`inline-flex h-10 w-10 items-center justify-center rounded-full border text-xs ${
-                    on ? "border-sage-600 bg-sage-600 text-white" : "border-line bg-white text-ink hover:border-sage-300"
-                  }`}
-                >
-                  {on ? "✓" : d}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="mt-4 rounded-xl border border-clay-200 bg-clay-50 p-4">
-            <div className="flex items-center gap-2 text-sm font-semibold text-clay-700">🔒 {INCLUDED} districts included with Professional membership</div>
-            <p className="mt-0.5 text-xs text-clay-700">Add reusable district slots any time.</p>
-            <div className="mt-3 grid grid-cols-3 gap-2">
-              <PriceCard t="+1 district" amt="£5" sub="One adjoining area." />
-              <PriceCard t="+10 districts" amt="£40" sub="Save £10 vs single slots." best />
-              <PriceCard t="+25 districts" amt="£75" sub="Broad regional coverage." />
-            </div>
-          </div>
-
-          <div className="mt-4 flex items-start gap-3 rounded-xl border border-sage-200 bg-sage-50 p-4">
-            <span className="tile h-10 w-10 shrink-0 bg-white" />
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <strong className="text-sm text-ink">Enhanced profile</strong>
-                <span className="font-serif text-ink">£19<span className="text-xs text-muted">/mo</span></span>
-              </div>
-              <p className="mt-0.5 text-xs text-muted">Featured placement, a bigger portfolio gallery and a verified badge.</p>
-              <button
-                onClick={() => setEnhanced((v) => !v)}
-                className={`mt-2 text-sm ${enhanced ? "btn-primary" : "btn-outline"} btn`}
-              >
-                {enhanced ? "✓ Enhanced active" : "Upgrade to Enhanced"}
-              </button>
-            </div>
-          </div>
-
-          <button className="btn-primary mt-4 w-full">Save coverage</button>
-          <p className="mt-2 text-center text-[0.7rem] text-muted">Preview — pricing buttons connect to Stripe in production.</p>
-        </div>
-
-        <div>
-          <div className="mb-2 flex items-center justify-between">
-            <h2 className="font-serif text-xl font-medium text-ink">Your coverage map</h2>
-            <span className="text-xs font-semibold text-sage-700">{selected.size} selected</span>
-          </div>
-          <CoverageMap selected={selected} onToggle={toggle} />
-          <p className="mt-2 text-xs text-muted">
-            Shaded shapes follow postcode-district boundaries (MapLibre · OpenFreeMap). Click a district on the map or a pill to add or remove it.
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/85">
+            {pro.coverage
+              ? <>You&apos;re listed across {pro.coverage} and the surrounding area. When a client requests an introduction in one of your districts, we confirm you cover their postcode — nothing more.</>
+              : <>Let us know the area you work in and we&apos;ll introduce you to the right clients there.</>}
           </p>
         </div>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          <Stat label="Included with membership" value={`${included} districts`} />
+          <Stat label="Postcode packs" value={packs > 0 ? `${packs} × 5` : "None"} />
+          <Stat label="Total reach" value={`${districts} districts`} />
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-line bg-cream/40 p-5">
+          <p className="text-sm font-medium text-ink">Private to your account</p>
+          <p className="mt-1 max-w-2xl text-sm text-muted">
+            The exact districts and any postcode packs you&apos;ve added are visible only to you. Clients never
+            see which or how many areas you cover — only that PlotWorthy recommends you in theirs.
+          </p>
+        </div>
+
+        <p className="mt-6 text-sm text-muted">
+          Want to widen your reach or change the areas you cover?{" "}
+          <a href="mailto:hello@plotworthy.co.uk?subject=Coverage%20change" className="font-medium text-sage-700 hover:underline">
+            Get in touch
+          </a>{" "}
+          and we&apos;ll update your listing. See how leads flow on the{" "}
+          <Link href="/professional" className="font-medium text-sage-700 hover:underline">Dashboard</Link>.
+        </p>
       </div>
     </div>
   );
 }
 
-function PriceCard({ t, amt, sub, best }: { t: string; amt: string; sub: string; best?: boolean }) {
+function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className={`relative rounded-lg border bg-white px-2 py-3 text-center ${best ? "border-clay-300 ring-1 ring-clay-200" : "border-line"}`}>
-      {best && (
-        <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-clay-400 px-2 py-0.5 text-[0.55rem] font-bold uppercase tracking-wide text-sage-900">
-          Best value
-        </span>
-      )}
-      <div className="text-[0.72rem] font-semibold text-ink">{t}</div>
-      <div className="mt-0.5 font-serif text-xl text-ink">
-        {amt}
-        <span className="text-[0.65rem] text-muted">/mo</span>
-      </div>
-      <div className="mt-1 text-[0.62rem] text-muted">{sub}</div>
-      <button className="btn-outline btn mt-2 w-full py-1 text-[0.68rem]">Choose</button>
+    <div className="card px-5 py-4">
+      <div className="font-serif text-2xl text-ink">{value}</div>
+      <div className="mt-0.5 text-xs text-muted">{label}</div>
     </div>
   );
 }

@@ -16,12 +16,12 @@ export async function GET(request: Request) {
 
   if (tokenHash && type) {
     const { error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash });
-    if (!error) return NextResponse.redirect(`${origin}${next}`);
+    if (!error) return NextResponse.redirect(`${origin}/go?next=${encodeURIComponent(next)}`);
   }
 
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) return NextResponse.redirect(`${origin}${next}`);
+    if (!error) return NextResponse.redirect(`${origin}/go?next=${encodeURIComponent(next)}`);
   }
 
   // Verification may have succeeded server-side even if we couldn't open a

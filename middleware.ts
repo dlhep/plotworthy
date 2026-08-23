@@ -9,7 +9,7 @@ const SUPABASE_KEY =
 // Journey routes a client must be signed in (and email-verified) to use.
 // Because "Confirm email" is on in Supabase, a session only exists after the
 // address is verified — so a valid session here means a verified account.
-const PROTECTED = ["/start", "/brief"];
+const PROTECTED = ["/start", "/brief", "/professional"];
 
 function isProtected(path: string) {
   return PROTECTED.some((p) => path === p || path.startsWith(p + "/"));
@@ -42,8 +42,9 @@ export async function middleware(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
   if (!user && isProtected(path)) {
-    // New journeys route to sign-up; returning to a saved project routes to log in.
-    const dest = path.startsWith("/brief") ? "/login" : "/signup";
+    // New client journeys route to sign-up; returning to a project or the
+    // professional workspace routes to log in.
+    const dest = path.startsWith("/start") ? "/signup" : "/login";
     const url = request.nextUrl.clone();
     url.pathname = dest;
     url.search = "";

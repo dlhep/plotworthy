@@ -39,8 +39,22 @@ const ICON: Record<string, JSX.Element> = {
   ),
 };
 
-export function WorkspaceSidebar() {
+export function WorkspaceSidebar({
+  name = "Your practice",
+  discipline = "Professional",
+}: {
+  name?: string;
+  discipline?: string;
+}) {
   const pathname = usePathname();
+  const initials =
+    name
+      .split(" ")
+      .map((w) => w[0])
+      .filter(Boolean)
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "PW";
   return (
     <aside className="w-full shrink-0 bg-sage-900 px-3.5 py-3 text-[#e9efe7] lg:sticky lg:top-16 lg:flex lg:h-[calc(100vh-4rem)] lg:w-[250px] lg:flex-col lg:py-4">
       <p className="hidden px-2 pb-3 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[#e9efe7]/45 lg:block">
@@ -51,11 +65,11 @@ export function WorkspaceSidebar() {
       <div className="hidden rounded-xl bg-white/[0.07] p-3.5 lg:block">
         <div className="flex items-center gap-2.5">
           <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-clay-300 text-sm font-bold text-sage-900">
-            SS
+            {initials}
           </span>
-          <div>
-            <div className="text-sm font-semibold text-white">Sample Studio</div>
-            <div className="text-xs text-[#e9efe7]/70">Architect</div>
+          <div className="min-w-0">
+            <div className="truncate text-sm font-semibold text-white">{name}</div>
+            <div className="text-xs text-[#e9efe7]/70">{discipline}</div>
           </div>
         </div>
         <span className="mt-2.5 inline-flex items-center gap-1 rounded-full bg-sage-400/30 px-2.5 py-1 text-[0.62rem] font-bold tracking-wide text-[#d7e6d3]">
@@ -85,9 +99,11 @@ export function WorkspaceSidebar() {
         })}
       </nav>
 
-      <div className="mt-auto hidden flex-col gap-1.5 pt-4 text-sm text-[#e9efe7]/70 lg:flex">
+      <div className="mt-auto hidden flex-col items-start gap-1.5 pt-4 text-sm text-[#e9efe7]/70 lg:flex">
         <Link href="/" className="hover:text-white">← View public website</Link>
-        <Link href="/" className="hover:text-white">Sign out</Link>
+        <form action="/auth/signout" method="post">
+          <button type="submit" className="hover:text-white">Sign out</button>
+        </form>
       </div>
     </aside>
   );

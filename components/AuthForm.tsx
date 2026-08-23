@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { getCurrentUser, readLocalDraft, saveProject } from "@/lib/project";
 import { Logo } from "./Logo";
 
 export function AuthForm({ mode }: { mode: "signup" | "login" }) {
-  const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next") || "/brief";
   const justVerified = params.get("verified") === "1";
@@ -54,8 +53,7 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
       }
       if (data.session) {
         await syncDraft();
-        router.push(next);
-        router.refresh();
+        window.location.href = `/go?next=${encodeURIComponent(next)}`;
       } else {
         // email confirmation required
         setCheck(true);
@@ -69,8 +67,7 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
         return;
       }
       await syncDraft();
-      router.push(next);
-      router.refresh();
+      window.location.href = `/go?next=${encodeURIComponent(next)}`;
     }
   }
 
@@ -166,6 +163,14 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
             {busy ? "Please wait…" : isSignup ? "Create account" : "Log in"}
           </button>
         </form>
+
+        {!isSignup && (
+          <p className="mt-4 text-center text-sm">
+            <Link href="/reset-password" className="text-muted hover:text-ink hover:underline">
+              Forgot your password?
+            </Link>
+          </p>
+        )}
 
         <p className="mt-5 text-center text-sm text-muted">
           {isSignup ? (
