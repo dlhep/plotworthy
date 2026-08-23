@@ -171,7 +171,6 @@ export function JoinForm() {
           <Field name="coverage" label="Coverage (postcode districts)" placeholder="B13, B14, B15" />
           <Field name="accreditations" label="Accreditations" placeholder="ARB, RIBA" />
           <Field name="insurance" label="Professional indemnity insurance" placeholder="£2m — Hiscox" />
-          <Field name="website" label="Website / portfolio" placeholder="https://…" />
         </div>
         <div>
           <label htmlFor="about" className="block text-sm font-medium text-ink">About your practice</label>
