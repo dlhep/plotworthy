@@ -82,5 +82,6 @@ export function gbp(n: number): string {
 // adjust here and they update across the site.
 export const CLIENT_PRICING = {
   expertReview: 49, // one-off, per brief
-  plusMonthly: 9, // PlotWorthy Plus subscription, per month
+  costCheck: 99, // one-off, independent review of a builder's costings
+  plusMonthly: 19, // PlotWorthy Plus subscription (incl. guided adviser), per month
 };

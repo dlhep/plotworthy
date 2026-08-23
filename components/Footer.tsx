@@ -19,6 +19,7 @@ export function Footer() {
             <li><Link href="/start" className="hover:text-ink">Start your journey</Link></li>
             <li><Link href="/journeys" className="hover:text-ink">Project journeys</Link></li>
             <li><Link href="/how-it-works" className="hover:text-ink">How PlotWorthy helps</Link></li>
+            <li><Link href="/faq" className="hover:text-ink">FAQ</Link></li>
           </ul>
         </div>
 
